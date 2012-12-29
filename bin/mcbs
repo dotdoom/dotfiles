@@ -1,0 +1,8 @@
+#!/bin/sh
+
+pushd ~/.mcabber
+for account in `ls -1 mcabberrc.* | grep -Ev 'disabled$' | cut -c11-`; do
+	ps x | grep -F "$account" | grep -v grep || exec xterm -title "$account - mcabber" -e mcabber -f "mcabberrc.$account" &
+done
+disown
+popd

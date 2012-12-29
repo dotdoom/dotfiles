@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+ADDR=$1
+ROLE=${2:-server}
+IPV=${3:-A}
+
+function print_host() {
+	port=$2
+	host -t $IPV $1 | awk '{ print $4 }' | while read server; do
+		echo $server:$port
+	done
+}
+
+HOST_ANSWER=$(host -t SRV "_xmpp-$ROLE._tcp.$ADDR")
+if echo $HOST_ANSWER | grep -q 'not found'; then
+	if [ "$ROLE" = "server" ]; then
+		port=5269
+	else
+		port=5222
+	fi
+	print_host $ADDR $port
+else
+	echo "$HOST_ANSWER" | awk '{ print $7, $8 }' | while read port server; do
+		print_host $server $port
+	done
+fi

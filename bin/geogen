@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'json'
+require 'geoip'
+
+$DEBUG = (ARGV.last == 'debug')
+
+def geogen(script)
+	geoip_country = GeoIP.new('/usr/share/GeoIP/GeoIP.dat')
+	geoip_city = GeoIP.new('/usr/share/GeoIP/GeoIPCity.dat')
+
+	counts = {}
+	IO.popen(script) do |f|
+		while ip = f.gets
+			loc = geoip_city.city(ip.strip)
+			if loc and loc.latitude and loc.longitude
+				counts[loc.latitude] ||= {}
+				counts[loc.latitude][loc.longitude] ||= []
+				data = counts[loc.latitude][loc.longitude]
+				data[0] = (data[0] || 0) + 1
+				unless data[1]
+					loc_country = geoip_country.country(ip.strip)
+					data[1] = loc_country.country_name
+					data[1] += ', ' + loc.city_name if loc.city_name and !loc.city_name.empty?
+				end
+				puts "%20s %s" % [ip.strip, data[1]] if $DEBUG
+			end
+		end
+	end
+
+	counts_a = []
+	counts.map { |lon, latc|
+		latc.map { |lat, count|
+			counts_a.push([lon, lat, count.first, count.last])
+		}
+	}
+
+	counts_a.sort{|a,b| b[2] <=> a[2]}.push(Time.now).to_json
+end
+
+puts geogen("/usr/local/bin/sudo /opt/bin/portstat -all #{ARGV.first}")

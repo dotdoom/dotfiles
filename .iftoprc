@@ -1,0 +1,14 @@
+interface: eth0
+dns-resolution: yes
+port-resolution: no
+#filter-code: bpf
+show-bars: yes
+#promiscuous: (yes|no)
+port-display: on
+hide-source: yes
+hide-destination: no
+use-bytes: yes
+sort: 2s
+line-display: two-line
+show-totals: yes
+log-scale: no

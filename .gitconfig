@@ -1,0 +1,24 @@
+[user]
+	name = Artem Sheremet
+	email = dot.doom@gmail.com
+[color]
+	ui = auto
+[alias]
+	co = checkout
+	st = status
+	di = diff -w --no-prefix
+	df = diff
+	dc = diff --cached
+	ci = commit
+	br = branch
+	lg = log -p
+	lol = log --graph --decorate --pretty=oneline --abbrev-commit
+	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	ls = ls-files
+
+	# Show files ignored by git:
+	ign = ls-files -o -i --exclude-standard
+	meta-fs = !/opt/bin/git-meta-fs
+
+[apply]
+	whitespace = nowarn

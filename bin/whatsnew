@@ -1,0 +1,14 @@
+#!/bin/bash
+
+sqlite3 <<SQL
+	attach database '$HOME/.local/share/gajim/logs.db' as logs;
+	attach database '$HOME/.cache/gajim/cache.db' as cache;
+	select roster.name,jids.jid,logs.message
+	from logs.unread_messages unread
+	left join logs.jids jids
+		on jids.jid_id = unread.jid_id
+	left join logs.logs logs
+		on unread.message_id = logs.log_line_id
+	left join cache.roster_entry roster
+		on roster.jid_id = unread.jid_id;
+SQL

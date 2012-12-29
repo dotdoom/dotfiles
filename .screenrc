@@ -1,0 +1,8 @@
+vbell off
+startup_message off
+defscrollback 10240
+caption always "%{+b}%H | %c %d.%m.%Y | Load: %l"
+hardstatus alwayslastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
+bindkey -k F1 prev
+bindkey -k F2 next
+#%?%{yk}%-Lw%?%{wb}%n*%f %t%?(%u)%?%?%{yk}%+Lw%?"

@@ -1,0 +1,137 @@
+. /etc/profile
+
+export EDITOR=vim
+export BROWSER=chromium
+export PAGER='less -R -F -X -S -n -i'
+export PATH="$HOME/bin:$HOME/.rvm/bin:/opt/bin:$HOME/.gem/ruby/1.9.1/bin:/usr/bin/vendor_perl:$PATH"
+export GTK_IM_MODULE=xim
+export GIT_COMMITTER_NAME='Artem Sheremet'
+export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
+
+# redefinitions
+if [ "$(uname -s)" = "Linux" ]; then
+	LS_VER=`/bin/ls --version | head -1 | cut -d' ' -f4`
+	LS_VER_INT=`echo $LS_VER | cut -d'.' -f1`
+	if [ $LS_VER_INT -lt 8 ]; then
+		alias ls='ls -hF --color=auto'
+	else
+		alias ls='ls -hF --color=auto --group-directories-first'
+	fi
+	alias pgrep='pgrep -lf'
+	alias crontab='crontab -i'
+elif [ "$(uname -s)" = "FreeBSD" ]; then
+	export LSCOLORS=ExGxFxFxCxdxDxabagacac
+	alias ls='ls -hFIG'
+	alias pgrep='pgrep -laf'
+	alias stat="/usr/bin/stat -f \"  File: '%N'%SY%n  Size: %-15z Blocks: %-10b IO Block: %-6k %HT%nDevice: %7Hr/%-7Lr Inode: %-11i Links: %l%nAccess: (%Mp%Lp/%Sp) Uid: (%5u/%8Su)  Gid: (%5g/%8Sg)%nAccess: %Sa%nModify: %Sm%nChange: %Sc%n Birth: %SB\" -t '%F %T %z'"
+fi
+alias nc='nc -vv'
+alias killall='killall -v'
+alias scrot='scrot -e "mv \$f ~/screenshots/ 2>/dev/null" -cd 5'
+alias qiv='qiv -fml -M'
+alias qivr='qiv -u'
+alias grep='grep --color=auto'
+alias fgrep='grep -Frn --color=always'
+alias figrep='fgrep -i'
+alias svn='svn --no-auth-cache'
+alias mysql='mysql --select_limit=1000'
+alias ka='killall'
+alias fsck='fsck -C'
+alias pager=$PAGER
+alias npager='pager -N'
+alias l='ls -lA'
+alias ds='du -sh'
+alias la='cat /proc/loadavg'
+alias ipt='iptables -nvL --line-numbers'
+alias psa='ps axfo pid,euser,bsdstart,vsz,rss,bsdtime,args'
+alias parent='ps -p $PPID -o comm='
+alias dbgrep='dbgrep.pl -vpuroot'
+
+# LOL protect me
+alias mv='mv -i'
+alias cp='cp -i'
+alias rm='rm -i'
+
+# git aliases
+alias gb='git branch'
+alias gba='git branch -av'
+alias gc='git commit -v'
+alias gd='git di'
+alias gdc='gd --cached'
+alias gl='git pull'
+alias gp='git push'
+alias gst='git status'
+
+# sudo
+alias sudo='sudo -E '
+
+# work
+RAILS=~/netmri/netmri/src/app/rails
+alias rmunv='rm $(svn st | grep "^?" | sed -r "s/^\? +//")'
+alias webui='cd $webui'
+
+# useful stuff
+[ -z "$VIM_ORIGINAL" ] && VIM_ORIGINAL="$(which vim)"
+function vim() {
+	local COMPAT_TERM="xterm-256color"
+	# we only handle single-argument VIM
+	if [ $# -eq 1 ]; then
+		if [ -e "$1" ]; then
+			# editing an existing file
+			FILENAME="$1"
+		else
+			# trying to create new file, will check it's directory for WRITE access
+			FILENAME="`dirname $1 2>/dev/null`"
+		fi
+
+		if [ -w "$FILENAME" ]; then
+			# yahoo! writable
+			TERM=$COMPAT_TERM "$VIM_ORIGINAL" "$1"
+		else
+			echo 'this file will be opened with sudo'
+			TERM=$COMPAT_TERM sudo "$VIM_ORIGINAL" "$1" || "$VIM_ORIGINAL" "$1"
+		fi
+	else
+		TERM=$COMPAT_TERM "$VIM_ORIGINAL" $*
+	fi
+}
+
+function mkcd() {
+	mkdir -p $@
+	cd $@
+}
+function cpcd() {
+	cp $@
+	cd $_
+}
+function cdls() {
+	cd $@
+	ls
+}
+
+function fin() {
+	local filename="$1"
+	shift
+	find $* -iname "*$filename*"
+}
+
+if [ -r ~/.rc_local ]; then
+	. ~/.rc_local
+fi
+
+if [ -x "$(which dircolors 2>/dev/null)" ]; then
+	eval $(dircolors)
+fi
+
+webui="$RAILS"
+
+case $- in
+	*i*)
+		# only with interactive non-sudo shell
+		if [ -n "$SSH_CLIENT" ] && [ -z "$SUDO_UID" ]; then
+			[ "$(parent)" = "screen" ] || screen -RR
+		fi
+		;;
+esac
+
+# vim: ft=sh
