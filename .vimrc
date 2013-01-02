@@ -95,7 +95,7 @@ set switchbuf+=usetab " Switch to existing tab; open a new tab for the new buffe
 
 set laststatus=2    " Always show the status line
 
-set statusline=%<%f\ %h%m%r\ %{GitBranch()}%=%-14.(%l,%c%V%)\ %P " Custom status line with Git Branch name
+set statusline=%<%f\ %h%m%r\ %{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P " Custom status line with Git Branch name
 
 let mapleader=","
 
@@ -109,7 +109,6 @@ Bundle 'gmarik/vundle'
 Bundle 'mileszs/ack.vim'
 Bundle 'wincent/Command-T'
 Bundle 'rosenfeld/conque-term'
-Bundle 'motemen/git-vim'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
@@ -233,7 +232,3 @@ cmap w!! %!sudo tee >/dev/null %<CR>
 "match NearColLimit /\%<121v.\%>117v/
 "match OverColLimit /.\%>120v/
 "match ExtraWhitespace /\s\+\%#\@<!$/
-
-" calling system() (e.g. in GitBranch) leaves some really annoying noise in the window
-" this fixes the issue
-set lz
