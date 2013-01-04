@@ -3,16 +3,19 @@ zstyle ':completion:*' completer _complete _ignored _approximate
 zstyle ':completion:*' max-errors 2
 zstyle ':completion:*' menu select
 zstyle ':completion:*' completealiases
-zstyle :compinstall filename '/home/artem/.zshrc'
+zstyle :compinstall filename ~/.zshrc
 
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 # Lines configured by zsh-newuser-install
-HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=10000
+export HISTFILE=~/.histfile
+export HISTSIZE=10000
+export SAVEHIST=$HISTSIZE
+setopt hist_ignore_all_dups
+unsetopt extendedglob
 setopt autocd
+setopt correctall
 bindkey -e
 bindkey "\e[1~" beginning-of-line # Home
 bindkey "\e[4~" end-of-line # End

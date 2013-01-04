@@ -3,7 +3,7 @@
 export EDITOR=vim
 export BROWSER=chromium
 export PAGER='less -R -F -X -S -n -i'
-export PATH="$HOME/bin:$HOME/.rvm/bin:/opt/bin:$HOME/.gem/ruby/1.9.1/bin:/usr/bin/vendor_perl:$PATH"
+export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/bin/vendor_perl:/opt/bin:$HOME/bin:$HOME/.rvm/bin:$HOME/.gem/ruby/1.9.1/bin"
 export GTK_IM_MODULE=xim
 export GIT_COMMITTER_NAME='Artem Sheremet'
 export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
