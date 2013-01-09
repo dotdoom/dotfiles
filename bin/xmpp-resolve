@@ -1,26 +1,46 @@
 #!/usr/bin/env bash
 
 ADDR=$1
-ROLE=${2:-server}
-IPV=${3:-A}
+DNS_SERVER=$2
+
+EXTRA_LINES_EXPR='(is an alias|has no|^Using domain server:|^Name:|^Address:|^Aliases:|^$)'
 
 function print_host() {
 	port=$2
-	host -t $IPV $1 | awk '{ print $4 }' | while read server; do
-		echo $server:$port
+	for ipv in A AAAA; do
+		if [ "$ipv" = A ]; then
+			argn=4
+			wl=''
+			wr=''
+		else
+			argn=5
+			wl='['
+			wr=']'
+		fi
+		host -t $ipv $1 $DNS_SERVER | grep -Ev "$EXTRA_LINES_EXPR" | awk "{ print \$$argn }" | while read server; do
+			echo -n "$wl$server$wr:$port (${3-$ipv}"
+			if nc -nzw 2 $server $port &>/dev/null; then
+				echo ')'
+			else
+				echo ', unavailable)'
+			fi
+		done
 	done
 }
 
-HOST_ANSWER=$(host -t SRV "_xmpp-$ROLE._tcp.$ADDR")
-if echo $HOST_ANSWER | grep -q 'not found'; then
-	if [ "$ROLE" = "server" ]; then
-		port=5269
+for role in client server; do
+	echo "--- $role ---------------------------------------------"
+	HOST_ANSWER=$(host -t SRV "_xmpp-$role._tcp.$ADDR" $DNS_SERVER | grep -Ev "$EXTRA_LINES_EXPR")
+	if echo $HOST_ANSWER | grep -q 'not found'; then
+		if [ "$role" = "server" ]; then
+			port=5269
+		else
+			port=5222
+		fi
+		print_host $ADDR $port
 	else
-		port=5222
+		echo "$HOST_ANSWER" | awk '{ print $7, $8 }' | while read port server; do
+			print_host $server $port SRV
+		done
 	fi
-	print_host $ADDR $port
-else
-	echo "$HOST_ANSWER" | awk '{ print $7, $8 }' | while read port server; do
-		print_host $server $port
-	done
-fi
+done
