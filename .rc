@@ -98,7 +98,7 @@ function vim() {
 function ds() {
 	du -sh "$@" | perl -e '
 		%byte_order = ( G => 0, M => 1, K => 2, k => 2, 0 => 3 );
-		print map { $_->[0] } sort { $byte_order{$a->[1]} <=> $byte_order{$b->[1]} || $b->[2] <=> $a->[2] } map { [ $_, /([MGKk0])/, /(\d+)/ ] } <>'
+		print map { $_->[0] } sort { $byte_order{$a->[1]} <=> $byte_order{$b->[1]} || $b->[2] <=> $a->[2] } map { [ $_, /^[\d.]+([MGKk0])/, /^([\d.]+)/ ] } <>'
 }
 
 function mkcd() {
