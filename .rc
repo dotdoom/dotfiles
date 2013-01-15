@@ -40,7 +40,6 @@ alias fsck='fsck -C'
 alias pager=$PAGER
 alias npager='pager -N'
 alias l='ls -lA'
-alias ds='du -sh'
 alias la='cat /proc/loadavg'
 alias ipt='iptables -nvL --line-numbers'
 alias psa='ps axfo pid,euser,bsdstart,vsz,rss,bsdtime,args'
@@ -94,6 +93,12 @@ function vim() {
 	else
 		TERM=$COMPAT_TERM "$VIM_ORIGINAL" $*
 	fi
+}
+
+function ds() {
+	du -sh "$@" | perl -e '
+		%byte_order = ( G => 0, M => 1, K => 2, k => 2, 0 => 3 );
+		print map { $_->[0] } sort { $byte_order{$a->[1]} <=> $byte_order{$b->[1]} || $b->[2] <=> $a->[2] } map { [ $_, /([MGKk0])/, /(\d+)/ ] } <>'
 }
 
 function mkcd() {
