@@ -172,7 +172,7 @@ call Amap("F3", "NERDTreeToggle")
 call Amap("F4", "close")
 call Amap("F5", "!ruby -c %")
 call Amap("F6", "make -s clean all")
-call Amap("F7", ":Ack ", 0)
+call Amap("F7", "cn ")
 "setl noai nocin nosi inde= formatoptions-=c formatoptions-=r formatoptions-=o nonumber
 call Amap("F8", "setl paste! number! <bar> NoShowMarks")
 call Amap("F9", "!traider")
