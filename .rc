@@ -26,6 +26,8 @@ elif [ "$(uname -s)" = "FreeBSD" ]; then
 	alias stat="/usr/bin/stat -f \"  File: '%N'%SY%n  Size: %-15z Blocks: %-10b IO Block: %-6k %HT%nDevice: %7Hr/%-7Lr Inode: %-11i Links: %l%nAccess: (%Mp%Lp/%Sp) Uid: (%5u/%8Su)  Gid: (%5g/%8Sg)%nAccess: %Sa%nModify: %Sm%nChange: %Sc%n Birth: %SB\" -t '%F %T %z'"
 fi
 alias nc='nc -vv'
+alias snc='openssl s_client -connect '
+alias vsnc='openssl s_client -showcerts -state -msg -debug -connect '
 alias killall='killall -v'
 alias scrot='scrot -e "mv \$f ~/screenshots/ 2>/dev/null" -cd 5'
 alias qiv='qiv -fml -M'
@@ -45,6 +47,14 @@ alias ipt='iptables -nvL --line-numbers'
 alias psa='ps axfo pid,euser,bsdstart,vsz,rss,bsdtime,args'
 alias parent='ps -p $PPID -o comm='
 alias dbgrep='dbgrep.pl -vpuroot'
+
+# mysqldump extraction
+function mysql_extract_db() {
+	sed -n "/^-- Current Database: \`$1\`/,/^-- Current Database: \`/p"
+}
+function mysql_extract_table() {
+	sed -n "/^-- Table structure for table \`$1\`/,/^-- Table structure for table \`/p"
+}
 
 # LOL protect me
 alias mv='mv -i'
@@ -99,6 +109,12 @@ function ds() {
 	du -sh "$@" | perl -e '
 		%byte_order = ( G => 0, M => 1, K => 2, k => 2, 0 => 3 );
 		print map { $_->[0] } sort { $byte_order{$a->[1]} <=> $byte_order{$b->[1]} || $b->[2] <=> $a->[2] } map { [ $_, /^\s*[\d.]+([MGKk0])/, /^\s*([\d.]+)/ ] } <>'
+}
+
+function dl() {
+	for entry in "$@"; do
+		printf '%-7d %s\n' $(find $entry | wc -l) "$entry"
+	done | sort -rn
 }
 
 function mkcd() {
