@@ -8,6 +8,8 @@ x-scheme-handler/unknown=chromium-browser.desktop
 video/x-ogm+ogg=rpmfusion-smplayer.desktop
 video/x-msvideo=rpmfusion-smplayer.desktop
 video/x-matroska=rpmfusion-smplayer.desktop
+video/mp4=rpmfusion-smplayer.desktop
+x-scheme-handler/mailto=chromium-browser.desktop
 
 [Added Associations]
 video/x-ogm+ogg=rpmfusion-smplayer.desktop;totem.desktop;rpmfusion-smplayer_enqueue.desktop;
@@ -17,3 +19,5 @@ application/x-shellscript=gedit.desktop;
 application/x-ruby=gedit.desktop;
 application/x-wine-extension-vbs=gedit.desktop;
 application/x-shockwave-flash=chromium-browser.desktop;
+video/mp4=rpmfusion-smplayer.desktop;
+application/x-ms-dos-executable=fedora-wine.desktop;
