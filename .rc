@@ -48,6 +48,14 @@ alias psa='ps axfo pid,euser,bsdstart,vsz,rss,bsdtime,args'
 alias parent='ps -p $PPID -o comm='
 alias dbgrep='dbgrep.pl -vpuroot'
 
+function i4() {
+	if [ $# -eq 0 ]; then
+		curl http://ipecho.net/plain; echo
+	else
+		ip addr show "$1" | sed -nr 's/\s+inet ([0-9.]+)\/.*/\1/p'
+	fi
+}
+
 # mysqldump extraction
 function mysql_extract_db() {
 	sed -n "/^-- Current Database: \`$1\`/,/^-- Current Database: \`/p"
@@ -76,7 +84,7 @@ alias sudo='sudo -E '
 
 # work
 RAILS=~/netmri/netmri/src/app/rails
-alias rmunv='rm $(svn st | grep "^?" | sed -r "s/^\? +//")'
+alias rmunv='rm -r $(svn st | grep "^?" | sed -r "s/^\? +//")'
 alias webui='cd $webui'
 
 # useful stuff
@@ -118,22 +126,23 @@ function dl() {
 }
 
 function mkcd() {
-	mkdir -p $@
-	cd $@
+	mkdir -p "$@"
+	cd "$@"
 }
 function cpcd() {
-	cp $@
+	cp "$@"
 	cd $_
 }
 function cdls() {
-	cd $@
-	ls
+	cd "$1"
+	shift
+	ls "$@"
 }
 
 function fin() {
 	local filename="$1"
-	shift
-	find $* -iname "*$filename*"
+	[ $# -gt 1 ] && shift
+	find "$@" -iname "*$filename*"
 }
 
 if [ -r ~/.rc_local ]; then
