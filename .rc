@@ -32,7 +32,7 @@ alias killall='killall -v'
 alias scrot='scrot -e "mv \$f ~/screenshots/ 2>/dev/null" -cd 5'
 alias qiv='qiv -fml -M'
 alias qivr='qiv -u'
-alias grep='grep --color=auto'
+alias grep='grep --line-buffered --color=auto'
 alias fgrep='grep -Frn --color=always'
 alias figrep='fgrep -i'
 alias svn='svn --no-auth-cache'
@@ -47,6 +47,7 @@ alias ipt='iptables -nvL --line-numbers'
 alias psa='ps axfo pid,euser,bsdstart,vsz,rss,bsdtime,args'
 alias parent='ps -p $PPID -o comm='
 alias dbgrep='dbgrep.pl -vpuroot'
+alias tcpdump='tcpdump -l'
 
 function i4() {
 	if [ $# -eq 0 ]; then
@@ -54,6 +55,10 @@ function i4() {
 	else
 		ip addr show "$1" | sed -nr 's/\s+inet ([0-9.]+)\/.*/\1/p'
 	fi
+}
+
+function prepend-timestamp() {
+	gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0 }'
 }
 
 # mysqldump extraction
