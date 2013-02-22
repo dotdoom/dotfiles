@@ -150,6 +150,20 @@ function fin() {
 	find "$@" -iname "*$filename*"
 }
 
+function title() {
+	echo -ne "\033]0;$*\007"
+}
+
+function ssh() {
+	if [ $# -eq 1 ]; then
+		title "ssh:$1"
+	else
+		title "ssh"
+	fi
+	$(which ssh) "$@"
+	title "Terminal"
+}
+
 if [ -r ~/.rc_local ]; then
 	. ~/.rc_local
 fi
