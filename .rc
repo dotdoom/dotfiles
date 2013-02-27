@@ -7,6 +7,7 @@ export PATH="$HOME/bin:$HOME/.rvm/bin:$HOME/.gem/ruby/1.9.1/bin:/opt/bin:/sbin:/
 export GTK_IM_MODULE=xim
 export GIT_COMMITTER_NAME='Artem Sheremet'
 export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
+export DOOMWADDIR=~/dist/games/doom/wad
 
 # redefinitions
 if [ "$(uname -s)" = "Linux" ]; then
@@ -51,7 +52,7 @@ alias tcpdump='tcpdump -l'
 
 function i4() {
 	if [ $# -eq 0 ]; then
-		curl http://ipecho.net/plain; echo
+		curl --silent http://ipecho.net/plain; echo
 	else
 		ip addr show "$1" | sed -nr 's/\s+inet ([0-9.]+)\/.*/\1/p'
 	fi
@@ -162,6 +163,42 @@ function ssh() {
 	fi
 	$(which ssh) "$@"
 	title "Terminal"
+}
+
+function ip4tables-fwd() {
+	if [ $# -eq 1 ]; then
+		local SRC_ADDR="$(i4)"
+		local DST_ADDR="$1"
+	elif [ $# -eq 2 ]; then
+		local SRC_ADDR="$1"
+		local DST_ADDR="$2"
+	else
+		echo "Usage: $0 [<src-addr:src-port>] <dst-addr:dst-port>" >&2
+		return 1
+	fi
+
+	local SRC_HOST=${SRC_ADDR/:*/}
+	if [ "$SRC_HOST" != "$SRC_ADDR" ]; then
+		local SRC_PORT=${SRC_ADDR/*:/}
+	fi
+
+	local DST_HOST=${DST_ADDR/:*/}
+	if [ "$DST_HOST" = "$DST_ADDR" ]; then
+		if [ -z "$SRC_PORT" ]; then
+			echo "Cannot detect forwarding port. At least one address must have it's port specified." >&2
+			return 1
+		fi
+		local DST_PORT=$SRC_PORT
+	else
+		local DST_PORT=${DST_ADDR/*:/}
+	fi
+
+	[ -z "$SRC_PORT" ] && local SRC_PORT=$DST_PORT
+
+	echo "To forward <$SRC_HOST> port <$SRC_PORT> to <$DST_HOST> port <$DST_PORT>:
+iptables -t nat -A PREROUTING  -p tcp --dport $SRC_PORT -j DNAT --to-destination $DST_HOST:$DST_PORT
+iptables -t nat -A POSTROUTING -p tcp --dport $DST_PORT -j SNAT --to-source $SRC_HOST:$SRC_PORT
+"
 }
 
 if [ -r ~/.rc_local ]; then
