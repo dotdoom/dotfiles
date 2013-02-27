@@ -8,8 +8,12 @@ Pry.plugins["doc"].activate!
 rails = File.join Dir.getwd, 'config', 'environment.rb'
 
 if File.exist?(rails) && ENV['SKIP_RAILS'].nil?
-  require rails
-  
+  begin
+    require rails
+  rescue SystemExit
+    raise "an attempt to load rails resulted in #{$!.class} call"
+  end
+
   if Rails.version[0..0] == "2"
     require 'console_app'
     require 'console_with_helpers'
