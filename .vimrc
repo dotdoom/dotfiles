@@ -81,6 +81,8 @@ set background=dark " When set to "dark", Vim will try to use colors that look
                     " try to use colors that look good on a light background.
                     " Any other value is illegal.
 
+set list listchars=tab:»\ ,trail:·
+
 if has("mouse")
 	set mouse=a     " Enable the use of the mouse.
 endif
@@ -174,7 +176,7 @@ call Amap("F5", "!ruby -c %")
 call Amap("F6", "make -s clean all")
 call Amap("F7", "cn ")
 "setl noai nocin nosi inde= formatoptions-=c formatoptions-=r formatoptions-=o nonumber
-call Amap("F8", "setl paste! number! <bar> NoShowMarks")
+call Amap("F8", "setl paste! number! list! <bar> NoShowMarks")
 call Amap("F9", "!traider")
 
 " Navigate by tabs with Shift+Left/Right
