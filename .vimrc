@@ -81,7 +81,7 @@ set background=dark " When set to "dark", Vim will try to use colors that look
                     " try to use colors that look good on a light background.
                     " Any other value is illegal.
 
-set list listchars=tab:»\ ,trail:·
+set list listchars=tab:\ \ ,trail:·
 
 if has("mouse")
 	set mouse=a     " Enable the use of the mouse.
