@@ -198,7 +198,7 @@ function ip4tables-fwd() {
 
 	echo "To forward <$SRC_HOST> port <$SRC_PORT> to <$DST_HOST> port <$DST_PORT>:
 iptables -t nat -A PREROUTING  -p tcp --dport $SRC_PORT -j DNAT --to-destination $DST_HOST:$DST_PORT
-iptables -t nat -A POSTROUTING -p tcp --dport $DST_PORT -j SNAT --to-source $SRC_HOST:$SRC_PORT
+iptables -t nat -A POSTROUTING -p tcp --dport $DST_PORT -j SNAT --to-source $SRC_HOST
 "
 }
 
