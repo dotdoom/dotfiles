@@ -15,6 +15,7 @@ export SAVEHIST=$HISTSIZE
 setopt hist_ignore_all_dups
 unsetopt extendedglob
 setopt autocd
+setopt rmstarsilent
 bindkey -e
 bindkey "\e[1~" beginning-of-line # Home
 bindkey "\e[4~" end-of-line # End
