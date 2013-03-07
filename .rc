@@ -155,13 +155,14 @@ function title() {
 	echo -ne "\033]0;$*\007"
 }
 
+[ -z "$SSH_ORIGINAL" ] && SSH_ORIGINAL="$(which ssh)"
 function ssh() {
 	if [ $# -eq 1 ]; then
 		title "ssh:$1"
 	else
 		title "ssh"
 	fi
-	$(which ssh) "$@"
+	$SSH_ORIGINAL "$@"
 	title "Terminal"
 }
 
