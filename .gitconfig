@@ -24,3 +24,5 @@
 	whitespace = nowarn
 [push]
 	default = simple
+[rebase]
+	stat = yes
