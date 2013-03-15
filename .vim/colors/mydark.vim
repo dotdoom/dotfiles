@@ -9,7 +9,7 @@ if version > 580
 endif
 let g:colors_name = "mydark"
 
-hi Normal guifg=grey  guibg=#000010 gui=none ctermfg=grey  ctermbg=black   cterm=none
+hi Normal guifg=grey  guibg=#000010 gui=none ctermfg=grey  ctermbg=none    cterm=none
 hi Cursor             guibg=#FF00FF gui=none               ctermbg=magenta
 hi Visual guifg=white guibg=#101099 gui=none ctermfg=white ctermbg=blue    cterm=none
 
