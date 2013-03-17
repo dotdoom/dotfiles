@@ -23,6 +23,6 @@
 [apply]
 	whitespace = nowarn
 [push]
-	default = simple
+	default = nothing
 [rebase]
 	stat = yes
