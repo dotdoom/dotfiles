@@ -145,6 +145,18 @@ function cdls() {
 	ls "$@"
 }
 
+function cap() {
+	local bakdir="$HOME/.cap-stash"
+	mkdir -p "$bakdir"
+	local bakfile="$bakdir/${1//\//%}"
+	if [ "$#" -gt 1 ]; then
+		cp -p "$1" "$bakfile"
+		sudo mv "$2" "$1"
+	else
+		sudo mv "$bakfile" "$1"
+	fi
+}
+
 function fin() {
 	local filename="$1"
 	[ $# -gt 1 ] && shift
