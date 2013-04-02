@@ -89,7 +89,6 @@ alias gst='git status'
 alias sudo='sudo -E '
 
 # work
-RAILS=~/netmri/netmri/src/app/rails
 alias rmunv='rm -r $(svn st | grep "^?" | sed -r "s/^\? +//")'
 alias webui='cd $webui'
 
