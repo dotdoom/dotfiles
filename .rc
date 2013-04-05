@@ -20,6 +20,7 @@ if [ "$(uname -s)" = "Linux" ]; then
 	fi
 	alias pgrep='pgrep -lf'
 	alias crontab='crontab -i'
+	alias gmake='make'
 elif [ "$(uname -s)" = "FreeBSD" ]; then
 	export LSCOLORS=ExGxFxFxCxdxDxabagacac
 	alias ls='ls -hFIG'
