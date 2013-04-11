@@ -11,9 +11,10 @@ export DOOMWADDIR=~/dist/games/doom/wad
 
 # redefinitions
 if [ "$(uname -s)" = "Linux" ]; then
-	LS_VER=`/bin/ls --version | head -1 | cut -d' ' -f4`
-	LS_VER_INT=`echo $LS_VER | cut -d'.' -f1`
-	if [ $LS_VER_INT -lt 8 ]; then
+	LS_VER=$(/bin/ls --version)
+	LS_VER=${LS_VER/.*/}
+	LS_VER=${LS_VER/* /}
+	if [ $LS_VER -lt 8 ]; then
 		alias ls='ls -hF --color=auto'
 	else
 		alias ls='ls -hF --color=auto --group-directories-first'
