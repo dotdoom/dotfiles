@@ -9,3 +9,10 @@ application/x-shockwave-flash=chromium.desktop
 x-scheme-handler/http=chromium.desktop
 image/png=shotwell-viewer.desktop
 image/jpeg=shotwell-viewer.desktop
+
+[Default Applications]
+text/html=chromium.desktop
+x-scheme-handler/http=chromium.desktop
+x-scheme-handler/https=chromium.desktop
+x-scheme-handler/about=chromium.desktop
+x-scheme-handler/unknown=chromium.desktop
