@@ -231,6 +231,13 @@ au BufNewFile,BufRead *.fasm setf fasm
 
 cmap w!! %!sudo tee >/dev/null %<CR>
 
+command WQ wq
+command Wq wq
+command W w
+command Q q
+command Qa qa
+command QA qa
+
 "match NearColLimit /\%<121v.\%>117v/
 "match OverColLimit /.\%>120v/
 "match ExtraWhitespace /\s\+\%#\@<!$/
