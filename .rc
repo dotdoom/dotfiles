@@ -3,7 +3,8 @@
 export EDITOR=vim
 export BROWSER=chromium
 export PAGER='less -R -F -X -S -n -i'
-export PATH="$HOME/bin:$HOME/.rvm/bin:$HOME/.gem/ruby/1.9.1/bin:/opt/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/bin/vendor_perl"
+
+export PATH="$(echo {$HOME,,/opt,/usr,/usr/local}/{bin,sbin} | tr ' ' :):$(echo $HOME/.gem/ruby/{1.9.1,2.0.0}/bin | tr ' ' :):/usr/bin/vendor_perl"
 export GTK_IM_MODULE=xim
 export GIT_COMMITTER_NAME='Artem Sheremet'
 export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
@@ -11,7 +12,7 @@ export DOOMWADDIR=~/dist/games/doom/wad
 
 # redefinitions
 if [ "$(uname -s)" = "Linux" ]; then
-	LS_VER=$(/bin/ls --version)
+	LS_VER=$(/bin/ls --version )
 	LS_VER=${LS_VER/.*/}
 	LS_VER=${LS_VER/* /}
 	if [ $LS_VER -lt 8 ]; then
@@ -55,6 +56,7 @@ alias fsck='fsck -C'
 alias pager=$PAGER
 alias npager='pager -N'
 alias l='ls -lA'
+alias ll='ls -l'
 alias la='cat /proc/loadavg'
 alias ipt='iptables -nvL --line-numbers'
 alias psa='ps axfo pid,euser,bsdstart,vsz,rss,bsdtime,args'
@@ -170,6 +172,10 @@ function fin() {
 
 function title() {
 	echo -ne "\033]0;$*\007"
+}
+
+function tt() {
+	tail -f "$@" | while read line; do echo -n $(date); echo -e "\t$line"; done
 }
 
 [ -z "$SSH_ORIGINAL" ] && SSH_ORIGINAL="$(which ssh)"
