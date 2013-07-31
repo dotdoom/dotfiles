@@ -9,6 +9,7 @@ application/x-shockwave-flash=chromium.desktop
 x-scheme-handler/http=chromium.desktop
 image/png=shotwell-viewer.desktop
 image/jpeg=shotwell-viewer.desktop
+image/gif=shotwell-viewer.desktop
 
 [Default Applications]
 text/html=chromium.desktop
