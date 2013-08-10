@@ -4478,6 +4478,9 @@ function! s:BufSettings()
     if exists(':UltiSnipsAddFiletypes') == 2
       UltiSnipsAddFiletypes rails
     endif
+    call self.setvar('&shiftwidth', 2)
+    call self.setvar('&softtabstop', 2)
+    call self.setvar('&expandtab', 1)
   elseif ft =~# 'yaml\>' || fnamemodify(self.name(),':e') ==# 'yml'
     call self.setvar('&define',self.define_pattern())
   elseif ft =~# '^eruby\>'
