@@ -2,7 +2,7 @@
 
 export EDITOR=vim
 export BROWSER=chromium
-export PAGER='less -R -F -X -S -n -i'
+export PAGER='less -R -F -X -S -n -i -m'
 
 export PATH="$(echo {$HOME,,/opt,/usr,/usr/local}/{bin,sbin} | tr ' ' :):$(echo $HOME/.gem/ruby/{1.9.1,2.0.0}/bin | tr ' ' :):/usr/bin/vendor_perl"
 export GTK_IM_MODULE=xim
