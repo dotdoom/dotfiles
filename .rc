@@ -9,6 +9,7 @@ export GTK_IM_MODULE=xim
 export GIT_COMMITTER_NAME='Artem Sheremet'
 export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
 export DOOMWADDIR=~/dist/games/doom/wad
+export GOPATH=~/projects/go
 
 # redefinitions
 if [ "$(uname -s)" = "Linux" ]; then
