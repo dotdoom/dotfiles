@@ -4,12 +4,12 @@ export EDITOR=vim
 export BROWSER=chromium
 export PAGER='less -R -F -X -S -n -i -m'
 
-export PATH="$(echo {$HOME,,/opt,/usr,/usr/local}/{bin,sbin} | tr ' ' :):$(echo $HOME/.gem/ruby/{1.9.1,2.0.0}/bin | tr ' ' :):/usr/bin/vendor_perl"
+export GOPATH=~/projects/go
+export PATH="$(echo {$HOME,,/opt,/usr,/usr/local}/{bin,sbin} | tr ' ' :):$(echo $HOME/.gem/ruby/{1.9.1,2.0.0}/bin | tr ' ' :):/usr/bin/vendor_perl:$GOPATH/bin"
 export GTK_IM_MODULE=xim
 export GIT_COMMITTER_NAME='Artem Sheremet'
 export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
 export DOOMWADDIR=~/dist/games/doom/wad
-export GOPATH=~/projects/go
 
 # redefinitions
 if [ "$(uname -s)" = "Linux" ]; then
