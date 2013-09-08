@@ -23,6 +23,6 @@
 [apply]
 	whitespace = nowarn
 [push]
-	default = upstream
+	default = tracking
 [rebase]
 	stat = yes
