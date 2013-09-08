@@ -122,6 +122,7 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'jacquesbh/vim-showmarks'
 Bundle 'kchmck/vim-coffee-script'
+Bundle 'vim-scripts/nginx.vim'
 
 colorscheme mydark
 
