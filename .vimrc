@@ -113,7 +113,10 @@ Bundle 'vim-scripts/mru.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'vim-scripts/rubycomplete.vim'
+
 Bundle 'ervandew/supertab'
+let g:SuperTabDefaultCompletionType = "context"
+
 Bundle 'tpope/vim-rails'
 Bundle 'tpope/vim-fugitive'
 Bundle 'vim-ruby/vim-ruby'
@@ -235,6 +238,8 @@ command W w
 command Q q
 command Qa qa
 command QA qa
+
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
 "match NearColLimit /\%<121v.\%>117v/
 "match OverColLimit /.\%>120v/
