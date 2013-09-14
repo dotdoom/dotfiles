@@ -1,8 +1,13 @@
+# no screen blinking on bell
 vbell off
 startup_message off
 defscrollback 10240
+# hostname, timestamp, LA in status bar
 caption always "%{+b}%H | %c %d.%m.%Y | Load: %l"
+# colored window list
 hardstatus alwayslastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
+# F11/F12 = switch windows
 bindkey -k F1 prev
 bindkey -k F2 next
-#%?%{yk}%-Lw%?%{wb}%n*%f %t%?(%u)%?%?%{yk}%+Lw%?"
+# C-x = new window, same dir
+bindkey ^x stuff "screen^M"
