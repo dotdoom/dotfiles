@@ -124,6 +124,33 @@ Bundle 'jacquesbh/vim-showmarks'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'vim-scripts/nginx.vim'
 
+Bundle 'majutsushi/tagbar'
+let g:tagbar_type_go = {
+	\ 'ctagstype' : 'go',
+	\ 'kinds'     : [
+		\ 'p:package',
+		\ 'i:imports:1',
+		\ 'c:constants',
+		\ 'v:variables',
+		\ 't:types',
+		\ 'n:interfaces',
+		\ 'w:fields',
+		\ 'e:embedded',
+		\ 'm:methods',
+		\ 'r:constructor',
+		\ 'f:functions'
+	\ ],
+	\ 'sro' : '.',
+    \ 'kind2scope' : {
+		\ 't' : 'ctype',
+		\ 'n' : 'ntype'
+	\ },
+	\ 'scope2kind' : {
+		\ 'ctype' : 't',
+		\ 'ntype' : 'n'
+	\ },
+\ }
+
 colorscheme mydark
 
 filetype plugin indent on
@@ -176,9 +203,9 @@ call Amap("F3", "NERDTreeToggle")
 call Amap("F4", "close")
 call Amap("F5", "!ruby -c %")
 call Amap("F6", "make -s clean all")
-call Amap("F7", "cn ")
+call Amap("F7", "TagbarToggle")
 "setl noai nocin nosi inde= formatoptions-=c formatoptions-=r formatoptions-=o nonumber
-call Amap("F8", "setl paste! number! list! <bar> NoShowMarks")
+call Amap("F8", "setl paste! number! <bar> NoShowMarks")
 call Amap("F9", "!traider")
 
 " Navigate by tabs with Shift+Left/Right
