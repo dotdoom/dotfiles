@@ -3,6 +3,7 @@
 # Music synchronized operation script
 
 MUSDIR=/home/music/
+MUSSRV=d522w4
 
 function enforce_permissions() {
 	#chown -R artem:users "$MUSDIR"
@@ -11,8 +12,8 @@ function enforce_permissions() {
 
 if [[ "$1" == "up" ]]; then
 	enforce_permissions
-	rsync -avzup --delete $MUSDIR d522w0:$MUSDIR
+	rsync -avzup --delete $MUSDIR $MUSSRV:$MUSDIR
 else
-	rsync -avzup --delete d522w0:$MUSDIR $MUSDIR
+	rsync -avzup --delete $MUSSRV:$MUSDIR $MUSDIR
 	enforce_permissions
 fi
