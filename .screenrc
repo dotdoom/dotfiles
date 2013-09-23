@@ -11,3 +11,5 @@ bindkey -k F1 prev
 bindkey -k F2 next
 # C-x = new window, same dir
 bindkey ^x stuff "screen^M"
+# Launch login shells
+shell -${SHELL}
