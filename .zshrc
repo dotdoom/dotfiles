@@ -52,7 +52,7 @@ bindkey -M vicmd '?' history-incremental-pattern-search-forward
 bindkey -M viins '^R' history-incremental-pattern-search-backward
 bindkey -M viins '^F' history-incremental-pattern-search-forward
 
-setopt share_history
+#setopt share_history
 setopt inc_append_history
 
 autoload -U promptinit

@@ -104,7 +104,6 @@ alias sudo='sudo -E '
 alias su='su -m'
 
 # work
-alias rmunv='rm -r $(svn st | grep "^?" | sed -r "s/^\? +//")'
 alias webui='cd $webui'
 
 # useful stuff
