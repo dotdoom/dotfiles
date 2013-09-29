@@ -182,17 +182,6 @@ function tt() {
 	tail -f "$@" | while read line; do echo -n $(date); echo -e "\t$line"; done
 }
 
-[ -z "$SSH_ORIGINAL" ] && SSH_ORIGINAL="$(which ssh)"
-function ssh() {
-	if [ $# -eq 1 ]; then
-		title "ssh:$1"
-	else
-		title "ssh"
-	fi
-	$SSH_ORIGINAL "$@"
-	title "Terminal"
-}
-
 function ip4tables-fwd() {
 	if [ $# -eq 1 ]; then
 		local SRC_ADDR="$(i4)"
