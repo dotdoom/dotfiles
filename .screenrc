@@ -1,3 +1,5 @@
+# http://aperiodic.net/screen/commands:start
+
 # no screen blinking on bell
 vbell off
 startup_message off
@@ -9,7 +11,8 @@ hardstatus alwayslastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
 # F11/F12 = switch windows
 bindkey -k F1 prev
 bindkey -k F2 next
-# C-x = new window, same dir
-bindkey ^x stuff "screen^M"
 # Launch login shells
 shell -${SHELL}
+# 256color support
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+defbce "on"

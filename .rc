@@ -162,9 +162,9 @@ function cap() {
 	local bakfile="$bakdir/${1//\//%}"
 	if [ "$#" -gt 1 ]; then
 		cp -p "$1" "$bakfile"
-		sudo mv "$2" "$1"
+		mv "$2" "$1"
 	else
-		sudo mv "$bakfile" "$1"
+		mv "$bakfile" "$1"
 	fi
 }
 
