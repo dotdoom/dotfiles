@@ -1,13 +1,16 @@
----- Standard awesome library
-awful = require("awful")
-awful.autofocus = require("awful.autofocus")
+-- Standard awesome library
+local gears = require("gears")
+local awful = require("awful")
 awful.rules = require("awful.rules")
+require("awful.autofocus")
 -- Widget and layout library
-wibox = require("wibox")
+local wibox = require("wibox")
 -- Theme handling library
-beautiful = require("beautiful")
+local beautiful = require("beautiful")
 -- Notification library
-naughty = require("naughty")
+local naughty = require("naughty")
+local menubar = require("menubar")
+
 -- External programs
 require("externals")
 
@@ -19,7 +22,7 @@ beautiful.init(".config/awesome/theme/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "xterm"
-editor = os.getenv("EDITOR") or "vim"
+editor = os.getenv("EDITOR") or "vi"
 editor_cmd = terminal .. " -e " .. editor
 height = 18
 
@@ -41,7 +44,7 @@ altkey = "Mod1"
 menukey = "Menu"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
-layouts =
+local layouts =
 {
 	awful.layout.suit.floating, -- 1
 	awful.layout.suit.tile, -- 2
@@ -326,19 +329,19 @@ globalkeys = awful.util.table.join(
 	awful.key({ modkey, "Control" }, "n", awful.client.restore),
 	awful.key({ modkey },            "F12", externals.display.screensaver),
 
-	awful.key({ modkey, "Control" }, "Up",    externals.player.toggle),
-	awful.key({ modkey, "Control" }, "Down",  externals.player.stop),
-	awful.key({ modkey, "Control" }, "Left",  externals.player.prev),
-	awful.key({ modkey, "Control" }, "Right", externals.player.next),
+	--awful.key({ modkey, "Control" }, "Up",    externals.player.toggle),
+	--awful.key({ modkey, "Control" }, "Down",  externals.player.stop),
+	--awful.key({ modkey, "Control" }, "Left",  externals.player.prev),
+	--awful.key({ modkey, "Control" }, "Right", externals.player.next),
 
 	awful.key({ modkey }, "Up",    externals.sound.up),
 	awful.key({ modkey }, "Down",  externals.sound.down),
 
 	-- Media Keys
-	awful.key({ }, 'XF86AudioPlay', externals.player.toggle),
-	awful.key({ }, 'XF86AudioPrev', externals.player.prev),
-	awful.key({ }, 'XF86AudioNext', externals.player.next),
-	awful.key({ }, 'XF86AudioStop', externals.player.stop),
+	--awful.key({ }, 'XF86AudioPlay', externals.player.toggle),
+	--awful.key({ }, 'XF86AudioPrev', externals.player.prev),
+	--awful.key({ }, 'XF86AudioNext', externals.player.next),
+	--awful.key({ }, 'XF86AudioStop', externals.player.stop),
 
 	awful.key({ }, 'XF86AudioMute', externals.sound.mute),
 	awful.key({ }, 'XF86AudioRaiseVolume', externals.sound.up),
