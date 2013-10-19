@@ -8,5 +8,9 @@ pulseaudio --start
 xrdb -merge .Xresources
 setxkbmap -layout "us,ru" -option "grp:caps_toggle,grp_led:caps,compose:ralt"
 xset r rate 290 30
+redshift &
+skype &
+chromium &
+psi-plus &
 
 exec awesome
