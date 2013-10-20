@@ -107,7 +107,14 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 Bundle 'mileszs/ack.vim'
+
 Bundle 'wincent/Command-T'
+execute 'silent !(
+			\ cd ~/.vim/bundle/Command-T/ruby/command-t &&
+			\ sleep 2 &&
+			\ ruby extconf.rb &&
+			\ make) >/dev/null 2>>~/.vimerr &'
+
 Bundle 'rosenfeld/conque-term'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'scrooloose/nerdcommenter'
