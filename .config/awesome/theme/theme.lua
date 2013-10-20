@@ -1,8 +1,9 @@
-theme = {}
+local theme = {}
+local awful = require("awful")
 
 theme.font          = "Terminus 9"
-theme.confdir       = "/home/artem/.config/awesome/theme"
-theme.wallpaper     = "/home/artem/media/images/Desktop/NatureMountains1.jpg"
+theme.confdir       = awful.util.getdir("config") .. "/theme"
+theme.wallpaper     = theme.confdir .. "/wallpaper.jpg"
 
 theme.bg_normal     = "#222222"
 theme.bg_focus      = "#535d6c"
