@@ -11,3 +11,5 @@ xterm*borderWidth: 0
 xterm*loginShell: true
 xterm*utf8Title: true
 xterm*allowC1Printable: true
+xterm*locale: true
+xterm*metaSendsEscape: true
