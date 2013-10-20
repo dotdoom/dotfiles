@@ -1,9 +1,13 @@
 xterm*foreground: #bbbbbb
 xterm*background: #000000
-xterm*faceName: Terminus:size=12:antialias=false
-xterm*locale: true
+xterm*renderFont: true
+xterm*faceName: Terminus
+xterm*faceSize: 12
 xterm*termName: xterm-256color
 xterm*saveLines: 409600
 xterm*VT100.geometry: 80x32
 xterm*bellIsUrgent: true
 xterm*borderWidth: 0
+xterm*loginShell: true
+xterm*utf8Title: true
+xterm*allowC1Printable: true

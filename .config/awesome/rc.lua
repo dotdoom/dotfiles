@@ -11,6 +11,15 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 
+-- Delightful Widgets (OMG paths...)
+--require('widgets.delightful.delightful.widgets.cpu')
+require('widgets.delightful.delightful.widgets.datetime')
+--require('widgets.delightful.delightful.widgets.imap')
+--require('widgets.delightful.delightful.widgets.memory')
+--require('widgets.delightful.delightful.widgets.network')
+--require('widgets.delightful.delightful.widgets.pulseaudio')
+--require('widgets.delightful.delightful.widgets.weather')
+
 -- External programs
 require("externals")
 --{{{ Error handling
@@ -285,7 +294,28 @@ for s = 1, screen.count() do
 	-- Widgets that are aligned to the right
 	local right_layout = wibox.layout.fixed.horizontal()
 	if s == 1 then right_layout:add(wibox.widget.systray()) end
-	right_layout:add(awful.widget.textclock())
+	--right_layout:add(awful.widget.textclock())
+
+	local delightful_container = { widgets = {}, icons = {} }
+	local widgets, icons = delightful.widgets.datetime:load()
+	if widgets then
+		if not icons then
+			icons = {}
+		end
+		table.insert(delightful_container.widgets, awful.util.table.reverse(widgets))
+		table.insert(delightful_container.icons,   awful.util.table.reverse(icons))
+	end
+
+	for delightful_container_index, delightful_container_data in pairs(delightful_container.widgets) do
+		for widget_index, widget_data in pairs(delightful_container_data) do
+			right_layout:add(widget_data)
+			if delightful_container.icons[delightful_container_index] and delightful_container.icons[delightful_container_index][widget_index] then
+				right_layout:add(delightful_container.icons[delightful_container_index][widget_index])
+			end
+		end
+	end
+
+
 	right_layout:add(mylayoutbox[s])
 
 	-- Now bring it all together (with the tasklist in the middle)
