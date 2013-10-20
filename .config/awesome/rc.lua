@@ -11,7 +11,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 
--- Delightful Widgets (OMG paths...)
+-- Delightful Widgets (OMG paths)
 --require('widgets.delightful.delightful.widgets.cpu')
 require('widgets.delightful.delightful.widgets.datetime')
 --require('widgets.delightful.delightful.widgets.imap')
@@ -138,7 +138,6 @@ mymainmenu = awful.menu({ items = {
 
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
---}}}
 
 mylauncher = awful.widget.launcher({
 	image = beautiful.awesome_icon,
