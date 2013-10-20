@@ -115,7 +115,6 @@ execute 'silent !(
 			\ ruby extconf.rb &&
 			\ make) >/dev/null 2>>~/.vimerr &'
 
-Bundle 'rosenfeld/conque-term'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
