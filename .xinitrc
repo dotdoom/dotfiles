@@ -11,12 +11,10 @@ xset dpms 600 600 600
 xset r rate 290 30
 xset +fp /usr/share/fonts/local
 xset fp rehash
-xautolock -locker slock &
-redshift &
-skype &
-chromium &
-psi-plus &
-
-# TODO: disown these to avoid zombies
+xautolock -locker slock &!
+redshift &!
+skype &!
+chromium &!
+psi-plus &!
 
 exec awesome
