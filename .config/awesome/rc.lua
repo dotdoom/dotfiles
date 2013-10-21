@@ -21,7 +21,7 @@ require('widgets.delightful.delightful.widgets.datetime')
 --require('widgets.delightful.delightful.widgets.weather')
 
 -- External programs
-require("externals")
+local externals = require("externals")
 --{{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -431,6 +431,7 @@ globalkeys = awful.util.table.join(
 				mypromptbox[mouse.screen].widget,
 				function (s)
 					local result = awful.util.eval('return ' .. s)
+					if not result then result = 'Error' end
 					mypromptbox[mouse.screen].widget:set_text('[ ' .. result .. ' ]')
 				end, nil,
 				awful.util.getdir("cache") .. "/history_eval")

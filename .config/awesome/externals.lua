@@ -1,4 +1,6 @@
-externals = {}
+local awful = require("awful")
+
+local externals = {}
 
 --{{{ helpers
 externals.hook = {
@@ -182,5 +184,7 @@ externals.display = {
 }
 
 externals.power = externals.powers.ck
+
+return externals
 
 -- vim: set foldmarker=--{{{,--}}} foldmethod=marker:
