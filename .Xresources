@@ -13,3 +13,4 @@ xterm*utf8Title: true
 xterm*allowC1Printable: true
 xterm*locale: true
 xterm*metaSendsEscape: true
+!xterm*VT100.translations: #override <Btn1Up>: select-end(PRIMARY, CLIPBOARD, CUT_BUFFER0)

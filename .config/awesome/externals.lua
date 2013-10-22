@@ -93,6 +93,30 @@ externals.sounds.alsa = {
 }
 --}}}
 
+--{{{ sounds.pulse
+externals.sounds.pulse = {
+	exec = function(command)
+		exec('amixer -q ' .. command)
+	end,
+
+	manager = function()
+		conexec('alsamixer')
+	end,
+
+	mute = function()
+		externals.sounds.alsa.exec('set ' .. externals.sound.channel .. ' toggle')
+	end,
+
+	up = function()
+		externals.sounds.alsa.exec('set ' .. externals.sound.channel .. ' 2dB+')
+	end,
+
+	down = function()
+		externals.sounds.alsa.exec('set ' .. externals.sound.channel .. ' 2dB-')
+	end
+}
+--}}}
+
 --{{{ powers.pm
 externals.powers.pm = {
 	exec = function(command)

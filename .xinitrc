@@ -16,5 +16,7 @@ redshift &!
 skype &!
 chromium &!
 psi-plus &!
+nm-applet &!
+clipit &!
 
 exec awesome
