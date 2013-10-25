@@ -120,23 +120,23 @@ externals.sounds.pulse = {
 --{{{ powers.pm
 externals.powers.pm = {
 	exec = function(command)
-		awful.util.spawn('sudo ' .. command)
+		awful.util.spawn('systemctl ' .. command)
 	end,
 
 	reboot = function()
-		externals.powers.pm.exec('shutdown -r now -t 10')
+		externals.powers.pm.exec('reboot')
 	end,
 
 	halt = function()
-		externals.powers.pm.exec('shutdown -h now -t 10')
+		externals.powers.pm.exec('poweroff')
 	end,
 
 	suspend = function()
-		externals.powers.pm.exec('pm-suspend')
+		externals.powers.pm.exec('suspend')
 	end,
 
 	hibernate = function()
-		externals.powers.pm.exec('pm-hibernate')
+		externals.powers.pm.exec('hibernate')
 	end,
 
 	switch_profile = function()

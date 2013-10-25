@@ -1,23 +1,49 @@
-require("../misc/calendar")
+local calendar = require("../misc/calendar")
+local awful = require('awful')
+local beautiful = require('beautiful')
+local wibox = require('wibox')
+local vicious = require('vicious')
 
 -- {{{ OK: Date and time
-datewidget = {}
-datewidget.i = wibox.widget.imagebox()
-datewidget.i:set_image(beautiful.widget_date)
-datewidget.w = wibox.widget.textbox()
-datewidget.format = '%a, %m/%d %R'
-datewidget.t = awful.tooltip({
-	objects = { datewidget.w, datewidget.i },
-	timer_function = function()
-		return calendar();
+function create(self, format)
+	local icon = wibox.widget.imagebox()
+	icon:set_image(beautiful.widget_date)
+	local widget = wibox.widget.textbox()
+	local format = format or '%a, %m/%d %R'
+	local year, month = 0
+	local tooltip = awful.tooltip({
+		objects = { widget, icon },
+		timer_function = function()
+			widget:set_text(os.date(' ' .. format .. ':%S '))
+			month, year = os.date('%m'), os.date('%Y')
+			return calendar.for_month(month, year)
+		end,
+		timeout = 60 * 60
+	})
+	function adjust_calendar(delta_months)
+		month = month + delta_months
+		tooltip:set_text(calendar.for_month(month, year))
 	end
-})
-datewidget.b = awful.util.table.join(
-	awful.button({ }, 1, function ()
-		datewidget.w:set_text(os.date(datewidget.format .. ':%S'))
-	end)
-)
-datewidget.w:buttons(datewidget.b)
-datewidget.i:buttons(datewidget.b)
-vicious.register(datewidget.w, vicious.widgets.date, datewidget.format, 61)
+
+	local button = awful.util.table.join(
+		awful.button({ }, 1, function()
+			adjust_calendar(-1)
+		end),
+		awful.button({ }, 3, function()
+			adjust_calendar(1)
+		end),
+		awful.button({ 'Shift' }, 1, function()
+			adjust_calendar(-12)
+		end),
+		awful.button({ 'Shift' }, 3, function()
+			adjust_calendar(12)
+		end)
+	)
+	widget:buttons(button)
+	icon:buttons(button)
+	vicious.register(widget, vicious.widgets.date, ' ' .. format .. ' ', 61)
+	return { widget, icon }
+end
+
+return { create = create }
 -- }}}

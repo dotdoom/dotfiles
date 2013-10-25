@@ -13,7 +13,7 @@ local menubar = require("menubar")
 
 -- Delightful Widgets (OMG paths)
 --require('widgets.delightful.delightful.widgets.cpu')
-require('widgets.delightful.delightful.widgets.datetime')
+local widgets_date = require('widgets.date')
 --require('widgets.delightful.delightful.widgets.imap')
 --require('widgets.delightful.delightful.widgets.memory')
 --require('widgets.delightful.delightful.widgets.network')
@@ -296,7 +296,7 @@ for s = 1, screen.count() do
 	--right_layout:add(awful.widget.textclock())
 
 	local delightful_container = { widgets = {}, icons = {} }
-	local widgets, icons = delightful.widgets.datetime:load()
+	local widgets, icons = widgets_date:create()
 	if widgets then
 		if not icons then
 			icons = {}
