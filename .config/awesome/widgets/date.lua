@@ -7,10 +7,10 @@ local vicious = require('vicious')
 -- {{{ OK: Date and time
 function calendar_for_month_markup(month, year)
 	local formats = {
-		today = '<span color="yellow">%s</span>',
+		today = '<span color="black" background="yellow">%s</span>',
 		prev_month = '<span color="#aaa">%s</span>'
 	}
-	return '<span font_desc="fixed">' .. calendar.for_month(month, year, formats) .. '</span>'
+	return '<span font_desc="monospace">' .. calendar.for_month(month, year, formats) .. '</span>'
 end
 
 function create(self, format)

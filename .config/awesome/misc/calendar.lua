@@ -15,7 +15,7 @@ function for_month(month, year, formats)
 	local month_last_day = os.date("*t", os.time{year = year, month = month + 1, day = 0})
 	for day = 1 - (prev_month_last_day.wday % 7), month_last_day.day do
 		if (day + prev_month_last_day.wday - 1) % 7 == 0 then
-			text = text .. "\n " .. string.format("%.2d", week)
+			text = text .. "\n " .. string.format("%.2d", week) .. " "
 			week = week + 1
 		end
 		local day_format, day_number
@@ -32,10 +32,10 @@ function for_month(month, year, formats)
 			day_number = day
 		end
 
-		text = text .. "  " .. string.format(formats[day_format] or "%s", string.format("%2d", day_number))
+		text = text .. string.format(formats[day_format] or "%s", string.format(" %2d ", day_number))
 	end
 
-	return string.format("%.2d.%d", month_last_day.month, month_last_day.year) .. "\n" .. text
+	return string.format("%13s%.2d.%d", "", month_last_day.month, month_last_day.year) .. "\n\n" .. text
 end
 
 return { for_month = for_month }
