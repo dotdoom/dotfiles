@@ -5,7 +5,19 @@ local wibox = require('wibox')
 local vicious = require('vicious')
 
 -- {{{ OK: Date and time
+function calendar_for_month_markup(month, year)
+	local formats = {
+		today = '<span color="yellow">%s</span>',
+		prev_month = '<span color="#aaa">%s</span>'
+	}
+	return '<span font_desc="fixed">' .. calendar.for_month(month, year, formats) .. '</span>'
+end
+
 function create(self, format)
+	local calendar_formats = {
+		prev_month = '',
+		today = ''
+	}
 	local icon = wibox.widget.imagebox()
 	icon:set_image(beautiful.widget_date)
 	local widget = wibox.widget.textbox()
@@ -16,13 +28,13 @@ function create(self, format)
 		timer_function = function()
 			widget:set_text(os.date(' ' .. format .. ':%S '))
 			month, year = os.date('%m'), os.date('%Y')
-			return calendar.for_month(month, year)
+			return calendar_for_month_markup(month, year)
 		end,
 		timeout = 60 * 60
 	})
 	function adjust_calendar(delta_months)
 		month = month + delta_months
-		tooltip:set_text(calendar.for_month(month, year))
+		tooltip:set_text(calendar_for_month_markup(month, year))
 	end
 
 	local button = awful.util.table.join(
