@@ -10,7 +10,7 @@ function calendar_for_month_markup(month, year)
 		today = '<span color="black" background="yellow">%s</span>',
 		prev_month = '<span color="#aaa">%s</span>'
 	}
-	return '<span font_desc="monospace">' .. calendar.for_month(month, year, formats) .. '</span>'
+	return '<span font_desc="fixed">' .. calendar.for_month(month, year, formats) .. '</span>'
 end
 
 function create(self, format)
@@ -18,13 +18,11 @@ function create(self, format)
 		prev_month = '',
 		today = ''
 	}
-	local icon = wibox.widget.imagebox()
-	icon:set_image(beautiful.widget_date)
 	local widget = wibox.widget.textbox()
 	local format = format or '%a, %m/%d %R'
 	local year, month = 0
 	local tooltip = awful.tooltip({
-		objects = { widget, icon },
+		objects = { widget },
 		timer_function = function()
 			widget:set_text(os.date(' ' .. format .. ':%S '))
 			month, year = os.date('%m'), os.date('%Y')
@@ -37,7 +35,7 @@ function create(self, format)
 		tooltip:set_text(calendar_for_month_markup(month, year))
 	end
 
-	local button = awful.util.table.join(
+	widget:buttons(awful.util.table.join(
 		awful.button({ }, 1, function()
 			adjust_calendar(-1)
 		end),
@@ -50,11 +48,9 @@ function create(self, format)
 		awful.button({ 'Shift' }, 3, function()
 			adjust_calendar(12)
 		end)
-	)
-	widget:buttons(button)
-	icon:buttons(button)
+	))
 	vicious.register(widget, vicious.widgets.date, ' ' .. format .. ' ', 61)
-	return { widget, icon }
+	return { widget }
 end
 
 return { create = create }
