@@ -42,11 +42,23 @@ function create(self, format)
 		awful.button({ }, 3, function()
 			adjust_calendar(1)
 		end),
+		awful.button({ }, 4, function()
+			adjust_calendar(1)
+		end),
+		awful.button({ }, 5, function()
+			adjust_calendar(-1)
+		end),
 		awful.button({ 'Shift' }, 1, function()
 			adjust_calendar(-12)
 		end),
 		awful.button({ 'Shift' }, 3, function()
 			adjust_calendar(12)
+		end),
+		awful.button({ 'Shift' }, 4, function()
+			adjust_calendar(12)
+		end),
+		awful.button({ 'Shift' }, 5, function()
+			adjust_calendar(-12)
 		end)
 	))
 	vicious.register(widget, vicious.widgets.date, ' ' .. format .. ' ', 61)
