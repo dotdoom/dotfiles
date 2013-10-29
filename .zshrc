@@ -59,4 +59,30 @@ autoload -U promptinit
 promptinit
 prompt clint
 
+# title <tab_title> <window_title>
+function title() {
+	[ "$DISABLE_AUTO_TITLE" != "true" ] || return
+	if [[ "$TERM" == screen* ]]; then
+		print -Pn "\ek$1:q\e\\"
+	elif [[ "$TERM" == xterm* ]] || [[ $TERM == rxvt* ]] || [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+		# Window title
+		[ -n "$2" ] && print -Pn "\e]2;$2:q\a"
+		# Tab title (gnome-terminal, konsole)
+		print -Pn "\e]1;$1:q\a"
+	fi
+}
+
+function terminal_title_at_prompt {
+	# "pwd" in tab, "user@host: pwd" in window
+	title "%15<..<%~%<<" "%n@%m: %~"
+}
+
+function terminal_title_on_command {
+	title "$1" "$1"
+}
+
+autoload -U add-zsh-hook
+add-zsh-hook precmd  terminal_title_at_prompt
+add-zsh-hook preexec terminal_title_on_command
+
 source ~/.rc

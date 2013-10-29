@@ -56,7 +56,7 @@ alias fsck='fsck -C'
 alias pager=$PAGER
 alias npager='pager -N'
 alias l='ls -lA'
-alias ll='ls -l'
+alias ll='ls -la'
 alias la='cat /proc/loadavg'
 alias ipt='iptables -nvL --line-numbers'
 alias psa='ps axfo pid,euser,bsdstart,vsz,rss,bsdtime,args'
@@ -172,10 +172,6 @@ function fin() {
 	local filename="$1"
 	[ $# -gt 1 ] && shift
 	find "$@" -iname "*$filename*"
-}
-
-function title() {
-	echo -ne "\033]0;$*\007"
 }
 
 function tt() {
