@@ -14,6 +14,7 @@ local menubar = require("menubar")
 -- Delightful Widgets (OMG paths)
 --require('widgets.delightful.delightful.widgets.cpu')
 local widgets_date = require('widgets.date')
+local widgets_bat = require('widgets.bat')
 --require('widgets.delightful.delightful.widgets.imap')
 --require('widgets.delightful.delightful.widgets.memory')
 --require('widgets.delightful.delightful.widgets.network')
@@ -305,6 +306,15 @@ for s = 1, screen.count() do
 		table.insert(delightful_container.icons,   awful.util.table.reverse(icons))
 	end
 
+	local widgets, icons = widgets_bat:create()
+	if widgets then
+		if not icons then
+			icons = {}
+		end
+		table.insert(delightful_container.widgets, awful.util.table.reverse(widgets))
+		table.insert(delightful_container.icons,   awful.util.table.reverse(icons))
+	end
+
 	for delightful_container_index, delightful_container_data in pairs(delightful_container.widgets) do
 		for widget_index, widget_data in pairs(delightful_container_data) do
 			right_layout:add(widget_data)
@@ -338,29 +348,29 @@ root.buttons(awful.util.table.join(
 --{{{ Key bindings
 -- read with 'xev' (xorg-xev)
 globalkeys = awful.util.table.join(
-	awful.key({ modkey,		   }, "Left",   awful.tag.viewprev	   ),
-	awful.key({ modkey,		   }, "Right",  awful.tag.viewnext	   ),
-	awful.key({ modkey,		   }, "Escape", awful.tag.history.restore),
+	awful.key({ modkey,        }, "Left",   awful.tag.viewprev),
+	awful.key({ modkey,        }, "Right",  awful.tag.viewnext),
+	awful.key({ modkey,        }, "Escape", awful.tag.history.restore),
 
-	awful.key({ modkey,		   }, "j",
+	awful.key({ modkey,        }, "j",
 		function ()
 			awful.client.focus.byidx( 1)
 			if client.focus then client.focus:raise() end
 		end),
-	awful.key({ modkey,		   }, "k",
+	awful.key({ modkey,        }, "k",
 		function ()
 			awful.client.focus.byidx(-1)
 			if client.focus then client.focus:raise() end
 		end),
-	awful.key({ modkey,		   }, "w", function () mymainmenu:show({keygrabber=true}) end),
+	awful.key({ modkey,        }, "w", function () mymainmenu:show({keygrabber=true}) end),
 
 	-- Layout manipulation
-	awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)	end),
-	awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)	end),
+	awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx( 1) end),
+	awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx(-1) end),
 	awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
 	awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
-	awful.key({ modkey,		   }, "u", awful.client.urgent.jumpto),
-	awful.key({ modkey,		   }, "Tab",
+	awful.key({ modkey,           }, "u", awful.client.urgent.jumpto),
+	awful.key({ modkey,           }, "Tab",
 		function ()
 			awful.client.focus.history.previous()
 			if client.focus then
@@ -369,21 +379,21 @@ globalkeys = awful.util.table.join(
 		end),
 
 	-- Standard program
-	awful.key({ modkey,		   }, "Return", function () awful.util.spawn(terminal) end),
+	awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
 	awful.key({ modkey, "Control" }, "r", awesome.restart),
 	awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
-	awful.key({ modkey,		   }, "l",	 function () awful.tag.incmwfact( 0.05)	end),
-	awful.key({ modkey,		   }, "h",	 function () awful.tag.incmwfact(-0.05)	end),
+	awful.key({ modkey,           }, "l",	 function () awful.tag.incmwfact( 0.05)	end),
+	awful.key({ modkey,           }, "h",	 function () awful.tag.incmwfact(-0.05)	end),
 	awful.key({ modkey, "Shift"   }, "h",	 function () awful.tag.incnmaster( 1)	  end),
 	awful.key({ modkey, "Shift"   }, "l",	 function () awful.tag.incnmaster(-1)	  end),
 	awful.key({ modkey, "Control" }, "h",	 function () awful.tag.incncol( 1)		 end),
 	awful.key({ modkey, "Control" }, "l",	 function () awful.tag.incncol(-1)		 end),
-	awful.key({ modkey,		   }, "space", function () awful.layout.inc(layouts,  1) end),
+	awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end),
 	awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
 
 	awful.key({ modkey, "Control" }, "n", awful.client.restore),
-	awful.key({ modkey },			"F12", externals.display.screensaver),
+	awful.key({ modkey            }, "F12", externals.display.screensaver),
 
 	--awful.key({ modkey, "Control" }, "Up",	externals.player.toggle),
 	--awful.key({ modkey, "Control" }, "Down",  externals.player.stop),
@@ -419,6 +429,7 @@ globalkeys = awful.util.table.join(
 	awful.key({ }, 'XF86WLAN', function() end),
 
 	awful.key({ }, "Print", externals.display.save),
+	--awful.key({ }, "Pause", externals.alarm.stop),
 
 	-- Prompt
 	awful.key({ modkey },			"r",	 function () mypromptbox[mouse.screen]:run() end),
@@ -546,6 +557,7 @@ root.keys(globalkeys)
 -- ...
 --
 -- instance = "Navigator", class = "Swiftfox", name = "Problem loading page - Swiftfox"
+-- http://awesome.naquadah.org/wiki/Understanding_Rules
 awful.rules.rules = {
 	-- All clients will match this rule.
 	{
@@ -568,10 +580,15 @@ awful.rules.rules = {
 		properties = { tag = tags[1][3] }
 	}, {
 		rule = { class = "Skype" },
-		properties = { tag = tags[1][4], size_hints_honor = false }
+		properties = { tag = tags[1][4], size_hints_honor = false, switchtotag = true },
+		callback = function(c)
+			if c.name:sub(1, 12) == "Profile for " then
+				awful.client.floating.set(c, true)
+			end
+		end
 	}, {
-		rule = { instance = "gajim" },
-		properties = { tag = tags[1][5] }
+		rule = { name = "Psi+" },
+		properties = { tag = tags[1][5], switchtotag = true }
 	}, {
 		rule = { class = "XTerm" },
 		callback = function(c)
@@ -607,13 +624,8 @@ awful.rules.rules = {
 		rule = { class = "VirtualBox" },
 		properties = { tag = tags[1][6], switchtotag = true }
 	}, {
-		rule = { class = "do-not-directly-run-secondlife-bin" },
-		properties = {
-			tag = tags[1][6],
-			switchtotag = true,
-			floating = true,
-			geometry = { x = 0, y = 0, width = 1364, height = 700 }
-		}
+		rule = { role = "pop-up" },
+		properties = { floating = true }
 	}
 }
 --}}}
@@ -651,7 +663,7 @@ client.connect_signal("manage", function (c, startup)
 		local titlebars_enabled = false
 	end)
 	local titlebars_enabled = false
-	if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
+	if c.role == "pop-up" then --titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
 		-- buttons for the titlebar
 		local buttons = awful.util.table.join(
 				awful.button({ }, 1, function()

@@ -19,4 +19,6 @@ psi-plus &!
 nm-applet &!
 clipit &!
 
+# TODO: disown processes to avoid zombies
+
 exec awesome
