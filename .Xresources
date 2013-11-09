@@ -1,8 +1,8 @@
 xterm*foreground: #bbbbbb
 xterm*background: #000000
-xterm*renderFont: true
-xterm*faceName: Terminus
-xterm*faceSize: 12
+!xterm*renderFont: true
+!xterm*faceName: Terminus
+!xterm*faceSize: 12
 xterm*termName: xterm-256color
 xterm*saveLines: 409600
 xterm*VT100.geometry: 80x32
@@ -13,4 +13,7 @@ xterm*utf8Title: true
 xterm*allowC1Printable: true
 xterm*locale: true
 xterm*metaSendsEscape: true
+xterm*charClass: 33:48,37:48,45-47:48,38:48
+xterm*font:     -misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1
+xterm*wideFont: -misc-fixed-medium-r-normal-ja-18-120-100-100-c-180-iso10646-1
 !xterm*VT100.translations: #override <Btn1Up>: select-end(PRIMARY, CLIPBOARD, CUT_BUFFER0)
