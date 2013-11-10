@@ -20,15 +20,19 @@ function create(self, format)
 	}
 	local widget = wibox.widget.textbox()
 	local format = format or '%a, %m/%d %R'
-	local year, month = 0
+
+	local year, month = 0, 0
+	widget:connect_signal('mouse::enter', function()
+		year, month = os.date('%Y'), os.date('%m')
+	end)
+
 	local tooltip = awful.tooltip({
 		objects = { widget },
 		timer_function = function()
 			widget:set_text(os.date(' ' .. format .. ':%S '))
-			month, year = os.date('%m'), os.date('%Y')
 			return calendar_for_month_markup(month, year)
 		end,
-		timeout = 60 * 60
+		timeout = 1
 	})
 	function adjust_calendar(delta_months)
 		month = month + delta_months
