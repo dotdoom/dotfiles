@@ -13,8 +13,9 @@ xterm*utf8Title: true
 xterm*allowC1Printable: true
 xterm*locale: true
 xterm*metaSendsEscape: true
-xterm*charClass: 33:48,37:48,45-47:48,38:48
+xterm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
 xterm*font: -misc-fixed-medium-r-*-*-18-*-*-*-*-*-iso10646-1
+*VT100*translations: #override Meta <Btn1Up>: exec-formatted("xdg-open '%t'", PRIMARY)
 !xterm*font:     -misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1
 !xterm*wideFont: -misc-fixed-medium-r-normal-ja-18-120-100-100-c-180-iso10646-1
 !xterm*font: -*-terminus-medium-*-*-*-16-*-*-*-*-*-iso10646-*
