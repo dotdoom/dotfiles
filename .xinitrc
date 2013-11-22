@@ -18,7 +18,6 @@ xset r rate 290 30
 	xautolock -locker slock &
 	gtk-redshift &
 	skype &
-	chromium &
 	psi-plus &
 	nm-applet &
 	clipit &

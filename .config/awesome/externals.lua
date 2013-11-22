@@ -202,8 +202,8 @@ externals.display = {
 	turn_off = function() exec('xset dpms force off') end,
 	save = function () exec("scrot -e 'mv $f ~/Pictures/'") end,
 	backlight = {
-		down = function() exec("sudo sh -c 'echo $[$(</sys/class/backlight/intel_backlight/brightness)-100] >/sys/class/backlight/intel_backlight/brightness'") end,
-		up = function() exec("sudo sh -c 'echo $[$(</sys/class/backlight/intel_backlight/brightness)+100] >/sys/class/backlight/intel_backlight/brightness'") end
+		down = function() exec("sudo sh -c 'echo $[$(</sys/class/backlight/intel_backlight/brightness)-500] >/sys/class/backlight/intel_backlight/brightness'") end,
+		up = function() exec("sudo sh -c 'echo $[$(</sys/class/backlight/intel_backlight/brightness)+500] >/sys/class/backlight/intel_backlight/brightness'") end
 	}
 }
 
