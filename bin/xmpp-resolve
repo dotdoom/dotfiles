@@ -3,7 +3,7 @@
 ADDR=$1
 DNS_SERVER=$2
 
-EXTRA_LINES_EXPR='(is an alias|has no|^Using domain server:|^Name:|^Address:|^Aliases:|^$)'
+EXTRA_LINES_EXPR='(is an alias|has no|not found|^Using domain server:|^Name:|^Address:|^Aliases:|^$)'
 
 function print_host() {
 	port=$2
