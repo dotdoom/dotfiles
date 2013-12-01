@@ -19,4 +19,4 @@ xterm*font: -misc-fixed-medium-r-*-*-18-*-*-*-*-*-iso10646-1
 !xterm*font:     -misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1
 !xterm*wideFont: -misc-fixed-medium-r-normal-ja-18-120-100-100-c-180-iso10646-1
 !xterm*font: -*-terminus-medium-*-*-*-16-*-*-*-*-*-iso10646-*
-!xterm*VT100.translations: #override <Btn1Up>: select-end(PRIMARY, CLIPBOARD, CUT_BUFFER0)
+xterm*VT100.translations: #override <Btn1Up>: select-end(PRIMARY, CLIPBOARD, CUT_BUFFER0)
