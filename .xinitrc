@@ -7,7 +7,7 @@ exec >$LOGS_DIR/awesome.out 2>$LOGS_DIR/awesome.err
 pulseaudio --start
 xrdb -merge .Xresources
 setxkbmap -layout "us,ru" -option "grp:caps_toggle,grp_led:caps,compose:ralt"
-xset dpms 600 600 600
+xset dpms 610 610 610
 xset r rate 290 30
 
 #xset +fp /usr/share/fonts/local
