@@ -104,7 +104,20 @@ alias sudo='sudo -E '
 alias su='su -m'
 
 # work
-alias webui='cd $webui'
+function webui() {
+	if [ -n "$1" ]; then
+		if [ "$1" = "trunk" ]; then
+			webui="$RAILS/trunk"
+		else
+			webui="$RAILS/branches/$1"
+		fi
+		echo $webui >~/.webui
+	else
+		webui=$(cat ~/.webui 2>/dev/null)
+		[ $? -eq 0 ] || webui="$RAILS"
+	fi
+	cd $webui
+}
 
 # useful stuff
 [ -z "$VIM_ORIGINAL" ] && VIM_ORIGINAL="$(which vim)"
