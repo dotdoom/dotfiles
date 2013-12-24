@@ -107,14 +107,13 @@ alias su='su -m'
 function webui() {
 	if [ -n "$1" ]; then
 		if [ "$1" = "trunk" ]; then
-			webui="$RAILS/trunk"
+			webui="${RAILS/BRANCH/trunk}"
 		else
-			webui="$RAILS/branches/$1"
+			webui="${RAILS/BRANCH/branches/$1}"
 		fi
 		echo $webui >~/.webui
 	else
-		webui=$(cat ~/.webui 2>/dev/null)
-		[ $? -eq 0 ] || webui="$RAILS"
+		[ -s ~/.webui ] && webui=$(<~/.webui)
 	fi
 	cd $webui
 }
@@ -235,7 +234,7 @@ if [ -x "$(which dircolors 2>/dev/null)" ]; then
 	eval $(dircolors)
 fi
 
-webui="$RAILS"
+webui="${RAILS/BRANCH*/}"
 
 case $- in
 	*i*)
