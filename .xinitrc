@@ -20,6 +20,7 @@ xset r rate 290 30
 	skype &
 	psi-plus &
 	nm-applet &
+	pa-applet &
 	clipit &
 	clementine &
 )
