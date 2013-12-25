@@ -13,13 +13,20 @@ general {
 
 order += "ipv6"
 order += "disk /"
+order += "disk /home"
 order += "run_watch DHCP"
 order += "run_watch VPN"
 order += "wireless wlp2s0"
 order += "ethernet enp14s0"
 order += "battery 0"
+order += "cpu_temperature 0"
 order += "load"
 order += "tztime local"
+
+cpu_temperature 0 {
+        format = "%degrees °C"
+        path = "/sys/devices/platform/coretemp.0/temp1_input"
+}
 
 wireless wlp2s0 {
         format_up = "W: (%quality at %essid) %ip"
@@ -53,5 +60,9 @@ load {
 }
 
 disk "/" {
-        format = "%free"
+        format = "/ %free"
+}
+
+disk "/home" {
+        format = "/home %free"
 }
