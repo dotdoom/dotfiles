@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+cat <<CONFIG
+general {
+	colors = true
+	interval = 5
+}
+
+order += "ipv6"
+order += "disk /"
+order += "disk /home"
+order += "run_watch DHCP"
+order += "run_watch VPN"
+CONFIG
+
+wireless_interface_config=''
+for wireless_interface in $(ip link | grep -Eo 'wl[a-z0-9]+'); do
+	echo "order += \"wireless $wireless_interface\""
+	wireless_interface_config="$wireless_interface_config
+wireless $wireless_interface {
+	format_up = \"W: (%quality at %essid) %ip\"
+	format_down = \"W: down\"
+}
+"
+done
+
+ethernet_interface_config=''
+for ethernet_interface in $(ip link | grep -Eo 'en[a-z0-9]+'); do
+	echo "order += \"ethernet $ethernet_interface\""
+	ethernet_interface_config="$ethernet_interface_config
+ethernet $ethernet_interface {
+	format_up = \"E: %ip (%speed)\"
+	format_down = \"E: down\"
+}
+"
+done
+
+echo 'order += "battery 0"'
+
+cpu_temperature_config=''
+cpu_temperature_index=0
+for cpu_temperature_file in /sys/devices/platform/coretemp.0/temp*_input; do
+	echo "order += \"cpu_temperature $cpu_temperature_index\""
+	cpu_temperature_config="$cpu_temperature_config
+cpu_temperature $cpu_temperature_index {
+	format = \"%degrees °C\"
+	path = \"$cpu_temperature_file\"
+}
+"
+	let cpu_temperature_index+=1
+done
+
+cat <<CONFIG
+order += "load"
+order += "tztime local"
+$cpu_temperature_config
+$wireless_interface_config
+$ethernet_interface_config
+
+run_watch DHCP {
+	pidfile = "/var/run/dhc*.pid"
+}
+
+run_watch VPN {
+	pidfile = "/var/run/vpnc/pid"
+}
+
+tztime local {
+	format = "%Y-%m-%d %H:%M:%S"
+}
+
+load {
+	format = "%1min"
+}
+
+disk "/" {
+	format = "/ %free"
+}
+
+disk "/home" {
+	format = "/home %free"
+}
+CONFIG

@@ -10,6 +10,9 @@ setxkbmap -layout "us,ru" -option "grp:caps_toggle,grp_led:caps,compose:ralt"
 xset dpms 610 610 610
 xset r rate 290 30
 
+local i3status=~/.config/i3status/config
+${i3status}.gen >$i3status
+
 #xset +fp /usr/share/fonts/local
 #xset fp rehash
 # if this doesn't work, run mkfontdir there
