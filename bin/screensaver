@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+DUNST_PID=$(<~/.cache/dunst.pid)
+
+if [ "$1" = "notify" ]; then
+	# notify-send help says timeout is in milliseconds
+	# but it appears that it is really in seconds (is it a dunst bug?)
+	notify-send -t 3 "Activating screensaver in $2 seconds..."
+else
+	kill -USR1 $DUNST_PID
+	notify_suspend
+	slock &
+	slock_pid=$!
+	# for xautolock -unlocknow
+	trap "kill -USR2 $DUNST_PID; kill $slock_pid" SIGTERM
+	wait $slock_pid
+	kill -USR2 $DUNST_PID
+fi

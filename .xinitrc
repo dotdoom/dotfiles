@@ -18,7 +18,10 @@ ${i3status}.gen >$i3status
 # if this doesn't work, run mkfontdir there
 
 (
-	xautolock -locker slock &
+	xautolock -locker '~/bin/screensaver start' -notify 5 -notifier '~/bin/screensaver notify 5' &
+	dunst &
+	# this pidfile is later used for screensaver
+	echo $! >.cache/dunst.pid
 	gtk-redshift &
 	skype &
 	psi-plus &
