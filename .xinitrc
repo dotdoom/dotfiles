@@ -27,8 +27,6 @@ export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 (
 	xautolock -locker '~/bin/screensaver start' -notify 5 -notifier '~/bin/screensaver notify 5' &
 	dunst &
-	# this pidfile is later used for screensaver
-	echo $! >.cache/dunst.pid
 	gtk-redshift &
 	skype &
 	psi-plus &
