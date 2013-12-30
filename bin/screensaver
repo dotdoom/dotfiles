@@ -10,7 +10,6 @@ else
 	slock &
 	slock_pid=$!
 	# for xautolock -unlocknow
-	trap "killall -USR2 dunst; kill $slock_pid" SIGTERM
+	trap "killall -USR2 dunst; kill $slock_pid" EXIT
 	wait $slock_pid
-	killall -USR2 dunst
 fi
