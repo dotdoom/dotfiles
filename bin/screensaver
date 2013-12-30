@@ -3,10 +3,9 @@
 if [ "$1" = "notify" ]; then
 	# notify-send help says timeout is in milliseconds
 	# but it appears that it is really in seconds (is it a dunst bug?)
-	notify-send -t $[$2-1] "Activating screensaver in $2 seconds..."
+	[ $2 -gt 1 ] && notify-send -t $[$2-1] "Activating screensaver in $2 seconds..."
 else
 	killall -USR1 dunst
-	notify_suspend
 	slock &
 	slock_pid=$!
 	# for xautolock -unlocknow
