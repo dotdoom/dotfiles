@@ -8,7 +8,6 @@ general {
 
 order += "disk /"
 order += "disk /home"
-order += "run_watch DHCP"
 CONFIG
 
 wireless_interface_config=''
@@ -63,18 +62,11 @@ done
 
 cat <<CONFIG
 order += "load"
-order += "tztime annapolis"
-order += "tztime santaclara"
 order += "tztime local"
 $cpu_temperature_config
 $wireless_interface_config
 $ethernet_interface_config
 $battery_config
-
-run_watch DHCP {
-	pidfile = "/var/run/dhc*.pid"
-	format = "%title"
-}
 
 tztime local {
 	format = "%Y-%m-%d %H:%M:%S"
@@ -90,15 +82,5 @@ disk "/" {
 
 disk "/home" {
 	format = "/home %free"
-}
-
-tztime annapolis {
-	format = "Ann %H:%M"
-	timezone = "US/Eastern"
-}
-
-tztime santaclara {
-	format = "S-C %H:%M"
-	timezone = "US/Pacific"
 }
 CONFIG
