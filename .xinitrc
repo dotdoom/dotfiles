@@ -29,7 +29,7 @@ export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 		-noclose \
 		-locker '~/bin/screensaver start' \
 		-notify 5 -notifier '~/bin/screensaver notify 5' \
-		-corners 0+-0 -cornerdelay 1 -cornerredelay 300 &
+		-corners 0+-0 -cornerdelay 1 -cornerredelay 900000 &
 	dunst &
 	gtk-redshift &
 	skype &
