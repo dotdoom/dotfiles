@@ -18,3 +18,5 @@ x-scheme-handler/https=chromium.desktop
 x-scheme-handler/about=chromium.desktop
 x-scheme-handler/unknown=chromium.desktop
 text/plain=gedit.desktop
+application/pdf=evince.desktop
+application/vnd.openxmlformats-officedocument.wordprocessingml.documentapplication/zip=/usr/share/mimelnk/application/libreoffice-openxmlformats-officedocument-wordprocessingml-document.desktop
