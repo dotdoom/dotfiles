@@ -27,10 +27,10 @@ export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 (
 	xautolock \
 		-noclose \
-		-locker '~/bin/screensaver start' \
-		-notify 5 -notifier '~/bin/screensaver notify 5' \
+		-locker slock \
+		-notify 5 -notifier 'notify-send Screensaver Activating...' \
 		-corners 0+-0 -cornerdelay 1 -cornerredelay 900000 &
-	dunst &
+	twmnd &
 	gtk-redshift &
 	skype &
 	psi-plus &
@@ -38,6 +38,7 @@ export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 	pa-applet &
 	clipit &
 	clementine &
+	linconnect-server &
 )
 
 i3status=~/.config/i3status/config
