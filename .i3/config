@@ -118,9 +118,10 @@ force_display_urgency_hint 0
 
 assign [class="xterm"]      "1: term"
 assign [class="Navigator"]  "2: browser"
+assign [class="Chromium"]   "2: browser"
 assign [class="Skype"]      "3: im"
 assign [title="Psi+"]       "3: im"
-assign [class="clementine"] "5: media"
+assign [class="Clementine"] "5: media"
 
 for_window [class="Skype" title="Profile for"] floating enable
 for_window [window_role="pop-up"] floating enable
