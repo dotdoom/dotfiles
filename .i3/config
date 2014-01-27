@@ -121,6 +121,7 @@ assign [class="Navigator"]  "2: browser"
 assign [class="Chromium"]   "2: browser"
 assign [class="Skype"]      "3: im"
 assign [title="Psi+"]       "3: im"
+assign [class="Remmina"]    "4: vbox"
 assign [class="Clementine"] "5: media"
 
 for_window [class="Skype" title="Profile for"] floating enable
