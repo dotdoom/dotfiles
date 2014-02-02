@@ -55,6 +55,8 @@ bindsym $mod+Shift+k move down
 bindsym $mod+Shift+l move up
 bindsym $mod+Shift+colon move right
 
+bindsym $mod+p move workspace to output right
+
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
@@ -132,6 +134,8 @@ for_window [window_role="pop-up"] floating enable
 #bindsym XF86AudioMute exec amixer -q set Master toggle
 bindsym XF86MonBrightnessDown exec xbacklight -10
 bindsym XF86MonBrightnessUp exec xbacklight +10
+
+bindsym $mod+Shift+s exec devmon -r
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
