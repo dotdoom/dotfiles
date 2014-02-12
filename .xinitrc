@@ -30,7 +30,6 @@ export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 		-locker slock \
 		-notify 5 -notifier 'notify-send Screensaver Activating...' \
 		-corners 0+-0 -cornerdelay 5 -cornerredelay 900000 &
-	twmnd &
 	redshift-gtk &
 	skype &
 	psi-plus &
