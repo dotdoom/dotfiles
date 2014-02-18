@@ -10,6 +10,7 @@ export GIT_COMMITTER_NAME='Artem Sheremet'
 export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
 export DOOMWADDIR=~/dist/games/doom/wad
 export GEM_HOME=~/.gem/ruby/2.0.0
+export DE=generic
 
 # redefinitions
 if [ "$(uname -s)" = "Linux" ]; then
