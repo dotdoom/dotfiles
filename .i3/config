@@ -130,6 +130,7 @@ for_window [class="Skype" title="Profile for"] floating enable
 for_window [class="Skype" title="Information"] floating enable
 for_window [class="Skype" window_role="CallWindow"] floating enable
 for_window [class="Skype" title="File Transfers"] floating enable
+for_window [class="Pavucontrol"] floating enable
 for_window [window_role="pop-up"] floating enable
 
 #bindsym XF86AudioRaiseVolume exec amixer -q set Master 2dB+ unmute
