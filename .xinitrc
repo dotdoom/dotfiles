@@ -42,6 +42,7 @@ export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 	devmon -g \
 		--exec-on-drive 'notify-send "%l" "%f %d ready"' \
 		--exec-on-unmount 'notify-send "%l" "%f %d is safe to remove"' &
+	(sleep 5; xautolock -locknow) &
 )
 
 i3status=~/.config/i3status/config
