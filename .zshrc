@@ -81,6 +81,10 @@ function terminal_title_on_command {
 	title "$1" "$1"
 }
 
+__git_files () {
+	_wanted files expl 'local files' _files
+}
+
 autoload -U add-zsh-hook
 add-zsh-hook precmd  terminal_title_at_prompt
 add-zsh-hook preexec terminal_title_on_command
