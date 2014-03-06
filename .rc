@@ -66,7 +66,6 @@ alias parent='ps -p $PPID -o comm='
 alias dbgrep='dbgrep.pl -vpuroot'
 alias tcpdump='tcpdump -l'
 alias pacman='pacman --color auto'
-alias ssh='ssh -o "ControlMaster=auto" -o "ControlPath=~/.ssh/ctl/master-%r@%h:%p" -o "ControlPersist=1h"'
 
 function i4() {
 	if [ $# -eq 0 ]; then
