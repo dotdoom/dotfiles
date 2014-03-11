@@ -289,3 +289,4 @@ autocmd FileType go autocmd BufWritePre <buffer> Fmt
 "match NearColLimit /\%<121v.\%>117v/
 "match OverColLimit /.\%>120v/
 "match ExtraWhitespace /\s\+\%#\@<!$/
+let gofmt_command = "goimports"
