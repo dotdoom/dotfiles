@@ -9,7 +9,7 @@ set fileencodings=utf-8,cp1251,latin1
 " Indentation settings. Dragons ahead!
 set tabstop=4       " The width of the TAB character, plain and simple.
 
-set shiftwidth=0    " Auto indentation, >>, <<, ==. 0 to use tabstop value.
+set shiftwidth=4    " Auto indentation, >>, <<, ==
 
 set softtabstop=0   " Number of spaces that a <Tab> counts for while performing editing
                     " operations, like inserting a <Tab> or using <BS>.
