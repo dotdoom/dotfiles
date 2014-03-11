@@ -6,30 +6,46 @@ set nocompatible
 " For multi-byte character support (CJK support, for example):
 set fileencodings=utf-8,cp1251,latin1
 
-set tabstop=4       " Number of spaces that a <Tab> in the file counts for.
+" Indentation settings. Dragons ahead!
+set tabstop=4       " The width of the TAB character, plain and simple.
 
-set shiftwidth=4    " Number of spaces to use for each step of (auto)indent.
+set shiftwidth=0    " Auto indentation, >>, <<, ==. 0 to use tabstop value.
 
-set nowrap          " No text wrapping
+set softtabstop=0   " Number of spaces that a <Tab> counts for while performing editing
+                    " operations, like inserting a <Tab> or using <BS>.
+
+set autoindent      " Copy indent from current line when starting a new line
+                    " (typing <CR> in Insert mode or when using the "o" or "O"
+                    " command).
+
+set copyindent      " Copy the structure of the existing lines indent when
+                    " autoindenting a new line (no tab-space reconstruction).
+
+set preserveindent  " When changing the indent of the current line, preserve as much
+                    " of the indent structure as possible.
 
 set noexpandtab     " Use the appropriate number of spaces to insert a <Tab>.
                     " Spaces are used in indents with the '>' and '<' commands
                     " and when 'autoindent' is on. To insert a real tab when
                     " 'expandtab' is on, use CTRL-V <Tab>.
 
-set modeline        " Vulnerabilities? Oh come on, am I going to have untrusted
-                    " files on my server(s)?
+set smarttab        " When on, a <Tab> in front of a line inserts blanks
+                    " according to 'shiftwidth'. 'tabstop' is used in other
+                    " places. A <BS> will delete a 'shiftwidth' worth of space
+                    " at the start of the line.
+
+autocmd FileType ruby       setlocal expandtab shiftwidth=2 tabstop=2
+autocmd FileType javascript setlocal expandtab shiftwidth=4 softtabstop=4
+
+set nowrap          " No text wrapping
+
+set modeline
 
 " Suggested config options
 set cf              " Enable error files & error jumping
 set clipboard+=unnamed " Yanks go to clipboard instead
 set timeoutlen=250  " Time to wait after ESC (default causes an annoying delay)
 set lcs=trail:~
-
-set smarttab        " When on, a <Tab> in front of a line inserts blanks
-                    " according to 'shiftwidth'. 'tabstop' is used in other
-                    " places. A <BS> will delete a 'shiftwidth' worth of space
-                    " at the start of the line.
 
 set showcmd         " Show (partial) command in status line.
 
@@ -55,10 +71,6 @@ set backspace=2     " Influences the working of <BS>, <Del>, CTRL-W
                     " and CTRL-U in Insert mode. This is a list of items,
                     " separated by commas. Each item allows a way to backspace
                     " over something.
-
-set autoindent      " Copy indent from current line when starting a new line
-                    " (typing <CR> in Insert mode or when using the "o" or "O"
-                    " command).
 
 set formatoptions=c,q,r " This is a sequence of letters which describes how
                     " automatic formatting is to be done.
@@ -118,14 +130,11 @@ execute 'silent !(
 Bundle 'vim-scripts/mru.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
-Bundle 'vim-scripts/rubycomplete.vim'
 
 Bundle 'ervandew/supertab'
 let g:SuperTabDefaultCompletionType = "context"
 
-Bundle 'tpope/vim-rails'
 Bundle 'tpope/vim-fugitive'
-Bundle 'vim-ruby/vim-ruby'
 Bundle 'jacquesbh/vim-showmarks'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'vim-scripts/nginx.vim'
