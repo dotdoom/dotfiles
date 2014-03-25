@@ -15,4 +15,7 @@ bindkey -k F2 next
 shell -${SHELL}
 # 256color support
 termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
-defbce "on"
+#defbce "on"
+# beep on activity monitor alert (C-a M)
+# ex.: 12:37 activity -> 7$ zsh
+activity "%c activity -> %n%f %t^G"
