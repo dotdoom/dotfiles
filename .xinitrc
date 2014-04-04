@@ -27,7 +27,7 @@ export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 (
 	xautolock \
 		-noclose \
-		-locker 'notify-send DUNST_COMMAND_PAUSE; i3lock -c 000000; notify-send DUNST_COMMAND_RESUME' \
+		-locker 'notify-send DUNST_COMMAND_PAUSE; i3lock -n -c 000000; notify-send DUNST_COMMAND_RESUME' \
 		-notify 5 -notifier 'notify-send Screensaver Activating...' \
 		-corners 0+-0 -cornerdelay 5 -cornerredelay 900000 &
 	redshift-gtk &
@@ -38,11 +38,10 @@ export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 	clipit &
 	clementine &
 	linconnect-server &
-	compton &
 	devmon -g \
 		--exec-on-drive 'notify-send "%l" "%f %d ready"' \
 		--exec-on-unmount 'notify-send "%l" "%f %d is safe to remove"' &
-)
+) &>/dev/null
 
 i3status=~/.config/i3status/config
 ${i3status}.gen >$i3status
