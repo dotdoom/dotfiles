@@ -138,6 +138,7 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'jacquesbh/vim-showmarks'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'vim-scripts/nginx.vim'
+Bundle 'airblade/vim-gitgutter'
 
 Bundle 'majutsushi/tagbar'
 let g:tagbar_type_go = {
