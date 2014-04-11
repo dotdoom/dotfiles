@@ -11,6 +11,9 @@ setxkbmap -layout "us,ru" -option "grp:caps_toggle,grp_led:caps,compose:ralt"
 xset dpms 610 610 610
 xset r rate 290 30
 
+# set primary output to the first connected monitor
+xrandr --output $(set -- $(xrandr | grep ' connected') && echo $1) --primary
+
 if [ -d /etc/X11/xinit/xinitrc.d ]; then
 	for f in /etc/X11/xinit/xinitrc.d/*; do
 		[ -x "$f" ] && . "$f"
