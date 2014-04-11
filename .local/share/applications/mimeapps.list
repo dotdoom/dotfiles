@@ -1,20 +1,12 @@
-[Added Associations]
-x-scheme-handler/http=chromium.desktop
-x-scheme-handler/https=chromium.desktop
-x-scheme-handler/about=chromium.desktop
-x-scheme-handler/unknown=chromium.desktop
-text/html=chromium.desktop
-application/pdf=evince.desktop
-application/x-shockwave-flash=chromium.desktop
-x-scheme-handler/http=chromium.desktop
-
 [Default Applications]
 text/html=chromium.desktop
 x-scheme-handler/http=chromium.desktop
 x-scheme-handler/https=chromium.desktop
 x-scheme-handler/about=chromium.desktop
 x-scheme-handler/unknown=chromium.desktop
-text/plain=gedit.desktop
+text/html=chromium.desktop
+text/plain=nedit.desktop
 application/pdf=evince.desktop
 application/vnd.openxmlformats-officedocument.wordprocessingml.documentapplication/zip=libreoffice-writer.desktop
 application/vnd.openxmlformats-officedocument.spreadsheetml.sheetapplication/zip=libreoffice-calc.desktop
+application/x-shockwave-flash=chromium.desktop
