@@ -66,6 +66,7 @@ alias parent='ps -p $PPID -o comm='
 alias dbgrep='dbgrep.pl -vpuroot'
 alias tcpdump='tcpdump -l'
 alias pacman='pacman --color auto'
+alias xo=xdg-open
 
 function i4() {
 	if [ $# -eq 0 ]; then
