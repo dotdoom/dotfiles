@@ -120,12 +120,7 @@ Bundle 'gmarik/vundle'
 
 Bundle 'mileszs/ack.vim'
 
-Bundle 'wincent/Command-T'
-execute 'silent !(
-			\ cd ~/.vim/bundle/Command-T/ruby/command-t &&
-			\ sleep 2 &&
-			\ ruby extconf.rb &&
-			\ make) >/dev/null 2>>~/.vimerr &'
+Bundle 'kien/ctrlp.vim'
 
 Bundle 'vim-scripts/mru.vim'
 Bundle 'scrooloose/nerdcommenter'
@@ -212,7 +207,7 @@ fu! Amap(key, cmd, ...)
 	exe "imap <" . a:key . "> <c-o><" . a:key . ">"
 endf
 
-call Amap("C-t", "CommandT")
+call Amap("C-t", "CtrlP")
 call Amap("C-n", "tabnew")
 call Amap("C-b", ":ls<CR>:b<Space>", 0)
 
