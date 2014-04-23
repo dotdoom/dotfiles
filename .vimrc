@@ -221,7 +221,7 @@ call Amap("F5", "!ruby -c %")
 call Amap("F6", "make -s clean all")
 call Amap("F7", "TagbarToggle")
 "setl noai nocin nosi inde= formatoptions-=c formatoptions-=r formatoptions-=o nonumber
-call Amap("F8", "setl paste! number! list! <bar> NoShowMarks")
+call Amap("F8", "setl paste! number! list! <bar> NoShowMarks <bar> GitGutterToggle")
 call Amap("F9", "!traider")
 
 " Navigate by tabs with Shift+Left/Right
