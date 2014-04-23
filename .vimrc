@@ -93,6 +93,9 @@ set background=dark " When set to "dark", Vim will try to use colors that look
                     " try to use colors that look good on a light background.
                     " Any other value is illegal.
 
+set list            " Display tabs and trailing spaces
+set listchars=tab:»-,trail:·
+
 if has("mouse")
 	set mouse=a     " Enable the use of the mouse.
 endif
@@ -152,7 +155,7 @@ let g:tagbar_type_go = {
 		\ 'f:functions'
 	\ ],
 	\ 'sro' : '.',
-    \ 'kind2scope' : {
+	\ 'kind2scope' : {
 		\ 't' : 'ctype',
 		\ 'n' : 'ntype'
 	\ },
@@ -284,5 +287,4 @@ autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
 "match NearColLimit /\%<121v.\%>117v/
 "match OverColLimit /.\%>120v/
-"match ExtraWhitespace /\s\+\%#\@<!$/
 let gofmt_command = "goimports"
