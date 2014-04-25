@@ -25,8 +25,8 @@ fi
 #xset fp rehash
 # if this doesn't work, run mkfontdir there
 
-eval $(gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
-export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
+#eval $(gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
+#export GNOME_KEYRING_CONTROL GNOME_KEYRING_PID GPG_AGENT_INFO SSH_AUTH_SOCK
 
 (
 	xautolock \
