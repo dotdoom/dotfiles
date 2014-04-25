@@ -94,7 +94,7 @@ set background=dark " When set to "dark", Vim will try to use colors that look
                     " Any other value is illegal.
 
 set list            " Display tabs and trailing spaces
-set listchars=tab:»-,trail:·
+set listchars=tab:»—,trail:·
 
 if has("mouse")
 	set mouse=a     " Enable the use of the mouse.
