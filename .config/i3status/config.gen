@@ -17,8 +17,7 @@ for wireless_interface in $(ip link | grep -Eo 'wl[a-z0-9]+'); do
 wireless $wireless_interface {
 	format_up = \"%essid:%ip %quality\"
 	format_down = \"$wireless_interface\"
-}
-"
+}"
 done
 
 ethernet_interface_config=''
@@ -28,8 +27,7 @@ for ethernet_interface in $(ip link | grep -Eo 'en[a-z0-9]+'); do
 ethernet $ethernet_interface {
 	format_up = \"%ip (%speed)\"
 	format_down = \"$ethernet_interface\"
-}
-"
+}"
 done
 
 battery_config=''
@@ -41,8 +39,7 @@ battery $battery_index {
 	format = \"%status %percentage %remaining\"
 	path = \"$battery_path/uevent\"
 	low_threshold = 10
-}
-"
+}"
 	let battery_index+=1
 done
 
@@ -54,8 +51,7 @@ for cpu_temperature_file in /sys/devices/platform/coretemp.0/temp*_input; do
 cpu_temperature $cpu_temperature_index {
 	format = \"%degrees °C\"
 	path = \"$cpu_temperature_file\"
-}
-"
+}"
 	let cpu_temperature_index+=1
 	break
 done
