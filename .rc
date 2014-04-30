@@ -5,7 +5,7 @@ export BROWSER=chromium
 export PAGER='less -R -F -X -S -n -i -m'
 
 export GOPATH=~/projects/go
-export PATH="$(echo {$HOME,,/opt,/usr,/usr/local}/{bin,sbin} | tr ' ' :):$(echo $HOME/.gem/ruby/{1.9.1,2.0.0,2.1.0}/bin | tr ' ' :):/usr/bin/vendor_perl:/usr/bin/core_perl:$GOPATH/bin"
+export PATH="$(echo {$HOME,,/opt,/usr,/usr/local}/{bin,sbin} | tr ' ' :):$(echo $HOME/.gem/ruby/*/bin | tr ' ' :):/usr/bin/vendor_perl:/usr/bin/core_perl:$GOPATH/bin"
 export GIT_COMMITTER_NAME='Artem Sheremet'
 export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
 export DOOMWADDIR=~/dist/games/doom/wad
