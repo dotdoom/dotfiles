@@ -89,4 +89,6 @@ autoload -U add-zsh-hook
 add-zsh-hook precmd  terminal_title_at_prompt
 add-zsh-hook preexec terminal_title_on_command
 
+alias -s avi=smplayer
+
 source ~/.rc

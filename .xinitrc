@@ -10,6 +10,7 @@ xrdb -merge .Xresources
 setxkbmap -layout "us,ru" -option "grp:caps_toggle,grp_led:caps,compose:ralt"
 xset dpms 610 610 610
 xset r rate 290 30
+xbacklight = 50
 
 # set primary output to the first connected monitor
 xrandr --output $(set -- $(xrandr | grep ' connected') && echo $1) --primary
@@ -42,6 +43,7 @@ fi
 	clipit &
 	clementine &
 	linconnect-server &
+	#projects/systemd-journal-notifier/systemd-journal-notifier &
 	devmon -g \
 		--exec-on-drive 'notify-send "%l" "%f %d ready"' \
 		--exec-on-unmount 'notify-send "%l" "%f %d is safe to remove"' &
