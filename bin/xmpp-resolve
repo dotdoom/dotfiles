@@ -6,20 +6,24 @@ DNS_SERVER=$2
 EXTRA_LINES_EXPR='(is an alias|has no|not found|^Using domain server:|^Name:|^Address:|^Aliases:|^$)'
 
 function print_host() {
-	port=$2
+	local port=$2
 	for ipv in A AAAA; do
 		if [ "$ipv" = A ]; then
-			argn=4
-			wl=''
-			wr=''
+			local argn=4
+			local wl=''
+			local wr=''
 		else
-			argn=5
-			wl='['
-			wr=']'
+			local argn=5
+			local wl='['
+			local wr=']'
 		fi
 		host -t $ipv $1 $DNS_SERVER | grep -Ev "$EXTRA_LINES_EXPR" | awk "{ print \$$argn }" | while read server; do
 			echo -n "$wl$server$wr:$port (${3-$ipv}"
-			if nc -nzw 2 $server $port &>/dev/null; then
+			local response
+			response=$(echo '</>' | nc -nw 2 -q 2 $server $port)
+			if [ $? -eq 0 ]; then
+				local introduced_as=$(echo "$response" | grep -Eo "from=.[^\'\"]+." | cut -d= -f2)
+				[ -n "$introduced_as" ] && echo -n " $introduced_as"
 				echo ')'
 			else
 				echo ', unavailable)'
