@@ -37,7 +37,6 @@ fi
 		-corners 0+-0 -cornerdelay 5 -cornerredelay 900000 &
 	redshift-gtk &
 	skype &
-	tkabber &
 	nm-applet &
 	pa-applet &
 	clipit &
