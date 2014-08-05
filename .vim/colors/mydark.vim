@@ -57,3 +57,5 @@ hi DiffDelete cterm=none ctermbg=darkred     ctermfg=black
 hi NearColLimit    gui=none guibg=yellow guifg=darkblue cterm=none ctermbg=yellow ctermfg=darkblue cterm=none cterm=none cterm=none cterm=none
 hi OverColLimit    gui=none guibg=red    guifg=darkblue cterm=none ctermbg=red    ctermfg=darkblue
 hi ExtraWhitespace          guibg=red                              ctermbg=red
+
+hi ColorColumn ctermbg=darkyellow
