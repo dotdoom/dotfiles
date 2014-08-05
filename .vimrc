@@ -106,6 +106,10 @@ if exists("+undofile")
 	set undofile
 endif
 
+if exists("+colorcolumn")
+	set colorcolumn=120
+endif
+
 set switchbuf+=usetab " Switch to existing tab; open a new tab for the new buffer
 
 set laststatus=2    " Always show the status line
@@ -137,6 +141,7 @@ Bundle 'jacquesbh/vim-showmarks'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'vim-scripts/nginx.vim'
 Bundle 'airblade/vim-gitgutter'
+Bundle 'terryma/vim-multiple-cursors'
 
 Bundle 'majutsushi/tagbar'
 let g:tagbar_type_go = {
