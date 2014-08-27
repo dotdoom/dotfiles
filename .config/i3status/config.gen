@@ -67,7 +67,7 @@ tztime_config='
 tztime local {
 	format = "%a %Y-%m-%d %H:%M:%S"
 }'
-for zone in Europe/Minsk US/Pacific US/Eastern; do
+for zone in Europe/Minsk; do
 	if [ "$zone" != "$current_zone" ]; then
 		echo "order += \"tztime $zone\""
 		tztime_config="$tztime_config
