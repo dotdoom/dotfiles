@@ -1,10 +1,10 @@
 [Default Applications]
-text/html=chromium.desktop
+text/html=chromium-browser.desktop
 application/x-shockwave-flash=chromium.desktop
-x-scheme-handler/http=chromium.desktop
-x-scheme-handler/https=chromium.desktop
-x-scheme-handler/about=chromium.desktop
-x-scheme-handler/unknown=chromium.desktop
+x-scheme-handler/http=chromium-browser.desktop
+x-scheme-handler/https=chromium-browser.desktop
+x-scheme-handler/about=chromium-browser.desktop
+x-scheme-handler/unknown=chromium-browser.desktop
 text/html=chromium.desktop
 text/plain=nedit.desktop
 application/xml=chromium.desktop

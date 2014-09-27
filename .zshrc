@@ -1,3 +1,5 @@
+source ~/.rc
+
 # zsh
 zstyle ':completion:*' completer _complete _ignored _approximate
 zstyle ':completion:*' max-errors 2
@@ -90,5 +92,3 @@ add-zsh-hook precmd  terminal_title_at_prompt
 add-zsh-hook preexec terminal_title_on_command
 
 alias -s avi=smplayer
-
-source ~/.rc
