@@ -33,8 +33,8 @@ fi
 	xautolock \
 		-noclose \
 		-locker 'notify-send DUNST_COMMAND_PAUSE; i3lock -n -c 000000; notify-send DUNST_COMMAND_RESUME' \
-		-notify 5 -notifier 'notify-send Screensaver Activating...' \
-		-corners 0+-0 -cornerdelay 5 -cornerredelay 900000 &
+		-notify 5 -notifier 'notify-send Screensaver Activating...' &
+	# -corners 0+-0 -cornerdelay 5 -cornerredelay 900000
 	redshift-gtk &
 	skype &
 	nm-applet &
