@@ -137,6 +137,7 @@ for_window [window_role="pop-up"] floating enable
 #bindsym XF86AudioMute exec amixer -q set Master toggle
 bindsym XF86MonBrightnessDown exec xbacklight -10
 bindsym XF86MonBrightnessUp exec xbacklight +10
+bindsym XF86Display exec xrandr --output VGA1 --auto --above LVDS1
 
 bindsym $mod+Shift+s exec devmon -r
 
