@@ -67,6 +67,7 @@ alias dbgrep='dbgrep.pl -vpuroot'
 alias tcpdump='tcpdump -l'
 alias pacman='pacman --color auto'
 alias xo=xdg-open
+alias ag='ag -C 2 --pager=$PAGER --smart-case'
 
 function i4() {
 	if [ $# -eq 0 ]; then
