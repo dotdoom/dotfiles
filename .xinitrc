@@ -42,7 +42,9 @@ fi
 	clipit &
 	clementine &
 	linconnect-server &
-	#projects/systemd-journal-notifier/systemd-journal-notifier &
+	transmission-gtk &
+	blueman-applet &
+	pcmanfm &
 	devmon -g \
 		--exec-on-drive 'notify-send "%l" "%f %d ready"' \
 		--exec-on-unmount 'notify-send "%l" "%f %d is safe to remove"' &
