@@ -14,6 +14,7 @@ export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
 export DOOMWADDIR=~/dist/games/doom/wad
 export GEM_HOME=~/.gem/ruby/2.1.0
 export DE=generic
+export CLICOLOR=1
 
 # redefinitions
 if [ "$(uname -s)" = "Linux" ]; then
@@ -111,21 +112,6 @@ alias gst='git status'
 # sudo
 alias sudo='sudo -E '
 alias su='su -m'
-
-# work
-function webui() {
-	if [ -n "$1" ]; then
-		if [ "$1" = "trunk" ]; then
-			webui="${RAILS/BRANCH/trunk}"
-		else
-			webui="${RAILS/BRANCH/branches/$1}"
-		fi
-		echo $webui >~/.webui
-	else
-		[ -s ~/.webui ] && webui=$(<~/.webui)
-	fi
-	cd $webui
-}
 
 # useful stuff
 [ -z "$VIM_ORIGINAL" ] && VIM_ORIGINAL="$(which vim)"
@@ -242,8 +228,6 @@ fi
 if [ -x "$(which dircolors 2>/dev/null)" ]; then
 	eval $(dircolors)
 fi
-
-webui="${RAILS/BRANCH*/}"
 
 case $- in
 	*i*)
