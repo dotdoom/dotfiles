@@ -20,7 +20,7 @@ function print_host() {
 		host -t $ipv $1 $DNS_SERVER | grep -Ev "$EXTRA_LINES_EXPR" | awk "{ print \$$argn }" | while read server; do
 			echo -n "$wl$server$wr:$port (${3-$ipv}"
 			local response
-			response=$(echo '</>' | nc -nw 2 -q 2 $server $port 2>/dev/null)
+			response=$(echo '</>' | nc -nw 2 $server $port 2>/dev/null)
 			if [ $? -eq 0 ]; then
 				local introduced_as=$(echo "$response" | grep -Eo "from=.[^\'\"]+." | cut -d= -f2)
 				[ -n "$introduced_as" ] && echo -n " $introduced_as"
