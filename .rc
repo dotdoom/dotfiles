@@ -29,22 +29,29 @@ if [ "$(uname -s)" = "Linux" ]; then
 	alias pgrep='pgrep -lf'
 	alias crontab='crontab -i'
 	alias gmake='make'
-
-	function ds() {
-		du -sh "$@" | sort -rh
-	}
 elif [ "$(uname -s)" = "FreeBSD" ]; then
 	export LSCOLORS=ExGxFxFxCxdxDxabagacac
 	alias ls='ls -hFIG'
 	alias pgrep='pgrep -laf'
-	alias stat="/usr/bin/stat -f \"  File: '%N'%SY%n  Size: %-15z Blocks: %-10b IO Block: %-6k %HT%nDevice: %7Hr/%-7Lr Inode: %-11i Links: %l%nAccess: (%Mp%Lp/%Sp) Uid: (%5u/%8Su)  Gid: (%5g/%8Sg)%nAccess: %Sa%nModify: %Sm%nChange: %Sc%n Birth: %SB\" -t '%F %T %z'"
+fi
 
+if stat >/dev/null 2>&1; then
+	# BSD stat prints 1 line and also allows to skip the operand
+	alias stat="/usr/bin/stat -f \"  File: '%N'%SY%n  Size: %-15z Blocks: %-10b IO Block: %-6k %HT%nDevice: %7Hr/%-7Lr Inode: %-11i Links: %l%nAccess: (%Mp%Lp/%Sp) Uid: (%5u/%8Su)  Gid: (%5g/%8Sg)%nAccess: %Sa%nModify: %Sm%nChange: %Sc%n Birth: %SB\" -t '%F %T %z'"
+fi
+
+if sort -h </dev/null 2>/dev/null; then
+	function ds() {
+		du -sh "$@" | sort -rh
+	}
+else
 	function ds() {
 		du -sh "$@" | perl -e '
 			%byte_order = ( G => 0, M => 1, K => 2, k => 2, 0 => 3 );
 			print map { $_->[0] } sort { $byte_order{$a->[1]} <=> $byte_order{$b->[1]} || $b->[2] <=> $a->[2] } map { [ $_, /^\s*[\d.]+([MGKk0])/, /^\s*([\d.]+)/ ] } <>'
 	}
 fi
+
 alias nc='nc -vv'
 alias snc='openssl s_client -connect '
 alias vsnc='openssl s_client -showcerts -state -msg -debug -connect '
