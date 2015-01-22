@@ -1,7 +1,0 @@
-#!/bin/bash
-
-find . -type d | grep -Fv '/.svn/' | while read dirname; do
-	if [[ "$(ls -a1 "$dirname" | grep -Ev "^(\.|\.\.)$")" == ".svn" ]]; then
-		echo $dirname
-	fi
-done
