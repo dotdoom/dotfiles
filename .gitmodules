@@ -1,3 +1,39 @@
-[submodule ".vim/bundle/vundle"]
-	path = .vim/bundle/vundle
-	url = https://github.com/gmarik/vundle.git
+[submodule ".vim/bundle/ag.vim"]
+	path = .vim/bundle/ag.vim
+	url = https://github.com/rking/ag.vim
+[submodule ".vim/bundle/ctrlp.vim"]
+	path = .vim/bundle/ctrlp.vim
+	url = https://github.com/kien/ctrlp.vim
+[submodule ".vim/bundle/vim-startify"]
+	path = .vim/bundle/vim-startify
+	url = https://github.com/mhinz/vim-startify
+[submodule ".vim/bundle/nerdcommenter"]
+	path = .vim/bundle/nerdcommenter
+	url = https://github.com/scrooloose/nerdcommenter
+[submodule ".vim/bundle/nerdtree"]
+	path = .vim/bundle/nerdtree
+	url = https://github.com/scrooloose/nerdtree
+[submodule ".vim/bundle/vim-fugitive"]
+	path = .vim/bundle/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive
+[submodule ".vim/bundle/vim-showmarks"]
+	path = .vim/bundle/vim-showmarks
+	url = https://github.com/jacquesbh/vim-showmarks
+[submodule ".vim/bundle/vim-coffee-script"]
+	path = .vim/bundle/vim-coffee-script
+	url = https://github.com/kchmck/vim-coffee-script
+[submodule ".vim/bundle/nginx.vim"]
+	path = .vim/bundle/nginx.vim
+	url = https://github.com/vim-scripts/nginx.vim
+[submodule ".vim/bundle/vim-gitgutter"]
+	path = .vim/bundle/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter
+[submodule ".vim/bundle/vim-multiple-cursors"]
+	path = .vim/bundle/vim-multiple-cursors
+	url = https://github.com/terryma/vim-multiple-cursors
+[submodule ".vim/bundle/supertab"]
+	path = .vim/bundle/supertab
+	url = https://github.com/ervandew/supertab
+[submodule ".vim/bundle/tagbar"]
+	path = .vim/bundle/tagbar
+	url = https://github.com/majutsushi/tagbar

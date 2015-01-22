@@ -118,29 +118,11 @@ set statusline=%<%f\ %h%m%r\ %{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P " Cus
 
 let mapleader=","
 
-" Vundle Area
 filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+execute pathogen#infect()
 
-Bundle 'gmarik/vundle'
-
-Bundle 'rking/ag.vim'
-Bundle 'kien/ctrlp.vim'
-Bundle 'mhinz/vim-startify'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'scrooloose/nerdtree'
-Bundle 'tpope/vim-fugitive'
-Bundle 'jacquesbh/vim-showmarks'
-Bundle 'kchmck/vim-coffee-script'
-Bundle 'vim-scripts/nginx.vim'
-Bundle 'airblade/vim-gitgutter'
-Bundle 'terryma/vim-multiple-cursors'
-
-Bundle 'ervandew/supertab'
 let g:SuperTabDefaultCompletionType = "context"
 
-Bundle 'majutsushi/tagbar'
 let g:tagbar_type_go = {
 	\ 'ctagstype' : 'go',
 	\ 'kinds'     : [
@@ -274,6 +256,7 @@ nmap zx "+x
 
 " custom filetypes
 au BufNewFile,BufRead *.fasm setf fasm
+au BufNewFile,BufRead *.pi setf python
 
 cmap w!! %!sudo tee >/dev/null %<CR>
 
