@@ -5,14 +5,15 @@ export BROWSER=chromium
 export PAGER='less -R -F -X -S -n -i -m'
 
 export GOPATH=~/src/go
-export PATH="$(echo {$HOME,,/opt,/usr,/usr/local}/{bin,sbin} | tr ' ' :):/usr/bin/vendor_perl:/usr/bin/core_perl:$GOPATH/bin"
+export GOROOT=~/pkg/go
+export PATH="$PATH:$HOME/bin:$GOROOT/bin:$GOPATH/bin"
 if [ -d $HOME/.gem/ruby ]; then
 	export PATH="$PATH:$(echo $HOME/.gem/ruby/*/bin | tr ' ' :)"
 fi
 export GIT_COMMITTER_NAME='Artem Sheremet'
 export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
 export DOOMWADDIR=~/dist/games/doom/wad
-export GEM_HOME=~/.gem/ruby/2.1.0
+export GEM_HOME=~/.gem/ruby/2.1.5
 export DE=generic
 export CLICOLOR=1
 
@@ -239,7 +240,7 @@ fi
 case $- in
 	*i*)
 		# only with interactive non-sudo shell
-		if [ -n "$SSH_CLIENT" ] && [ -z "$SUDO_UID" ]; then
+		if [ -n "$SSH_CONNECTION" ] && [ -z "$SUDO_UID" ]; then
 			[ "$(parent)" = "screen" ] || screen -RR
 		fi
 		;;
