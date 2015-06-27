@@ -107,7 +107,7 @@ if exists("+undofile")
 endif
 
 if exists("+colorcolumn")
-	set colorcolumn=120
+	set colorcolumn=80
 endif
 
 set switchbuf+=usetab " Switch to existing tab; open a new tab for the new buffer
@@ -266,8 +266,6 @@ command W w
 command Q q
 command Qa qa
 command QA qa
-
-autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
 "match NearColLimit /\%<121v.\%>117v/
 "match OverColLimit /.\%>120v/
