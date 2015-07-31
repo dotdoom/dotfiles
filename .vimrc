@@ -119,6 +119,8 @@ set statusline=%<%f\ %h%m%r\ %{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P " Cus
 let mapleader=","
 
 filetype off
+
+runtime bundle/vim-pathogen/autoload/pathogen.vim
 execute pathogen#infect()
 
 let g:SuperTabDefaultCompletionType = "context"
