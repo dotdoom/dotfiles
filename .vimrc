@@ -14,10 +14,6 @@ set shiftwidth=4    " Auto indentation, >>, <<, ==
 set softtabstop=0   " Number of spaces that a <Tab> counts for while performing editing
                     " operations, like inserting a <Tab> or using <BS>.
 
-set autoindent      " Copy indent from current line when starting a new line
-                    " (typing <CR> in Insert mode or when using the "o" or "O"
-                    " command).
-
 set copyindent      " Copy the structure of the existing lines indent when
                     " autoindenting a new line (no tab-space reconstruction).
 
@@ -29,14 +25,6 @@ set noexpandtab     " Use the appropriate number of spaces to insert a <Tab>.
                     " and when 'autoindent' is on. To insert a real tab when
                     " 'expandtab' is on, use CTRL-V <Tab>.
 
-set smarttab        " When on, a <Tab> in front of a line inserts blanks
-                    " according to 'shiftwidth'. 'tabstop' is used in other
-                    " places. A <BS> will delete a 'shiftwidth' worth of space
-                    " at the start of the line.
-
-autocmd FileType ruby       setlocal expandtab shiftwidth=2 tabstop=2
-autocmd FileType javascript setlocal expandtab shiftwidth=4 softtabstop=4
-
 set nowrap          " No text wrapping
 
 set modeline
@@ -44,10 +32,6 @@ set modeline
 " Suggested config options
 set cf              " Enable error files & error jumping
 set clipboard+=unnamed " Yanks go to clipboard instead
-set timeoutlen=250  " Time to wait after ESC (default causes an annoying delay)
-set lcs=trail:~
-
-set showcmd         " Show (partial) command in status line.
 
 set number          " Show line numbers.
 
@@ -59,18 +43,8 @@ set showmatch       " When a bracket is inserted, briefly jump to the matching
 set hlsearch        " When there is a previous search pattern, highlight all
                     " its matches.
 
-set incsearch       " While typing a search command, show immediately where the
-                    " so far typed pattern matches.
-
-set ignorecase      " Ignore case in search patterns.
-
 set smartcase       " Override the 'ignorecase' option if the search pattern
                     " contains upper case characters.
-
-set backspace=2     " Influences the working of <BS>, <Del>, CTRL-W
-                    " and CTRL-U in Insert mode. This is a list of items,
-                    " separated by commas. Each item allows a way to backspace
-                    " over something.
 
 set formatoptions=c,q,r " This is a sequence of letters which describes how
                     " automatic formatting is to be done.
@@ -85,16 +59,12 @@ set formatoptions=c,q,r " This is a sequence of letters which describes how
                     " t         Auto-wrap text using textwidth (does not apply
                     "           to comments)
 
-set ruler           " Show the line and column number of the cursor position,
-                    " separated by a comma.
-
 set background=dark " When set to "dark", Vim will try to use colors that look
                     " good on a dark background. When set to "light", Vim will
                     " try to use colors that look good on a light background.
                     " Any other value is illegal.
 
 set list            " Display tabs and trailing spaces
-set listchars=tab:\ \ ,trail:·
 
 if has("mouse")
 	set mouse=a     " Enable the use of the mouse.
@@ -112,8 +82,6 @@ endif
 
 set switchbuf+=usetab " Switch to existing tab; open a new tab for the new buffer
 
-set laststatus=2    " Always show the status line
-
 set statusline=%<%f\ %h%m%r\ %{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P " Custom status line with Git Branch name
 
 let mapleader=","
@@ -125,38 +93,7 @@ execute pathogen#infect()
 
 let g:SuperTabDefaultCompletionType = "context"
 
-let g:tagbar_type_go = {
-	\ 'ctagstype' : 'go',
-	\ 'kinds'     : [
-		\ 'p:package',
-		\ 'i:imports:1',
-		\ 'c:constants',
-		\ 'v:variables',
-		\ 't:types',
-		\ 'n:interfaces',
-		\ 'w:fields',
-		\ 'e:embedded',
-		\ 'm:methods',
-		\ 'r:constructor',
-		\ 'f:functions'
-	\ ],
-	\ 'sro' : '.',
-	\ 'kind2scope' : {
-		\ 't' : 'ctype',
-		\ 'n' : 'ntype'
-	\ },
-	\ 'scope2kind' : {
-		\ 'ctype' : 't',
-		\ 'ntype' : 'n'
-	\ },
-	\ 'ctagsbin'  : 'gotags',
-	\ 'ctagsargs' : '-sort -silent'
-\ }
-
 colorscheme mydark
-
-filetype plugin indent on
-syntax on
 
 nnoremap ` :ShowMarksOnce<cr>`
 "command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis | wincmd p
@@ -202,12 +139,9 @@ call Amap("C-w", "close")
 
 call Amap("F2", "update")
 call Amap("F3", "NERDTreeToggle")
-call Amap("F5", "!ruby -c %")
-call Amap("F6", "make -s clean all")
 call Amap("F7", "TagbarToggle")
 "setl noai nocin nosi inde= formatoptions-=c formatoptions-=r formatoptions-=o nonumber
 call Amap("F8", "setl paste! number! list! <bar> NoShowMarks <bar> GitGutterToggle")
-call Amap("F9", " :!traider ", 0)
 
 " Navigate by tabs with Shift+Left/Right
 call Amap("S-Left", "tabprev")
@@ -269,6 +203,4 @@ command Q q
 command Qa qa
 command QA qa
 
-"match NearColLimit /\%<121v.\%>117v/
-"match OverColLimit /.\%>120v/
 let gofmt_command = "goimports"
