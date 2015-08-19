@@ -13,7 +13,6 @@ fi
 export GIT_COMMITTER_NAME='Artem Sheremet'
 export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
 export DOOMWADDIR=~/dist/games/doom/wad
-export GEM_HOME=~/.gem/ruby/2.1.5
 export DE=generic
 export CLICOLOR=1
 
