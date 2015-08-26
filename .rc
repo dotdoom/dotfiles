@@ -16,42 +16,10 @@ export DOOMWADDIR=~/dist/games/doom/wad
 export DE=generic
 export CLICOLOR=1
 
-# redefinitions
-if [ "$(uname -s)" = "Linux" ]; then
-	LS_VER=$(/bin/ls --version )
-	LS_VER=${LS_VER/.*/}
-	LS_VER=${LS_VER/* /}
-	if [ $LS_VER -lt 8 ]; then
-		alias ls='ls -hF --color=auto'
-	else
-		alias ls='ls -hF --color=auto --group-directories-first'
-	fi
-	alias pgrep='pgrep -lf'
-	alias crontab='crontab -i'
-	alias gmake='make'
-elif [ "$(uname -s)" = "FreeBSD" ]; then
-	export LSCOLORS=ExGxFxFxCxdxDxabagacac
-	alias ls='ls -hFIG'
-	alias pgrep='pgrep -laf'
-fi
-
-if stat >/dev/null 2>&1; then
-	# BSD stat prints 1 line and also allows to skip the operand
-	alias stat="/usr/bin/stat -f \"  File: '%N'%SY%n  Size: %-15z Blocks: %-10b IO Block: %-6k %HT%nDevice: %7Hr/%-7Lr Inode: %-11i Links: %l%nAccess: (%Mp%Lp/%Sp) Uid: (%5u/%8Su)  Gid: (%5g/%8Sg)%nAccess: %Sa%nModify: %Sm%nChange: %Sc%n Birth: %SB\" -t '%F %T %z'"
-fi
-
-if sort -h </dev/null 2>/dev/null; then
-	function ds() {
-		du -sh "$@" | sort -rh
-	}
-else
-	function ds() {
-		du -sh "$@" | perl -e '
-			%byte_order = ( G => 0, M => 1, K => 2, k => 2, 0 => 3 );
-			print map { $_->[0] } sort { $byte_order{$a->[1]} <=> $byte_order{$b->[1]} || $b->[2] <=> $a->[2] } map { [ $_, /^\s*[\d.]+([MGKk0])/, /^\s*([\d.]+)/ ] } <>'
-	}
-fi
-
+alias ls='ls -hF --color=auto'
+alias pgrep='pgrep -lf'
+alias crontab='crontab -i'
+alias gmake='make'
 alias nc='nc -vv'
 alias snc='openssl s_client -connect '
 alias vsnc='openssl s_client -showcerts -state -msg -debug -connect '
@@ -80,6 +48,11 @@ alias tcpdump='tcpdump -l'
 alias pacman='pacman --color auto'
 alias xo=xdg-open
 alias ag='ag -C 2 --pager=$PAGER --smart-case'
+alias prepend-timestamp='gawk "{ print strftime(\"[%Y-%m-%d %H:%M:%S]\"), \$0; fflush() }"'
+
+function ds() {
+	du -sh "$@" | sort -rh
+}
 
 function i4() {
 	if [ $# -eq 0 ]; then
@@ -87,10 +60,6 @@ function i4() {
 	else
 		ip addr show "$1" | sed -nr 's/\s+inet ([0-9.]+)\/.*/\1/p'
 	fi
-}
-
-function prepend-timestamp() {
-	gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0; fflush() }'
 }
 
 # mysqldump extraction
@@ -171,26 +140,13 @@ function cdls() {
 	ls "$@"
 }
 
-function cap() {
-	local bakdir="$HOME/.cap-stash"
-	mkdir -p "$bakdir"
-	local bakfile="$bakdir/${1//\//%}"
-	if [ "$#" -gt 1 ]; then
-		cp -p "$1" "$bakfile"
-		mv "$2" "$1"
-	else
-		mv "$bakfile" "$1"
-	fi
-}
-
 function fin() {
 	local filename="$1"
-	[ $# -gt 1 ] && shift
-	find "$@" -iname "*$filename*"
+	find . -iname "*$filename*"
 }
 
 function tt() {
-	tail -f "$@" | while read line; do echo -n $(date); echo -e "\t$line"; done
+	tail -f "$@" | prepend-timestamp
 }
 
 function ip4tables-fwd() {
