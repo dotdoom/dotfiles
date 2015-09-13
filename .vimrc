@@ -92,6 +92,7 @@ runtime bundle/vim-pathogen/autoload/pathogen.vim
 execute pathogen#infect()
 
 let g:SuperTabDefaultCompletionType = "context"
+let g:go_fmt_command = "goimports"
 
 colorscheme mydark
 
@@ -147,10 +148,6 @@ call Amap("F8", "setl paste! number! list! <bar> NoShowMarks <bar> GitGutterTogg
 call Amap("S-Left", "tabprev")
 call Amap("S-Right", "tabnext")
 
-" Override vim-Rails plugin default binding
-"let g:rails_mappings=0
-"nmap gf <Plug>RailsTabFind
-
 " Navigate by windows with Ctrl+direction
 call Amap("C-Left", "wincmd h")
 call Amap("C-Down", "wincmd j")
@@ -202,5 +199,3 @@ command W w
 command Q q
 command Qa qa
 command QA qa
-
-let gofmt_command = "goimports"
