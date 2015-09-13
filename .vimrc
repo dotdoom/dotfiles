@@ -43,6 +43,7 @@ set showmatch       " When a bracket is inserted, briefly jump to the matching
 set hlsearch        " When there is a previous search pattern, highlight all
                     " its matches.
 
+set ignorecase
 set smartcase       " Override the 'ignorecase' option if the search pattern
                     " contains upper case characters.
 
