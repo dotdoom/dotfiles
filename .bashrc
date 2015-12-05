@@ -5,12 +5,21 @@
 # bash history with time
 export HISTTIMEFORMAT="%F %T "
 
-export GITAWAREPROMPT="$HOME/.bash/git-aware-prompt"
-source "$GITAWAREPROMPT/main.sh"
-
 ##
 ## prompt games
 ##
+
+function title() {
+	[ "$DISABLE_AUTO_TITLE" != "true" ] || return
+	if [[ "$TERM" == screen* ]]; then
+		echo -en "\033k"; echo -n "$1"; echo -ne "\033\\"
+	elif [[ "$TERM" == xterm* ]] || [[ $TERM == rxvt* ]] || [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+		# Window title
+		[ -n "$2" ] && echo -en "\033]2;"; echo -n "$2"; echo -en "\a"
+		# Tab title (gnome-terminal, konsole)
+		echo -en "\033]1;"; echo -n "$1"; echo -en "\a"
+	fi
+}
 
 # DYNAMIC: first brace [ color depends on the exit code
 PS1='$(if [ $? -eq 0 ]; then echo -ne "\[$BGreen\]"; else echo -ne "\[$BRed\]"; fi)['
@@ -41,6 +50,9 @@ PS1="$PS1\h "
 
 # DYNAMIC: wd bg is blue for symlinks
 PS1="$PS1"'$(if [ -L "$PWD" ]; then echo -ne "\[$On_Blue\]"; fi)'
+
+# DYNAMIC: pwd in title
+PS1="$PS1"'$(title \W)'
 
 # DYNAMIC: wd length < 6 (/, /etc, /usr, /var, /home etc) brings red wd name
 PS1="$PS1"'$(if [ ${#PWD} -lt 6 ]; then echo -ne "\[$BRed\]"; else echo -ne "\[$BGreen\]"; fi)\W'
@@ -249,23 +261,11 @@ case $- in
 		;;
 esac
 
-function title() {
-	[ "$DISABLE_AUTO_TITLE" != "true" ] || return
-	if [[ "$TERM" == screen* ]]; then
-		echo -en "\033k$1\033\\"
-	elif [[ "$TERM" == xterm* ]] || [[ $TERM == rxvt* ]] || [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
-		# Window title
-		[ -n "$2" ] && echo -en "\033]2;$2\a"
-		# Tab title (gnome-terminal, konsole)
-		echo -en "\033]1;$1\a"
-	fi
-}
-
-trap 'title "$BASH_COMMAND" "$BASH_COMMAND"' DEBUG
-
 # TODO: delete this
 upload() {
 	echo http://bin.dget.cc/$(curl -X POST --data-binary @"$1" http://bin.dget.cc/ | tail -3 | head -1 | cut -d'"' -f2)
 }
+
+trap 'title "$BASH_COMMAND"' DEBUG
 
 # vim: ft=sh
