@@ -5,6 +5,9 @@
 # bash history with time
 export HISTTIMEFORMAT="%F %T "
 
+export GITAWAREPROMPT="$HOME/.bash/git-aware-prompt"
+source "$GITAWAREPROMPT/main.sh"
+
 ##
 ## prompt games
 ##
@@ -42,7 +45,7 @@ PS1="$PS1"'$(if [ -L "$PWD" ]; then echo -ne "\[$On_Blue\]"; fi)'
 # DYNAMIC: wd length < 6 (/, /etc, /usr, /var, /home etc) brings red wd name
 PS1="$PS1"'$(if [ ${#PWD} -lt 6 ]; then echo -ne "\[$BRed\]"; else echo -ne "\[$BGreen\]"; fi)\W'
 
-PS1="$PS1\[$Color_Off\]\[$BGreen\]]\\$\[$Color_Off\] "
+PS1="$PS1\[$Color_Off\]\[$BGreen\]]"'$git_branch$git_dirty'"\\$\[$Color_Off\] "
 
 export EDITOR=vim
 export BROWSER=chromium
@@ -258,7 +261,7 @@ function title() {
 	fi
 }
 
-trap 'title "$BASH_COMMAND"' DEBUG
+trap 'title "$BASH_COMMAND" "$BASH_COMMAND"' DEBUG
 
 # TODO: delete this
 upload() {
