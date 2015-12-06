@@ -52,7 +52,7 @@ PS1="$PS1\h "
 PS1="$PS1"'$(if [ -L "$PWD" ]; then echo -ne "\[$On_Blue\]"; fi)'
 
 # DYNAMIC: pwd in title
-PS1="$PS1"'$(title \W)'
+PS1="$PS1"'\[$(title \W)\]'
 
 # DYNAMIC: wd length < 6 (/, /etc, /usr, /var, /home etc) brings red wd name
 PS1="$PS1"'$(if [ ${#PWD} -lt 6 ]; then echo -ne "\[$BRed\]"; else echo -ne "\[$BGreen\]"; fi)\W'
@@ -265,6 +265,8 @@ esac
 upload() {
 	echo http://bin.dget.cc/$(curl -X POST --data-binary @"$1" http://bin.dget.cc/ | tail -3 | head -1 | cut -d'"' -f2)
 }
+
+shopt -s autocd
 
 trap 'title "$BASH_COMMAND"' DEBUG
 
