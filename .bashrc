@@ -4,6 +4,21 @@
 
 # bash history with time
 export HISTTIMEFORMAT="%F %T "
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+# append to the history file, don't overwrite it
+shopt -s histappend
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=10000
+HISTFILESIZE=500000
+# treat directory name commands as cd
+shopt -s autocd
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 ##
 ## prompt games
@@ -265,8 +280,6 @@ esac
 upload() {
 	echo http://bin.dget.cc/$(curl -X POST --data-binary @"$1" http://bin.dget.cc/ | tail -3 | head -1 | cut -d'"' -f2)
 }
-
-shopt -s autocd
 
 trap 'title "$BASH_COMMAND"' DEBUG
 
