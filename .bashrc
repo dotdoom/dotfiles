@@ -126,6 +126,7 @@ alias pacman='pacman --color auto'
 alias xo=xdg-open
 alias ag='ag -C 2 --pager="$PAGER" --smart-case'
 alias prepend-timestamp='gawk "{ print strftime(\"[%Y-%m-%d %H:%M:%S]\"), \$0; fflush() }"'
+alias strace='strace -f -s 1024'
 
 function ds() {
 	du -sh "$@" | sort -rh
