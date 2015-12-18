@@ -280,11 +280,6 @@ case $- in
 		;;
 esac
 
-# TODO: delete this
-upload() {
-	echo http://bin.dget.cc/$(curl -X POST --data-binary @"$1" http://bin.dget.cc/ | tail -3 | head -1 | cut -d'"' -f2)
-}
-
 trap 'title "$BASH_COMMAND"' DEBUG
 
 # vim: ft=sh
