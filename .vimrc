@@ -67,9 +67,9 @@ set background=dark " When set to "dark", Vim will try to use colors that look
 
 set list            " Display tabs and trailing spaces
 
-if has("mouse")
-	set mouse=a     " Enable the use of the mouse.
-endif
+"if has("mouse")
+"	set mouse=a     " Enable the use of the mouse.
+"endif
 
 if exists("+undofile")
     " Enable the persistent undo file(s)
