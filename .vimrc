@@ -135,25 +135,25 @@ fu! Amap(key, cmd, ...)
 	exe "imap <" . a:key . "> <c-o><" . a:key . ">"
 endf
 
-call Amap("C-t", "tabnew")
-call Amap("C-b", ":ls<CR>:b<Space>", 0)
-call Amap("C-w", "close")
+"call Amap("C-t", "tabnew")
+"call Amap("C-b", ":ls<CR>:b<Space>", 0)
+"call Amap("C-w", "close")
 
-call Amap("F2", "update")
-call Amap("F3", "NERDTreeToggle")
-call Amap("F7", "TagbarToggle")
+"call Amap("F2", "update")
+"call Amap("F3", "NERDTreeToggle")
+"call Amap("F7", "TagbarToggle")
 "setl noai nocin nosi inde= formatoptions-=c formatoptions-=r formatoptions-=o nonumber
 call Amap("F8", "setl paste! number! list! <bar> NoShowMarks <bar> GitGutterToggle")
 
 " Navigate by tabs with Shift+Left/Right
-call Amap("S-Left", "tabprev")
-call Amap("S-Right", "tabnext")
+"call Amap("S-Left", "tabprev")
+"call Amap("S-Right", "tabnext")
 
 " Navigate by windows with Ctrl+direction
-call Amap("C-Left", "wincmd h")
-call Amap("C-Down", "wincmd j")
-call Amap("C-Up", "wincmd k")
-call Amap("C-Right", "wincmd l")
+"call Amap("C-Left", "wincmd h")
+"call Amap("C-Down", "wincmd j")
+"call Amap("C-Up", "wincmd k")
+"call Amap("C-Right", "wincmd l")
 
 " Resize windows with Alt+direction
 call Amap("M-Left", "vertical resize -1")
@@ -162,14 +162,10 @@ call Amap("M-Up", "resize -1")
 call Amap("M-Right", "vertical resize +1")
 
 " Move windows with Ctrl+Shift+direction
-call Amap("C-S-Left", "wincmd H")
-call Amap("C-S-Down", "wincmd J")
-call Amap("C-S-Up", "wincmd K")
-call Amap("C-S-Right", "wincmd L")
-
-" Split windows with Ctrl+Alt+Down/Right
-call Amap("C-M-Down", "split")
-call Amap("C-M-Right", "vsplit")
+"call Amap("C-S-Left", "wincmd H")
+"call Amap("C-S-Down", "wincmd J")
+"call Amap("C-S-Up", "wincmd K")
+"call Amap("C-S-Right", "wincmd L")
 
 " Backspace navigates 'Back'
 nmap <BS> <C-O>
