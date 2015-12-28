@@ -87,8 +87,6 @@ export PATH="$PATH:$HOME/bin:$GOROOT/bin:$GOPATH/bin"
 if [ -d $HOME/.gem/ruby ]; then
 	export PATH="$PATH:$(echo $HOME/.gem/ruby/*/bin | tr ' ' :)"
 fi
-export GIT_COMMITTER_NAME='Artem Sheremet'
-export GIT_COMMITTER_EMAIL='dot.doom@gmail.com'
 export DOOMWADDIR=~/dist/games/doom/wad
 export DE=generic
 export CLICOLOR=1
