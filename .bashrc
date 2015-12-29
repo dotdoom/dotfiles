@@ -83,7 +83,7 @@ export PAGER='less -R -F -X -S -n -i -m'
 
 export GOPATH=~/src/go
 export GOROOT=~/pkg/go
-export PATH="$PATH:$HOME/bin:$GOROOT/bin:$GOPATH/bin"
+export PATH="$HOME/bin:$PATH:$GOROOT/bin:$GOPATH/bin"
 if [ -d $HOME/.gem/ruby ]; then
 	export PATH="$PATH:$(echo $HOME/.gem/ruby/*/bin | tr ' ' :)"
 fi
