@@ -259,6 +259,17 @@ iptables -t nat -A POSTROUTING -d $DST_HOST -p tcp --dport $DST_PORT -j SNAT --t
 "
 }
 
+cod() { # colordiff replacement with git
+	local gitarg file1 file2
+	for arg; do
+		gitarg="$gitarg $file1"
+		file1="$file2"
+		file2="$arg"
+	done
+	# git won't diff against a pipe, so a kind of workaround
+	cat $file2 | git diff --no-index $gitarg -- "$file1" -
+}
+
 if [ -r ~/.bashrc_local ]; then
 	. ~/.bashrc_local
 fi
