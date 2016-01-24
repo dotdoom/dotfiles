@@ -23,3 +23,6 @@
 	default = tracking
 [rebase]
 	stat = yes
+
+[format]
+	pretty = fuller
