@@ -77,13 +77,10 @@ if exists("+undofile")
 	set undofile
 endif
 
-if exists("+colorcolumn")
-	set colorcolumn=80
-endif
+set switchbuf+=usetab " Switch to existing tab; open a new tab for the new buf
 
-set switchbuf+=usetab " Switch to existing tab; open a new tab for the new buffer
-
-set statusline=%<%f\ %h%m%r\ %{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P " Custom status line with Git Branch name
+" Custom status line with Git Branch name
+set statusline=%<%f\ %h%m%r\ %{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 let mapleader=","
 
@@ -118,6 +115,12 @@ endfunction
 augroup resCur
 	autocmd!
 	autocmd BufWinEnter * call ResCur()
+augroup END
+
+augroup EditorWidth
+	autocmd BufEnter * highlight OverLength ctermbg=darkred
+	autocmd BufEnter * match OverLength /\%80v.*/
+	autocmd BufEnter *.go match OverLength /\%100v.*/
 augroup END
 
 " Window navigation map
