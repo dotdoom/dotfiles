@@ -25,7 +25,6 @@ shopt -s checkwinsize
 ##
 
 function title() {
-	[ "$DISABLE_AUTO_TITLE" != "true" ] || return
 	if [[ "$TERM" == screen* ]]; then
 		echo -en "\033k"; echo -n "$1"; echo -ne "\033\\"
 	elif [[ "$TERM" == xterm* ]] || [[ $TERM == rxvt* ]] || [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
