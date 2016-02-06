@@ -119,8 +119,8 @@ augroup END
 
 augroup EditorWidth
 	autocmd BufEnter * highlight OverLength ctermbg=darkred
-	autocmd BufEnter * match OverLength /\%80v.*/
-	autocmd BufEnter *.go match OverLength /\%100v.*/
+	autocmd BufEnter * match OverLength /\%81v.*/
+	autocmd BufEnter *.go match OverLength /\%101v.*/
 augroup END
 
 " Window navigation map
