@@ -1,5 +1,8 @@
 # http://aperiodic.net/screen/commands:start
 
+# see accompanying file ~/.ssh/rc
+setenv SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock
+
 # no screen blinking on bell
 vbell off
 startup_message off
