@@ -266,7 +266,7 @@ cod() { # colordiff replacement with git
 		file2="$arg"
 	done
 	# git won't diff against a pipe, so a kind of workaround
-	cat $file2 | git diff --no-index $gitarg -- "$file1" -
+	cat $file2 | git diff --no-prefix $gitarg --no-index "$file1" -
 }
 
 if [ -r ~/.bashrc_local ]; then
