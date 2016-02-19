@@ -290,4 +290,7 @@ esac
 
 trap 'title "$BASH_COMMAND"' DEBUG
 
+# save history after each command
+PROMPT_COMMAND='history -a'
+
 # vim: ft=sh
