@@ -199,3 +199,7 @@ command W w
 command Q q
 command Qa qa
 command QA qa
+
+if filereadable(expand("~/.vimrc_local"))
+	source ~/.vimrc_local
+endif
