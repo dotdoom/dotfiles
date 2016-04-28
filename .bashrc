@@ -283,7 +283,9 @@ case $- in
 		bind 'TAB:menu-complete'
 		# only with interactive non-sudo shell
 		if [ -n "$SSH_CONNECTION" ] && [ -z "$SUDO_UID" ]; then
-			[ "$(parent)" = "screen" ] || screen -RR
+			[ "$(parent)" = "screen" ] ||
+				[ "$(parent)" = "mosh-server" ] ||
+				screen -RR
 		fi
 		;;
 esac
