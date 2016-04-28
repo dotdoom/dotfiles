@@ -129,13 +129,19 @@ noremap <C-\> :let @/ = ""<CR>
 fu! Amap(key, cmd, ...)
 	let l:cr="<CR>"
 	let l:p=":"
-	if (a:0 > 0) && (a:1 == 0)
-		let l:cr=""
-		let l:p=""
+	let l:key="<" . a:key . ">"
+	if a:0 > 0
+		if a:1 == 0
+			let l:cr=""
+			let l:p=""
+		endif
+		if a:1 > 0
+			let l:key=a:key
+		endif
 	endif
-	exe "nmap <" . a:key . "> " . l:p . a:cmd . l:cr
-	exe "vmap <" . a:key . "> <ESC><" . a:key . ">gv"
-	exe "imap <" . a:key . "> <c-o><" . a:key . ">"
+	exe "nmap " . l:key . " " . l:p . a:cmd . l:cr
+	exe "vmap " . l:key . " <ESC>" . l:key . "<ESC>gv"
+	exe "imap " . l:key . " <c-o>" . l:key . ""
 endf
 
 "call Amap("C-t", "tabnew")
@@ -145,8 +151,6 @@ endf
 "call Amap("F2", "update")
 "call Amap("F3", "NERDTreeToggle")
 "call Amap("F7", "TagbarToggle")
-"setl noai nocin nosi inde= formatoptions-=c formatoptions-=r formatoptions-=o nonumber
-call Amap("F8", "setl paste! number! list! <bar> NoShowMarks <bar> GitGutterToggle")
 
 " Navigate by tabs with Shift+Left/Right
 "call Amap("S-Left", "tabprev")
@@ -176,16 +180,12 @@ nmap <S-BS> <C-I>
 "call Amap("C-p", "cp")
 "call Amap("C-n", "cn")
 
-" Working with system clipboard
-vmap zy "+y
-vmap zp "+p
-vmap zP "+P
-vmap zx "+x
-
-nmap zy "+y
-nmap zp "+p
-nmap zP "+P
-nmap zx "+x
+" Working with SSH clipboard
+" This doesn't paste; it prepares vim to do so. Use ^D when finished.
+call Amap("zp", "r !cat", 1)
+"setl noai nocin nosi inde= formatoptions-=c formatoptions-=r formatoptions-=o nonumber
+" This doesn't yank; it (un)prepares vim to do so.
+call Amap("zy", "setl paste! number! list! <bar> NoShowMarks <bar> GitGutterToggle", 1)
 
 " custom filetypes
 au BufNewFile,BufRead *.fasm setf fasm
