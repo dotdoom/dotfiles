@@ -25,14 +25,13 @@ shopt -s checkwinsize
 ##
 
 function title() {
+	printf "\033"
 	if [[ "$TERM" == screen* ]]; then
-		echo -en "\033k"; echo -n "$1"; echo -ne "\033\\"
-	elif [[ "$TERM" == xterm* ]] || [[ $TERM == rxvt* ]] || [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
-		# Window title
-		[ -n "$2" ] && echo -en "\033]2;"; echo -n "$2"; echo -en "\a"
-		# Tab title (gnome-terminal, konsole)
-		echo -en "\033]1;"; echo -n "$1"; echo -en "\a"
+		printf k
+	else
+		printf "]1;"  # or 2 for window title
 	fi
+	printf "$1\033\\"
 }
 
 # DYNAMIC: first brace [ color depends on the exit code
@@ -64,9 +63,6 @@ PS1="$PS1\h "
 
 # DYNAMIC: wd bg is blue for symlinks
 PS1="$PS1"'$(if [ -L "$PWD" ]; then echo -ne "\[$On_Blue\]"; fi)'
-
-# DYNAMIC: pwd in title
-PS1="$PS1"'\[$(title \W)\]'
 
 # DYNAMIC: wd length < 6 (/, /etc, /usr, /var, /home etc) brings red wd name
 PS1="$PS1"'$(if [ ${#PWD} -lt 6 ]; then echo -ne "\[$BRed\]"; else echo -ne "\[$BGreen\]"; fi)\W'
@@ -291,6 +287,6 @@ esac
 trap 'title "$BASH_COMMAND"' DEBUG
 
 # save history after each command
-PROMPT_COMMAND='history -a'
+PROMPT_COMMAND='history -a; title $SHELL'
 
 # vim: ft=sh
