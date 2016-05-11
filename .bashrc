@@ -273,13 +273,32 @@ if [ -x "$(which dircolors 2>/dev/null)" ]; then
 	eval $(dircolors)
 fi
 
+mosh-cleanup() {
+	# kill all mosh-server processes except for the one that is a parent
+	# (hopefully), and another 10 that have been recently started.
+	/usr/bin/pgrep -u "$USER" mosh-server |
+	grep -vx "$PPID" |
+	head -c-1 |
+	tr '\n' ',' |
+	xargs -r -- \
+		/bin/ps \
+		--sort=start_time \
+		-o pid= \
+		-p |
+	head -n -10 |
+	xargs -r kill
+}
+
 case $- in
 	*i*)
 		bind 'set show-all-if-ambiguous on'
 		bind 'TAB:menu-complete'
 		# only with interactive non-sudo shell
 		if [ -n "$SSH_CONNECTION" ] && [ -z "$SUDO_UID" ]; then
-			[ "$(parent)" = "screen" ] || screen -RR
+			if [ "$(parent)" != "screen" ]; then
+				mosh-cleanup
+				screen -RR
+			fi
 		fi
 		;;
 esac
