@@ -54,7 +54,7 @@ fi
 PS1="$PS1@"
 
 # STATIC: hostname depends on Xorg installed (w/o Xorg looks like headless, thus RED)
-if which X >/dev/null 2>&1; then
+if which X &>/dev/null; then
 	PS1="$PS1\[$BGreen\]"
 else
 	PS1="$PS1\[$BRed\]"
@@ -62,12 +62,13 @@ fi
 PS1="$PS1\h "
 
 # DYNAMIC: wd bg is blue for symlinks
-PS1="$PS1"'$(if [ -L "$PWD" ]; then echo -ne "\[$On_Blue\]"; fi)'
+PS1="$PS1"'$([ -L "$PWD" ] && echo -ne "\[$On_Blue\]")'
 
 # DYNAMIC: wd length < 6 (/, /etc, /usr, /var, /home etc) brings red wd name
-PS1="$PS1"'$(if [ ${#PWD} -lt 6 ]; then echo -ne "\[$BRed\]"; else echo -ne "\[$BGreen\]"; fi)\W'
+PS1="$PS1"'$(if [ ${#PWD} -lt 6 ]; then echo -ne "\[$BRed\]"; else echo -ne "\[$BYellow\]"; fi)\W'
 
-PS1="$PS1\[$Color_Off\]\[$BGreen\]]"'$git_branch$git_dirty'"\\$\[$Color_Off\] "
+export GIT_PS1_SHOWDIRTYSTATE=1
+PS1="$PS1\[$Color_Off\]\[$BGreen\]]\[$BBlue\]"'$(__git_ps1)'"\[$Color_Off\] \\$ "
 
 export EDITOR=vim
 export BROWSER=chromium
