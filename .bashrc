@@ -29,7 +29,7 @@ function title() {
 	if [[ "$TERM" == screen* ]]; then
 		printf k
 	else
-		printf "]1;"  # or 2 for window title
+		printf "]0;"  # or 1, 2 for window title
 	fi
 	printf "$1\033\\"
 }
@@ -301,12 +301,10 @@ case $- in
 				screen -RR
 			fi
 		fi
+		trap 'history -a; title "$BASH_COMMAND"' DEBUG
+		# reset title to shell name.
+		PROMPT_COMMAND='title $SHELL'
 		;;
 esac
-
-trap 'title "$BASH_COMMAND"' DEBUG
-
-# save history after each command
-PROMPT_COMMAND='history -a; title $SHELL'
 
 # vim: ft=sh
