@@ -71,7 +71,7 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 PS1="$PS1\[$Color_Off\]\[$BGreen\]]\[$BBlue\]"'$(__git_ps1)'"\[$Color_Off\] \\$ "
 
 export EDITOR=vim
-export BROWSER=chromium
+export BROWSER=google-chrome
 export PAGER='less -R -F -X -S -n -i -m'
 
 export GOPATH=~/src/go
