@@ -12,6 +12,7 @@ shopt -s histappend
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=100000
 HISTFILESIZE=5000000
+PROMPT_DIRTRIM=5
 # treat directory name commands as cd
 shopt -s autocd
 # check the window size after each command and, if necessary,
@@ -65,7 +66,7 @@ PS1="$PS1\h "
 PS1="$PS1"'$([ -L "$PWD" ] && echo -ne "\[$On_Blue\]")'
 
 # DYNAMIC: wd length < 6 (/, /etc, /usr, /var, /home etc) brings red wd name
-PS1="$PS1"'$(if [ ${#PWD} -lt 6 ]; then echo -ne "\[$BRed\]"; else echo -ne "\[$BYellow\]"; fi)\W'
+PS1="$PS1"'$(if [ ${#PWD} -lt 6 ]; then echo -ne "\[$BRed\]"; else echo -ne "\[$BYellow\]"; fi)\w'
 
 export GIT_PS1_SHOWDIRTYSTATE=1
 PS1="$PS1\[$Color_Off\]\[$BGreen\]]\[$BBlue\]"'$(__git_ps1)'"\[$Color_Off\] \\$ "
