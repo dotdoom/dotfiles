@@ -11,9 +11,6 @@ defscrollback 10240
 caption always "%{+b}%H | %c %d.%m.%Y | Load: %l"
 # colored window list
 hardstatus alwayslastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
-# F11/F12 = switch windows
-bindkey -k F1 prev
-bindkey -k F2 next
 # Launch login shells
 shell -${SHELL}
 # 256color support
@@ -22,3 +19,9 @@ termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 # beep on activity monitor alert (C-a M)
 # ex.: 12:37 activity -> 7$ zsh
 activity "%c activity -> %n%f %t^G"
+
+# Alt Left/Right = switch windows
+bindkey "^[[1;3D" prev
+bindkey "^[[1;3C" next
+# Alt N = new window
+bindkey "^[n" screen
