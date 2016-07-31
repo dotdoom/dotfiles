@@ -275,7 +275,7 @@ if [ -x "$(which dircolors 2>/dev/null)" ]; then
 	eval $(dircolors)
 fi
 
-mosh-cleanup() {
+mosh-cleanup-by-count() {
 	# kill all mosh-server processes except for the one that is a parent
 	# (hopefully), and another 10 that have been recently started.
 	/usr/bin/pgrep -u "$USER" mosh-server |
@@ -291,6 +291,17 @@ mosh-cleanup() {
 	xargs -r kill
 }
 
+mosh-cleanup-by-idle() {
+	# kill mosh-server that are idle for more than 3 days.
+	for tty in `
+			w -sf |
+			grep -E "^$USER" |
+			grep '[3-9]days mosh-server' |
+			cut -c 10-15`; do
+		kill -9 `ps -o pid= -t $tty`
+	done
+}
+
 case $- in
 	*i*)
 		bind 'set show-all-if-ambiguous on'
@@ -298,7 +309,7 @@ case $- in
 		# only with interactive non-sudo shell
 		if [ -n "$SSH_CONNECTION" ] && [ -z "$SUDO_UID" ]; then
 			if [ "$(parent)" != "screen" ]; then
-				mosh-cleanup
+				mosh-cleanup-by-idle
 				screen -RR
 			fi
 		fi
