@@ -44,7 +44,7 @@ hi StorageClass guifg=#FF8000 gui=none ctermfg=darkyellow cterm=none
 hi Structure    guifg=#FF8000 gui=none ctermfg=darkyellow cterm=none
 hi Typedef      guifg=#FF8000 gui=none ctermfg=darkyellow cterm=none
 
-hi Pmenu      ctermfg=cyan    ctermbg=blue cterm=none guifg=cyan   guibg=darkblue
+hi Pmenu      ctermfg=black   ctermbg=blue cterm=none guifg=black  guibg=darkblue
 hi PmenuSel   ctermfg=white   ctermbg=blue cterm=none guifg=white  guibg=darkblue gui=none
 hi PmenuSbar                  ctermbg=cyan            guibg=cyan
 hi PmenuThumb ctermfg=white                           guifg=white
