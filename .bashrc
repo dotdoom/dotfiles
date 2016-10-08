@@ -319,4 +319,7 @@ case $- in
 		;;
 esac
 
+# Remove duplicates from PATH.
+export PATH="$(awk -v RS=: -v ORS=: '!arr[$0]++' <<<"$PATH" | head -1)"
+
 # vim: ft=sh
