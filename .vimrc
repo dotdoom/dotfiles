@@ -203,6 +203,23 @@ command Q q
 command Qa qa
 command QA qa
 
+" keep in sync with https://github.com/dasfoo/travis/blob/master/go.sh
+let g:go_metalinter_command = "gometalinter " .
+			\ "--disable=unconvert " .
+			\ "--disable=dupl " .
+			\ "--disable=gas " .
+			\ "--enable=testify " .
+			\ "--enable=test ".
+			\ "--enable=goimports " .
+			\ "--enable=gofmt " .
+			\ "--enable=lll " .
+			\ "--enable=misspell " .
+			\ "--deadline=1m " .
+			\ "--line-length=100 " .
+			\ "--exclude='\.pb\.go:' " .
+			\ "./..."
+
+
 if filereadable(expand("~/.vimrc_local"))
 	source ~/.vimrc_local
 endif
