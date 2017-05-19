@@ -25,18 +25,13 @@ shopt -s checkwinsize
 ## prompt games
 ##
 
-function title() {
-	printf "\033"
-	if [[ "$TERM" == screen* ]]; then
-		printf k
-	else
-		printf "]0;"  # or 1, 2 for window title
-	fi
-	printf "$1\033\\"
-}
+PS1=''
+if [ "$TERM" = screen ]; then
+	PS1='\[\033k\033\\\]'
+fi
 
 # DYNAMIC: first brace [ color depends on the exit code
-PS1='$(if [ $? -eq 0 ]; then echo -ne "\[$BGreen\]"; else echo -ne "\[$BRed\]"; fi)['
+PS1="$PS1"'$(if [ $? -eq 0 ]; then echo -ne "\[$BGreen\]"; else echo -ne "\[$BRed\]"; fi)['
 
 # STATIC: username color depends on UID
 if [ $UID -eq 0 ]; then
@@ -94,12 +89,9 @@ alias snc='openssl s_client -connect '
 alias vsnc='openssl s_client -showcerts -state -msg -debug -connect '
 alias killall='killall -v -r'
 alias scrot='scrot -e "mv \$f ~/Pictures/ 2>/dev/null" -cd 5'
-alias qiv='qiv -fml -M'
-alias qivr='qiv -u'
 alias grep='grep --line-buffered --color=auto'
 alias fgrep='grep -Frn --color=always'
 alias figrep='fgrep -i'
-alias svn='svn --no-auth-cache'
 alias mysql='mysql --select_limit=1000'
 alias ka='killall'
 alias fsck='fsck -C'
@@ -114,7 +106,6 @@ alias psa='ps axfo pid,euser,bsdstart,vsz,rss,bsdtime,args'
 alias parent='ps -p $PPID -o comm='
 alias dbgrep='dbgrep.pl -vpuroot'
 alias tcpdump='tcpdump -l'
-alias pacman='pacman --color auto'
 alias xo=xdg-open
 alias ag='ag -C 2 --pager="$PAGER" --smart-case'
 alias prepend-timestamp='gawk "{ print strftime(\"[%Y-%m-%d %H:%M:%S]\"), \$0; fflush() }"'
@@ -296,7 +287,7 @@ mosh-cleanup-by-idle() {
 	for tty in `
 			w -sf |
 			grep -E "^$USER" |
-			grep '[3-9]days mosh-server' |
+			grep -E "[3-9]days (mosh-server|-)" |
 			cut -c 10-15`; do
 		kill -9 `ps -o pid= -t $tty`
 	done
@@ -313,9 +304,7 @@ case $- in
 				screen -RR
 			fi
 		fi
-		trap 'history -a; title "$BASH_COMMAND"' DEBUG
-		# reset title to shell name.
-		PROMPT_COMMAND='title $SHELL'
+		trap 'history -a' DEBUG
 		;;
 esac
 

@@ -25,3 +25,5 @@ bindkey "^[[1;3D" prev
 bindkey "^[[1;3C" next
 # Alt N = new window
 bindkey "^[n" screen
+
+shelltitle '$ |bash'
