@@ -14,7 +14,8 @@ hardstatus alwayslastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
 # Launch login shells
 shell -${SHELL}
 # 256color support
-termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+#termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+term screen-256color
 #defbce "on"
 # beep on activity monitor alert (C-a M)
 # ex.: 12:37 activity -> 7$ zsh

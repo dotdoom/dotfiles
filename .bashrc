@@ -155,11 +155,6 @@ alias su='su -m'
 # useful stuff
 [ -z "$VIM_ORIGINAL" ] && VIM_ORIGINAL="$(which vim)"
 function vim() {
-	if [ "$TERM" = "linux" ]; then
-		local COMPAT_TERM=$TERM
-	else
-		local COMPAT_TERM="xterm-256color"
-	fi
 	# we only handle single-argument VIM
 	if [ $# -eq 1 ]; then
 		if [ -e "$1" ]; then
@@ -172,13 +167,13 @@ function vim() {
 
 		if [ -w "$FILENAME" ]; then
 			# yahoo! writable
-			TERM=$COMPAT_TERM "$VIM_ORIGINAL" "$1"
+			"$VIM_ORIGINAL" "$1"
 		else
 			echo 'this file will be opened with sudo'
-			TERM=$COMPAT_TERM sudo "$VIM_ORIGINAL" "$1" || "$VIM_ORIGINAL" "$1"
+			sudo "$VIM_ORIGINAL" "$1" || "$VIM_ORIGINAL" "$1"
 		fi
 	else
-		TERM=$COMPAT_TERM "$VIM_ORIGINAL" $*
+		"$VIM_ORIGINAL" $*
 	fi
 }
 
