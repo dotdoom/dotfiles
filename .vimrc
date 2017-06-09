@@ -67,9 +67,9 @@ set background=dark " When set to "dark", Vim will try to use colors that look
 
 set list            " Display tabs and trailing spaces
 
-"if has("mouse")
-"	set mouse=a     " Enable the use of the mouse.
-"endif
+if has("mouse")
+	set mouse=a     " Enable the use of the mouse.
+endif
 
 if exists("+undofile")
     " Enable the persistent undo file(s)
@@ -188,7 +188,17 @@ nmap <S-BS> <C-I>
 call Amap("zp", "r !cat", 1)
 "setl noai nocin nosi inde= formatoptions-=c formatoptions-=r formatoptions-=o nonumber
 " This doesn't yank; it (un)prepares vim to do so.
-call Amap("zy", "setl paste! number! list! <bar> NoShowMarks <bar> GitGutterToggle", 1)
+"call Amap("zy", "setl paste! number! list! <bar> NoShowMarks <bar> GitGutterToggle", 1)
+
+"noremap <silent> <Leader>y :w !printf "\e]52;c;$(base64 -w0)\a"<Return><Esc>
+"noremap <silent> <Leader>y :w !printf "\eP\e]52;c;$(base64 -w0)\a\e\\"<Return><Esc>
+
+" https://github.com/mobile-shell/mosh/issues/637 D'oh, really Mosh?!
+" Well at least works with SecureShell + screen.
+noremap <silent> <Leader>y :w !printf "
+\$([[ "${TERM/-*/}" == screen ]] && printf "\eP")
+\\e]52;c;$(base64 -w0)\a
+\$([[ "${TERM/-*/}" == screen ]] && printf "\e\\")"<Return><Esc>
 
 " custom filetypes
 au BufNewFile,BufRead *.fasm setf fasm
