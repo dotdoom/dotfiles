@@ -76,6 +76,9 @@ export PATH="$HOME/bin:$PATH:$GOROOT/bin:$GOPATH/bin:$HOME/.npm/bin"
 if [ -d $HOME/.gem/ruby ]; then
 	export PATH="$PATH:$(echo $HOME/.gem/ruby/*/bin | tr ' ' :)"
 fi
+if [ -d $HOME/Android/Sdk ]; then
+	export PATH="$PATH:$HOME/Android/Sdk/tools:$HOME/Android/Sdk/platform-tools"
+fi
 export DOOMWADDIR=~/dist/games/doom/wad
 export DE=generic
 export CLICOLOR=1
