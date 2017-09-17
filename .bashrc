@@ -26,7 +26,7 @@ shopt -s checkwinsize
 ##
 
 PS1=''
-if [ "$TERM" = screen ]; then
+if [[ "$TERM" == screen* ]]; then
 	PS1='\[\033k\033\\\]'
 fi
 
