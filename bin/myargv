@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# A command that prints its argv to a log.
+echo $(date) $(pwd) "$0" "$@" >>"/tmp/myargv-${USER}.log"
