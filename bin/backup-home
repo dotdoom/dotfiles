@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+mkdir -p "$HOME/tmp"
+exec >"$HOME/tmp/backup.log" 2>&1
+
+ROUND="$(($(date +%_j) % 10))"
+
+/bin/tar -cp \
+	--exclude-tag-all=purgefile \
+	--exclude="$HOME/pkg" \
+	--exclude="$HOME/tmp" \
+	--exclude="$HOME/Android/Sdk" \
+	--exclude="$HOME/Downloads" \
+	--exclude="$HOME/.gradle" \
+	--exclude="$HOME/.android/avd" \
+	--exclude="$HOME/.cache" \
+	--exclude="$HOME/.wine" \
+	--exclude="$HOME/.gvfs" \
+	--exclude="$HOME/.npm" \
+	--exclude="$HOME/.local/share/Trash" \
+	"$HOME" |
+gsutil cp - \
+	"gs://backup-dasfoo-org/$(hostname)/$(whoami)/backup-$ROUND.tar"
