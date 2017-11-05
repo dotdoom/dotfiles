@@ -246,6 +246,13 @@ iptables -t nat -A POSTROUTING -d $DST_HOST -p tcp --dport $DST_PORT -j SNAT --t
 "
 }
 
+vind() {
+	local target
+	target="$1"
+	shift
+	find . -name "$target" -exec vim {} "$@" \; -quit
+}
+
 cod() { # colordiff replacement with git
 	local gitarg file1 file2
 	for arg; do
