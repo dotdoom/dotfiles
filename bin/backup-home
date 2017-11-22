@@ -11,13 +11,16 @@ ROUND="$(($(date +%_j) % 10))"
 	--exclude="$HOME/tmp" \
 	--exclude="$HOME/Android/Sdk" \
 	--exclude="$HOME/Downloads" \
-	--exclude="$HOME/.gradle" \
 	--exclude="$HOME/.android/avd" \
 	--exclude="$HOME/.cache" \
 	--exclude="$HOME/.wine" \
 	--exclude="$HOME/.gvfs" \
 	--exclude="$HOME/.npm" \
 	--exclude="$HOME/.local/share/Trash" \
+	--exclude=build \
+	--exclude=.gradle \
+	--exclude=node_modules \
+	--exclude=bower_components \
 	"$HOME" |
 gsutil cp - \
 	"gs://backup-dasfoo-org/$(hostname)/$(whoami)/backup-$ROUND.tar"
