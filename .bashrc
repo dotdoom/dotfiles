@@ -264,6 +264,10 @@ cod() { # colordiff replacement with git
 	cat $file2 | git diff --no-prefix $gitarg --no-index "$file1" -
 }
 
+if [ -z "$SSH_AUTH_SOCK" ]; then
+	eval `ssh-agent -s`
+fi
+
 if [ -r ~/.bashrc_local ]; then
 	. ~/.bashrc_local
 fi
