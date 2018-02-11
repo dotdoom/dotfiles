@@ -18,6 +18,7 @@ ROUND="$(($(date +%_j) % 10))"
 	--exclude="$HOME/.npm" \
 	--exclude="$HOME/.local/share/Trash" \
 	--exclude="$HOME/VirtualBox VMs" \
+	--exclude="$HOME/.vagrant.d" \
 	--exclude=build \
 	--exclude=.gradle \
 	--exclude=node_modules \
