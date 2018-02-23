@@ -40,3 +40,6 @@
 [submodule ".vim/bundle/vim-lastplace"]
 	path = .vim/bundle/vim-lastplace
 	url = https://github.com/farmergreg/vim-lastplace.git
+[submodule ".vim/bundle/dart-vim-plugin"]
+	path = .vim/bundle/dart-vim-plugin
+	url = https://github.com/dart-lang/dart-vim-plugin.git
