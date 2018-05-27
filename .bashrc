@@ -83,6 +83,10 @@ export DOOMWADDIR=~/dist/games/doom/wad
 export DE=generic
 export CLICOLOR=1
 
+# Disable Wine creating application shortcuts and, most importantly, hijack
+# file associations!
+export WINEDLLOVERRIDES=winemenubuilder.exe=d
+
 alias ls='ls -hF --color=auto'
 alias pgrep='pgrep -lf'
 alias crontab='crontab -i'
