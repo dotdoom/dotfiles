@@ -20,3 +20,10 @@ xterm*font: -misc-fixed-medium-r-*-*-18-*-*-*-*-*-iso10646-1
 !xterm*wideFont: -misc-fixed-medium-r-normal-ja-18-120-100-100-c-180-iso10646-1
 !xterm*font: -*-terminus-medium-*-*-*-16-*-*-*-*-*-iso10646-*
 xterm*VT100.translations: #override <Btn1Up>: select-end(PRIMARY, CLIPBOARD, CUT_BUFFER0)
+Xft.antialias:  1
+Xft.autohint:   0
+Xft.dpi:        96
+Xft.hinting:    0
+Xft.hintstyle:  hintnone
+Xft.lcdfilter:  lcddefault
+Xft.rgba:       rgb
