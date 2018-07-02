@@ -157,9 +157,8 @@ alias gc='git commit -v'
 alias gd='git di'
 alias gdc='gd --cached'
 alias gdm='gd master --stat --relative'
-alias gl='git pull'
-alias gp='git push'
 alias gst='git status'
+alias grm='git fetch origin master && git rebase origin/master && git push -f'
 
 # sudo
 alias sudo='sudo -E '
