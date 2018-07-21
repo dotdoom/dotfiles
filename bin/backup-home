@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+BUCKET="${1?GCS bucket name is required}"
+
 mkdir -p "$HOME/tmp"
 exec >"$HOME/tmp/backup.log" 2>&1
 
@@ -25,4 +27,4 @@ ROUND="$(($(date +%_j) % 10))"
 	--exclude=bower_components \
 	"$HOME" |
 gsutil cp - \
-	"gs://backup-dasfoo-org/$(hostname)/$(whoami)/backup-$ROUND.tar"
+	"gs://${BUCKET}/$(hostname)/$(whoami)/backup-$ROUND.tar"
