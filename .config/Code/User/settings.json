@@ -1,0 +1,32 @@
+{
+    "androidEmulatorLauncher.adbPath": "$ANDROID_HOME/platform-tools/adb",
+    "androidEmulatorLauncher.emulatorPath": "$ANDROID_HOME/tools/emulator",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.bundle": true,
+        "**/.idea": true,
+        "**/.vscode": true,
+        "**/.packages": true,
+        "**/.DS_Store": true,
+    },
+    "files.autoSave": "onFocusChange",
+    "terminal.integrated.fontSize": 13,
+    "terminal.integrated.fontWeightBold": "normal",
+    "editor.fontSize": 13,
+    "editor.lineHeight": 18,
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+        80
+    ],
+    // Disable git support (and annoying popups) in IDE
+    "git.enabled": false,
+    // Disable [confusing] file icons in Explorer
+    "workbench.iconTheme": null,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true,
+    },
+    "debug.toolBarLocation": "docked",
+}
