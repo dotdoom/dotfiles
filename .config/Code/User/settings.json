@@ -1,6 +1,4 @@
 {
-    "androidEmulatorLauncher.adbPath": "$ANDROID_HOME/platform-tools/adb",
-    "androidEmulatorLauncher.emulatorPath": "$ANDROID_HOME/tools/emulator",
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
