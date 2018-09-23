@@ -273,8 +273,10 @@ cod() { # colordiff replacement with git
 }
 
 if [ -z "$SSH_AUTH_SOCK" ]; then
-	eval `ssh-agent -s`
-	trap 'kill $SSH_AGENT_PID' EXIT
+	if [[ $- == *i*  ]]; then
+		eval `ssh-agent -s`
+		trap 'kill $SSH_AGENT_PID' EXIT
+	fi
 fi
 
 if [ -r ~/.bashrc_local ]; then
