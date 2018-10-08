@@ -78,7 +78,8 @@ if [ -d "$HOME/.gem/ruby" ]; then
 	PATH+=":$(echo $HOME/.gem/ruby/*/bin | tr ' ' :)"
 fi
 if [ -d "$HOME/Android/Sdk" ]; then
-	PATH+=":$HOME/Android/Sdk/tools:$HOME/Android/Sdk/platform-tools"
+	export ANDROID_HOME="$HOME/Android/Sdk"
+	PATH+=":$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
 fi
 for extras in "$GOROOT/bin" "$GOPATH/bin" "$HOME/.local/bin" "$HOME/.npm/bin" "$HOME/.pub-cache/bin" /usr/lib/dart/bin; do
 	[ -d "$extras" ] && PATH+=":$extras"
