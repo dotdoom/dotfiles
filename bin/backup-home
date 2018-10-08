@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+exec >"$HOME/tmp/backup.log" 2>&1
+
+source .bashrc
+
+set -ex
+
 BUCKET="${1?GCS bucket name is required}"
 
 mkdir -p "$HOME/tmp"
-exec >"$HOME/tmp/backup.log" 2>&1
 
 ROUND="$(($(date +%_j) % 10))"
 
