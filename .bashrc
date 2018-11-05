@@ -165,6 +165,11 @@ alias grm='git fetch origin master && git rebase origin/master && git push -f'
 alias sudo='sudo -E '
 alias su='su -m'
 
+alias dev-docker='docker run --rm --user root \
+	--mount type=bind,source=$PWD,target=/home/build/project \
+	--interactive --tty dasfoo/dev:latest \
+	-u$(id -u) -g$(id -g) bash -c'
+
 # useful stuff
 [ -z "$VIM_ORIGINAL" ] && VIM_ORIGINAL="$(which vim)"
 function vim() {
