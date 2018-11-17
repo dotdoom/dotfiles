@@ -165,15 +165,9 @@ alias grm='git fetch origin master && git rebase origin/master && git push -f'
 alias sudo='sudo -E '
 alias su='su -m'
 
-alias dev-docker='mkdir -p $HOME/.{gradle,npm,pub-cache,android} && \
-	docker run --rm --user root \
-	--mount type=bind,source=$PWD,target=/home/build/project \
-	--mount type=bind,source=$HOME/.npm,target=/home/build/.npm \
-	--mount type=bind,source=$HOME/.gradle,target=/home/build/.gradle \
-	--mount type=bind,source=$HOME/.pub-cache,target=/home/build/.pub-cache \
-	--mount type=bind,source=$HOME/.android,target=/home/build/.android \
-	--interactive --tty dasfoo/dev:latest \
-	-u$(id -u) -g$(id -g) bash -c'
+alias dev-docker='docker run --rm \
+	--mount type=bind,source=$PWD,target=/home/build/project_src \
+	--interactive --tty dasfoo/dev:latest'
 
 # useful stuff
 [ -z "$VIM_ORIGINAL" ] && VIM_ORIGINAL="$(which vim)"
