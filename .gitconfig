@@ -12,20 +12,17 @@
 	lol = log --graph --decorate=full --pretty=oneline --abbrev-commit
 	lola = log --graph --decorate=full --pretty=oneline --abbrev-commit --all
 	ls = ls-files
-
 	# Show files ignored by git:
 	ign = ls-files -o -i --exclude-standard
-	meta-fs = !/opt/bin/git-meta-fs
-
 [apply]
 	whitespace = nowarn
 [push]
 	default = tracking
 [rebase]
 	stat = yes
-
 [format]
 	pretty = fuller
-
 [fetch]
 	prune = yes
+[credential "https://source.developers.google.com"]
+	helper = gcloud.sh
