@@ -57,6 +57,11 @@ let g:SuperTabDefaultCompletionType = "context"
 " vim-go: not just format the code; insert imports, too.
 let g:go_fmt_command = "goimports"
 
+" dart-vim-plugin: highlight HTML in strings, enforce syntax, format on save
+let dart_html_in_string = v:true
+let dart_style_guide = 2
+let dart_format_on_save = 1
+
 " Tell vim to remember certain things when we exit
 "  'N   :  marks will be remembered for up to N previously edited files
 "  "N   :  will save up to N lines for each register
