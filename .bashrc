@@ -133,6 +133,7 @@ pretransfer: %{time_pretransfer} | \
 starttransfer: %{time_starttransfer} | \
 total: %{time_total} | \
 size: %{size_download}\n"'
+alias ssh-fp='echo /etc/ssh/ssh_host_*_key.pub | xargs -n1 ssh-keygen -l -f'
 
 function ds() {
 	du -sh "$@" | sort -rh
