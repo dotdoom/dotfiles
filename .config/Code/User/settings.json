@@ -27,4 +27,8 @@
         "source.organizeImports": true,
     },
     "debug.toolBarLocation": "docked",
+    "editor.renderWhitespace": "all",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
 }
