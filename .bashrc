@@ -135,6 +135,23 @@ total: %{time_total} | \
 size: %{size_download}\n"'
 alias ssh-fp='echo /etc/ssh/ssh_host_*_key.pub | xargs -n1 ssh-keygen -l -f'
 
+function git-remaster() {
+	local need_stash="$(git status --porcelain)"
+	if [ -n "${need_stash}" ]; then
+		git stash --quiet --include-untracked || return 1
+	fi
+	# `git fetch origin master && git rebase origin/master` would also work,
+	# but that's cumbersome (ex.: need to find out the name "origin") and
+	# does not update local master branch itself, which is often desirable.
+	git checkout --quiet master && \
+		git pull --rebase && \
+		git checkout --quiet - && \
+		git rebase master
+	if [ $? -eq 0 -a -n "${need_stash}" ]; then
+		git stash pop --quiet
+	fi
+}
+
 function ds() {
 	du -sh "$@" | sort -rh
 }
@@ -169,6 +186,7 @@ alias gdc='gd --cached'
 alias gdm='gd master --stat --relative'
 alias gst='git status'
 alias grm='git fetch origin master && git rebase origin/master && git push -f'
+alias gamend='git commit -a --amend --no-edit && git push -f'
 
 # sudo
 alias sudo='sudo -E '
