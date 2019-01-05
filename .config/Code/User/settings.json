@@ -32,4 +32,7 @@
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "window.titleBarStyle": "custom",
+    "[javascript]": {
+        "editor.formatOnSave": false
+    }
 }
