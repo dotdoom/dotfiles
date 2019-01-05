@@ -88,6 +88,7 @@ done
 export DOOMWADDIR=~/dist/games/doom/wad
 export DE=generic
 export CLICOLOR=1
+export PYTHONSTARTUP="$HOME/.pythonstartup"
 
 # Disable Wine creating application shortcuts and, most importantly, hijack
 # file associations!

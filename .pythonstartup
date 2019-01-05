@@ -1,0 +1,19 @@
+def init_prompt():
+  try:
+    import readline
+    import rlcompleter
+  except ImportError:
+    return
+
+  import os
+  histfile = os.path.join(os.environ.get('HOME', ''), '.pythonhistory')
+  try:
+    readline.read_history_file(histfile)
+  except IOError:
+    pass
+
+  import atexit
+  atexit.register(readline.write_history_file, histfile)
+
+init_prompt()
+del init_prompt
