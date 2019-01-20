@@ -34,5 +34,6 @@
     "window.titleBarStyle": "custom",
     "[javascript]": {
         "editor.formatOnSave": false
-    }
+    },
+    "html.format.wrapLineLength": 80
 }
