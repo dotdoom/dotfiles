@@ -134,6 +134,7 @@ starttransfer: %{time_starttransfer} | \
 total: %{time_total} | \
 size: %{size_download}\n"'
 alias ssh-fp='echo /etc/ssh/ssh_host_*_key.pub | xargs -n1 ssh-keygen -l -f'
+alias aplay_pcm='aplay -t raw -c 2 -r 44100 -f S16_LE'
 
 function git-remaster() {
 	local need_stash="$(git status --porcelain)"
