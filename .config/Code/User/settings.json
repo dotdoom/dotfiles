@@ -35,5 +35,13 @@
     "[javascript]": {
         "editor.formatOnSave": false
     },
-    "html.format.wrapLineLength": 80
+    "html.format.wrapLineLength": 80,
+    "files.associations": {
+        // Fastlane files.
+        "Fastfile": "ruby",
+        "Pluginfile": "ruby",
+        "Matchfile": "ruby",
+        "Gymfile": "ruby",
+        "Appfile": "ruby"
+    }
 }
