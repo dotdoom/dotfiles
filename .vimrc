@@ -80,7 +80,6 @@ augroup EditorWidth
 	au BufEnter *.go match OverLength /\%101v./
 	au BufEnter *.java match OverLength /\%101v./
 
-	au BufEnter *.yml match OverLength /$$/
 	au BufEnter *.data match OverLength /$$/
 	au BufEnter .vimrc match OverLength /$$/
 augroup END
