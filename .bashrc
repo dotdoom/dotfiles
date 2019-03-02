@@ -72,14 +72,17 @@ export PAGER='less -R -F -X -S -n -i -m'
 
 export GOPATH="$HOME/src/go"
 export GOROOT="$HOME/pkg/go"
+export GEM_HOME="$HOME/.gem"
 
 export PATH="$HOME/bin:$PATH"
 if [ -d "$HOME/.gem/ruby" ]; then
 	PATH+=":$(echo $HOME/.gem/ruby/*/bin | tr ' ' :)"
 fi
 if [ -d "$HOME/Android/Sdk" ]; then
-	export ANDROID_HOME="$HOME/Android/Sdk"
-	PATH+=":$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
+	export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
+	# ANDROID_HOME for https://issuetracker.google.com/issues/125138969.
+	export ANDROID_HOME="${ANDROID_SDK_ROOT?}"
+	PATH+=":$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools"
 fi
 for extras in "$GOROOT/bin" "$GOPATH/bin" "$HOME/.local/bin" "$HOME/.npm/bin" "$HOME/.pub-cache/bin" /usr/lib/dart/bin; do
 	[ -d "$extras" ] && PATH+=":$extras"
