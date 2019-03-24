@@ -26,3 +26,5 @@
 	prune = yes
 [credential "https://source.developers.google.com"]
 	helper = gcloud.sh
+[core]
+	autocrlf = input
