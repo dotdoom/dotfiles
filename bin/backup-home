@@ -13,7 +13,6 @@ mkdir -p "$HOME/tmp"
 ROUND="$(($(date +%_j) % 10))"
 
 /bin/tar -cp \
-	--exclude-tag-all=purgefile \
 	--exclude="$HOME/pkg" \
 	--exclude="$HOME/tmp" \
 	--exclude="$HOME/Android/Sdk" \
@@ -23,7 +22,17 @@ ROUND="$(($(date +%_j) % 10))"
 	--exclude="$HOME/.wine" \
 	--exclude="$HOME/.gvfs" \
 	--exclude="$HOME/.npm" \
+	--exclude="$HOME/.gem" \
+	--exclude="$HOME/.pub-cache" \
+	--exclude="$HOME/.bundle" \
+	--exclude="$HOME/.dartServer" \
 	--exclude="$HOME/.local/share/Trash" \
+	--exclude="$HOME/.config/google-chrome" \
+	--exclude="$HOME/.config/chrome-remote-desktop" \
+	--exclude="$HOME/.config/Code" \
+	--exclude="$HOME/.vscode" \
+	--exclude="$HOME/.AndroidStudio*" \
+	--exclude="$HOME/.config/gzdoom" \
 	--exclude="$HOME/VirtualBox VMs" \
 	--exclude="$HOME/.vagrant.d" \
 	--exclude=build \
