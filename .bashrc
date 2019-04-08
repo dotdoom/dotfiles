@@ -199,6 +199,7 @@ alias su='su -m'
 alias dev-docker='docker run --rm \
 	--mount type=bind,source=$PWD,target=/home/build/project_src \
 	--interactive --tty dasfoo/dev:latest'
+alias backup-home-explore='eval "ncdu $(grep -A1 -- --exclude $HOME/bin/backup-home | tr -d \|)"'
 
 # useful stuff
 [ -z "$VIM_ORIGINAL" ] && VIM_ORIGINAL="$(which vim)"
