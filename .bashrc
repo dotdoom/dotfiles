@@ -85,7 +85,7 @@ if [ -d "$HOME/Android/Sdk" ]; then
 	PATH+=":$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools"
 fi
 for extras in "$GOROOT/bin" "$GOPATH/bin" "$HOME/.local/bin" "$HOME/.npm/bin" "$HOME/.pub-cache/bin" /usr/lib/dart/bin; do
-	[ -d "$extras" ] && PATH+=":$extras"
+	[ -d "$extras" ] && PATH="$extras:$PATH"
 done
 
 export DOOMWADDIR=~/dist/games/doom/wad
