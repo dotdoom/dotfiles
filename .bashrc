@@ -72,7 +72,6 @@ export PAGER='less -R -F -X -S -n -i -m'
 
 export GOPATH="$HOME/src/go"
 export GOROOT="$HOME/pkg/go"
-export GEM_HOME="$HOME/.gem"
 
 export PATH="$HOME/bin:$PATH"
 if [ -d "$HOME/.gem/ruby" ]; then
