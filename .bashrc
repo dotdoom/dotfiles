@@ -155,6 +155,15 @@ function git-remaster() {
 	fi
 }
 
+function git-recover() {
+	echo 'This operation is destructive. Ctrl-C now.'
+	read
+	find .git/objects/ -size 0 -exec rm -f {} \;
+	git fetch origin
+	echo 'You may need to run:'
+	echo 'git symbolic-ref HEAD refs/heads/mybranch'
+}
+
 function ds() {
 	du -sh "$@" | sort -rh
 }
