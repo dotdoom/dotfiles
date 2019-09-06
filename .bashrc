@@ -83,7 +83,15 @@ if [ -d "$HOME/Android/Sdk" ]; then
 	export ANDROID_HOME="${ANDROID_SDK_ROOT?}"
 	PATH+=":$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools"
 fi
-for extras in "$GOROOT/bin" "$GOPATH/bin" "$HOME/.local/bin" "$HOME/.npm/bin" "$HOME/.pub-cache/bin" /usr/lib/dart/bin; do
+for extras in \
+	"$GOROOT/bin" \
+	"$GOPATH/bin" \
+	"$HOME/.local/bin" \
+	"$HOME/.npm/bin" \
+	"$HOME/.pub-cache/bin" \
+	/usr/lib/dart/bin \
+	"$HOME/pkg/flutter/bin" \
+	; do
 	[ -d "$extras" ] && PATH="$extras:$PATH"
 done
 
