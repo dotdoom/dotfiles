@@ -43,5 +43,6 @@
         "Matchfile": "ruby",
         "Gymfile": "ruby",
         "Appfile": "ruby"
-    }
+    },
+    "window.restoreFullscreen": true
 }
