@@ -28,3 +28,8 @@
 	helper = gcloud.sh
 [core]
 	autocrlf = input
+[branch]
+	# 0 times I wanted this when doing "git checkout".
+	autoSetupMerge = false
+	# Set up new branches in a way that "git pull" does a rebase by default.
+	autoSetupRebase = always
