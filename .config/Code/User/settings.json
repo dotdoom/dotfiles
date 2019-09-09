@@ -1,14 +1,15 @@
 {
     "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
         "**/.bundle": true,
-        "**/.idea": true,
-        "**/.vscode": true,
-        "**/.packages": true,
         "**/.DS_Store": true,
+        "**/.git": true,
+        "**/.hg": true,
+        "**/.idea": true,
+        "**/.packages": true,
+        "**/.svn": true,
+        "**/.vscode": true,
+        "**/*.g.dart": true,
+        "**/CVS": true
     },
     "files.autoSave": "onFocusChange",
     "terminal.integrated.fontSize": 13,
