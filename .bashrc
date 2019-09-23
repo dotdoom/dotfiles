@@ -71,7 +71,6 @@ export BROWSER=google-chrome
 export PAGER='less -R -F -X -S -n -i -m'
 
 export GOPATH="$HOME/src/go"
-export GOROOT="$HOME/pkg/go"
 
 export PATH="$HOME/bin:$PATH"
 if [ -d "$HOME/.gem/ruby" ]; then
@@ -84,7 +83,6 @@ if [ -d "$HOME/Android/Sdk" ]; then
 	PATH+=":$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools"
 fi
 for extras in \
-	"$GOROOT/bin" \
 	"$GOPATH/bin" \
 	"$HOME/.local/bin" \
 	"$HOME/.npm/bin" \
