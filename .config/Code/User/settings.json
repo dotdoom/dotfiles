@@ -46,5 +46,8 @@
         "Appfile": "ruby"
     },
     "window.restoreFullscreen": true,
-    "window.newWindowDimensions": "maximized"
+    "window.newWindowDimensions": "maximized",
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }
