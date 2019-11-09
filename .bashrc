@@ -201,10 +201,9 @@ alias gba='git branch -av'
 alias gc='git commit -v'
 alias gd='git di'
 alias gdc='gd --cached'
-alias gdm='gd master --stat --relative'
 alias gst='git status'
-alias grm='git fetch origin master && git rebase origin/master && git push -f'
 alias gamend='git commit -a --amend --no-edit && git push -f'
+alias gnew='git fetch upstream && git co upstream/master -b'
 
 # sudo
 alias sudo='sudo -E '
