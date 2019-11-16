@@ -97,6 +97,8 @@ export DOOMWADDIR=~/dist/games/doom/wad
 export DE=generic
 export CLICOLOR=1
 export PYTHONSTARTUP="$HOME/.pythonstartup"
+# Disable legacy ncurses behavior.
+export NCURSES_NO_UTF8_ACS=1
 
 # Disable Wine creating application shortcuts and, most importantly, hijack
 # file associations!
