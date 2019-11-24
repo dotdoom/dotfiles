@@ -83,6 +83,7 @@ if [ -d "$HOME/Android/Sdk" ]; then
 	PATH+=":$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools"
 fi
 for extras in \
+	"$HOME/pkg/go/bin" \
 	"$GOPATH/bin" \
 	"$HOME/.local/bin" \
 	"$HOME/.npm/bin" \
