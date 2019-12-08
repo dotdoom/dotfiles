@@ -146,6 +146,7 @@ total: %{time_total} | \
 size: %{size_download}\n"'
 alias ssh-fp='echo /etc/ssh/ssh_host_*_key.pub | xargs -n1 ssh-keygen -l -f'
 alias aplay_pcm='aplay -t raw -c 2 -r 44100 -f S16_LE'
+alias logcat='adb logcat -v "color printable usec year zone" -T 10'
 
 function git-remaster() {
 	local need_stash="$(git status --porcelain)"
@@ -207,6 +208,7 @@ alias gdc='gd --cached'
 alias gst='git status'
 alias gamend='git commit -a --amend --no-edit && git push -f'
 alias gnew='git fetch upstream && git co upstream/master -b'
+alias greb='git pull --rebase upstream master'
 
 # sudo
 alias sudo='sudo -E '
