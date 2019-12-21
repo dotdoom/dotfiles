@@ -208,7 +208,7 @@ alias gdc='gd --cached'
 alias gst='git status'
 alias gamend='git commit -a --amend --no-edit && git push -f'
 alias gnew='git fetch upstream && git co upstream/master -b'
-alias greb='git pull --rebase upstream master'
+alias greb='git fetch upstream && git rebase upstream/master'
 
 # sudo
 alias sudo='sudo -E '
