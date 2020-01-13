@@ -64,6 +64,7 @@ PS1="$PS1"'$([ -L "$PWD" ] && echo -ne "\[$On_Blue\]")'
 PS1="$PS1"'$(if [ ${#PWD} -lt 6 ]; then echo -ne "\[$BRed\]"; else echo -ne "\[$BYellow\]"; fi)\w'
 
 export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWSTASHSTATE=1
 PS1="$PS1\[$Color_Off\]\[$BGreen\]]\[$BBlue\]"'$(__git_ps1)'"\[$Color_Off\] \\$ "
 
 export EDITOR=vim
