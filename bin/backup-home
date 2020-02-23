@@ -42,12 +42,3 @@ ROUND="$(($(date +%_j) % 10))"
 	"$HOME" |
 gsutil cp - \
 	"gs://$BUCKET/$(hostname)/$(whoami)/backup-$ROUND.tar"
-
-if [ $# -eq 2 ]; then
-	PROJECT="$2"
-	# Also backup Firebase Database.
-	firebase --project="$PROJECT" database:get / | \
-		gzip | \
-		gsutil cp - \
-		"gs://$BUCKET/$PROJECT/firebase-database-$ROUND.gz"
-fi
