@@ -20,8 +20,6 @@
     "editor.rulers": [
         80
     ],
-    // Disable git support (and annoying popups) in IDE
-    "git.enabled": false,
     // Disable [confusing] file icons in Explorer
     "workbench.iconTheme": null,
     "editor.codeActionsOnSave": {
@@ -49,5 +47,9 @@
     "window.newWindowDimensions": "maximized",
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    },
+    "git.decorations.enabled": false,
+    "git.detectSubmodules": false,
+    "git.enableStatusBarSync": false,
+    "git.ignoreMissingGitWarning": true
 }
