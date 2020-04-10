@@ -75,13 +75,13 @@ export GOPATH="$HOME/src/go"
 
 export PATH="$HOME/bin:$PATH"
 if [ -d "$HOME/.gem/ruby" ]; then
-	PATH+=":$(echo $HOME/.gem/ruby/*/bin | tr ' ' :)"
+	PATH="$(echo $HOME/.gem/ruby/*/bin | tr ' ' :):$PATH"
 fi
 if [ -d "$HOME/Android/Sdk" ]; then
 	export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
 	# ANDROID_HOME for https://issuetracker.google.com/issues/125138969.
 	export ANDROID_HOME="${ANDROID_SDK_ROOT?}"
-	PATH+=":$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools"
+	PATH="$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools:$PATH"
 fi
 for extras in \
 	"$HOME/pkg/go/bin" \
