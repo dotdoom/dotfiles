@@ -1,0 +1,8 @@
+[Unit]
+Description=VSCode Server
+
+[Service]
+ExecStart=%h/pkg/code-server/code-server --auth none --disable-ssh --user-data-dir %h/.config/Code --extensions-dir %h/.vscode/extensions
+
+[Install]
+WantedBy=default.target
