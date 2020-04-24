@@ -13,8 +13,6 @@ shopt -s histappend
 HISTSIZE=100000
 HISTFILESIZE=5000000
 PROMPT_DIRTRIM=5
-# treat directory name commands as cd
-shopt -s autocd
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
@@ -97,7 +95,6 @@ done
 
 export DOOMWADDIR=~/dist/games/doom/wad
 export DE=generic
-export CLICOLOR=1
 export PYTHONSTARTUP="$HOME/.pythonstartup"
 # Disable legacy ncurses behavior.
 export NCURSES_NO_UTF8_ACS=1
@@ -106,7 +103,15 @@ export NCURSES_NO_UTF8_ACS=1
 # file associations!
 export WINEDLLOVERRIDES=winemenubuilder.exe=d
 
-alias ls='ls -hF --color=auto'
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	export CLICOLOR=1
+	alias ls='ls -hF'
+else
+	alias ls='ls -hF --color=auto'
+	# treat directory name commands as cd. bash is super old on Mac and
+	# does not support this option.
+	shopt -s autocd
+fi
 alias pgrep='pgrep -lf'
 alias crontab='crontab -i'
 alias gmake='make'
