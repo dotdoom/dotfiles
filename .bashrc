@@ -89,6 +89,7 @@ for extras in \
 	"$HOME/.pub-cache/bin" \
 	/usr/lib/dart/bin \
 	"$HOME/pkg/flutter/bin" \
+	"$HOME/.platformio/penv/bin" \
 	; do
 	[ -d "$extras" ] && PATH="$extras:$PATH"
 done
