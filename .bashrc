@@ -1,6 +1,8 @@
-. /etc/profile
-# colors
-. ~/.bash_colors
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+. ~/.term_color_shell_constants
 
 # bash history with time
 export HISTTIMEFORMAT="%F %T "
@@ -9,7 +11,9 @@ export HISTTIMEFORMAT="%F %T "
 HISTCONTROL=ignoreboth
 # append to the history file, don't overwrite it
 shopt -s histappend
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
 HISTSIZE=100000
 HISTFILESIZE=5000000
 PROMPT_DIRTRIM=5
@@ -18,6 +22,9 @@ PROMPT_DIRTRIM=5
 shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+shopt -s globstar
 
 ##
 ## prompt games
@@ -104,16 +111,21 @@ export NCURSES_NO_UTF8_ACS=1
 # file associations!
 export WINEDLLOVERRIDES=winemenubuilder.exe=d
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+	test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+	alias ls='ls -hF --color=auto'
+else
 	export CLICOLOR=1
 	alias ls='ls -hF'
-else
-	alias ls='ls -hF --color=auto'
-	# treat directory name commands as cd. bash is super old on Mac and
-	# does not support this option.
-	shopt -s autocd
 fi
-alias pgrep='pgrep -lf'
+
+# treat directory name commands as cd, may not be supported in old bash version.
+shopt -s autocd 2>/dev/null || true
+
 alias crontab='crontab -i'
 alias gmake='make'
 alias nc='nc -vv'
