@@ -405,5 +405,6 @@ esac
 
 # Remove duplicates from PATH.
 export PATH="$(awk -v RS=: -v ORS=: '!arr[$0]++' <<<"$PATH" | head -1)"
+systemctl --user import-environment PATH 2>/dev/null || true
 
 # vim: ft=sh
