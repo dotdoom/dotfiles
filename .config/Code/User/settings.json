@@ -17,23 +17,20 @@
     "editor.fontSize": 13,
     "editor.lineHeight": 18,
     "editor.formatOnSave": true,
-    "editor.rulers": [
-        80
-    ],
+    "editor.rulers": [80],
+    // Allow completion while filling in a code snippet.
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
     // Disable [confusing] file icons in Explorer
     "workbench.iconTheme": null,
     "editor.codeActionsOnSave": {
         "source.organizeImports": true,
     },
     "debug.toolBarLocation": "docked",
+    "debug.openDebug": "openOnDebugBreak",
     "editor.renderWhitespace": "all",
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
-    "window.titleBarStyle": "custom",
-    "[javascript]": {
-        "editor.formatOnSave": false
-    },
     "html.format.wrapLineLength": 80,
     "files.associations": {
         // Fastlane files.
@@ -43,13 +40,31 @@
         "Gymfile": "ruby",
         "Appfile": "ruby"
     },
-    "window.restoreFullscreen": true,
-    "window.newWindowDimensions": "maximized",
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
     "git.decorations.enabled": false,
     "git.detectSubmodules": false,
     "git.enableStatusBarSync": false,
-    "git.ignoreMissingGitWarning": true
+    "git.ignoreMissingGitWarning": true,
+    "window.autoDetectColorScheme": true,
+    "dart.debugExternalLibraries": true,
+    "dart.debugSdkLibraries": true,
+    "workbench.colorTheme": "Default Dark+",
+
+    "[javascript]": {
+        "editor.formatOnSave": false
+    },
+
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    "[dart]": {
+        // Dart plugin has a built-in semantic highlighter.
+        "editor.selectionHighlight": false,
+
+        // Enter "for<TAB>" to insert a corresponding snippet.
+        "editor.tabCompletion": "onlySnippets",
+
+        // No suggestions when plugin does not provide them (comments, strings).
+        "editor.wordBasedSuggestions": false,
+    },
 }
