@@ -67,4 +67,7 @@
         // No suggestions when plugin does not provide them (comments, strings).
         "editor.wordBasedSuggestions": false,
     },
+    "search.exclude": {
+        "**/.flutter": true
+    },
 }
