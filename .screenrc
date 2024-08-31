@@ -24,6 +24,8 @@ activity "%c activity -> %n%f %t^G"
 # Alt Left/Right = switch windows
 bindkey "^[[1;3D" prev
 bindkey "^[[1;3C" next
+bindkey "^[b" prev
+bindkey "^[f" next
 # Alt N = new window
 bindkey "^[n" screen
 
