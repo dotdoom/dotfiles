@@ -29,4 +29,4 @@ bindkey "^[f" next
 # Alt N = new window
 bindkey "^[n" screen
 
-shelltitle '$ |bash'
+shelltitle '% |zsh'
