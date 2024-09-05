@@ -8,6 +8,8 @@ setopt SHARE_HISTORY
 setopt hist_ignore_space
 
 export EDITOR=vim
+# Noticing this EDITOR setting, zsh will default to vim keybindings. No thanks.
+bindkey -e
 export PAGER='less -R -F -X -S -n -i -m'
 export PYTHONSTARTUP="$HOME/.pythonstartup"
 export NCURSES_NO_UTF8_ACS=1
