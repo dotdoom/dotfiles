@@ -89,7 +89,6 @@ zstyle ':vcs_info:*' unstagedstr '%F{red}*%f'
 zstyle ':vcs_info:git:*' formats ' (%F{cyan}%b%f%c%u)'
 setopt prompt_subst
 PROMPT='%(?..%F{red}%?%f )[%n@%m] %3~${vcs_info_msg_0_} %# '
-RPROMPT='%*'
 
 # At least have the following in .zshrc_local:
 #   export GIT_AUTHOR_NAME='Alfred Muster'
