@@ -13,7 +13,10 @@ bindkey -e
 export PAGER='less -R -F -X -S -n -i -m'
 export PYTHONSTARTUP="$HOME/.pythonstartup"
 export NCURSES_NO_UTF8_ACS=1
+# For ls.
 export CLICOLOR=1
+# For dark terminal backgrounds.
+export LSCOLORS=HxFxCxDxBxEgEdHbHgHcHd
 
 # Looking for more environment variables? Check out .zshenv!
 
