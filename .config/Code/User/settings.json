@@ -23,7 +23,7 @@
     // Disable [confusing] file icons in Explorer
     "workbench.iconTheme": null,
     "editor.codeActionsOnSave": {
-        "source.organizeImports": true,
+        "source.organizeImports": "explicit"
     },
     "debug.toolBarLocation": "docked",
     "debug.openDebug": "openOnDebugBreak",
@@ -65,7 +65,7 @@
         "editor.tabCompletion": "onlySnippets",
 
         // No suggestions when plugin does not provide them (comments, strings).
-        "editor.wordBasedSuggestions": false,
+        "editor.wordBasedSuggestions": "off",
     },
     "search.exclude": {
         "**/.flutter": true
