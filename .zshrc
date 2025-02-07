@@ -11,6 +11,7 @@ export EDITOR=vim
 # Noticing this EDITOR setting, zsh will default to vim keybindings. No thanks.
 bindkey -e
 export PAGER='less -R -F -X -S -n -i -m'
+export LESSCHARSET=utf-8
 export PYTHONSTARTUP="$HOME/.pythonstartup"
 export NCURSES_NO_UTF8_ACS=1
 # For ls.
