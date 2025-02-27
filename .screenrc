@@ -6,6 +6,8 @@ setenv SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock
 # no screen blinking on bell
 vbell off
 startup_message off
+# disable "New screen..." message
+msgwait 0
 defscrollback 10240
 # hostname, timestamp, LA in status bar
 caption always "%{+b}%H | %c %d.%m.%Y | Load: %l"
