@@ -13,11 +13,19 @@ case "$0" in -*)
 esac
 
 HISTFILE=~/.zsh_history
+# History in the file
 HISTSIZE=10000
+# History in RAM
 SAVEHIST=10000
 setopt appendhistory
 setopt SHARE_HISTORY
+# Self-explanatory
 setopt hist_ignore_space
+setopt hist_ignore_dups
+# Remove older duplicates first
+setopt hist_expire_dups_first
+# Store timestamps
+setopt EXTENDED_HISTORY
 
 export EDITOR=vim
 # Noticing this EDITOR setting, zsh will default to vim keybindings. No thanks.
