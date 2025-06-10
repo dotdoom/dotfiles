@@ -1,5 +1,17 @@
 # Interactive shell.
 
+# Login shell, connected via SSH, interactive (implied by running in this file),
+# not in a GNU screen session already and screen is installed: jump to an active
+# screen session or start a new, UTF-8 capable.
+#
+# Since we exec right afterwards, there's no point in setting this shell up.
+case "$0" in -*)
+	[ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && \
+		[ -z "$STY" ] && \
+		which screen 2>/dev/null && \
+		exec screen -URR
+esac
+
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -100,13 +112,3 @@ PROMPT='%(?..%F{red}%?%f )[%n@%m] %3~${vcs_info_msg_0_} %# '
 #   export GIT_COMMITTER_NAME="${GIT_AUTHOR_NAME?}"
 #   export GIT_COMMITTER_EMAIL="${GIT_AUTHOR_EMAIL?}"
 [ -r ~/.zshrc_local ] && source ~/.zshrc_local || true
-
-# Login shell, connected via SSH, interactive (implied by running in this file),
-# not in a GNU screen session already and screen is installed: jump to an active
-# screen session or start a new, UTF-8 capable.
-case "$0" in -*)
-	[ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && \
-		[ -z "$STY" ] && \
-		which screen 2>/dev/null && \
-		exec screen -URR
-esac
