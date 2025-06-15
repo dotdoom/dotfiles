@@ -67,6 +67,8 @@ alias logcat='adb logcat -v "color printable usec year zone" -T 10'
 alias readelf='readelf -W'
 alias l='ls -lA'
 alias ll='ls -la'
+# To kill the ControlMaster session (e.g. to modify it or when it's stuck).
+alias unssh='ssh -O exit'
 
 alias curl_t='curl -w \
 "# dnslookup: %{time_namelookup} | \
