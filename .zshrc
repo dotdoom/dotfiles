@@ -101,9 +101,15 @@ colordiff() {
 
 alias backup-home-explore='eval "ncdu $(grep -A1 -- --exclude $HOME/bin/backup-home | tr -d \|)"'
 
-if [ -z "$SSH_AUTH_SOCK" ]; then
+if [ -z "$SSH_AUTH_SOCK" -a -z "$SSH_CLIENT" ]; then
+	# This path is only needed in a local shell.
+	#
+	# In a screen session, we set SSH_AUTH_SOCK to a fixed path in
+	# .screenrc before a shell is started.
+	#
+	# That fixed path is a symlink which gets updated by .ssh/rc scrtipt.
 	eval `ssh-agent -s`
-	trap 'kill $SSH_AGENT_PID' EXIT
+	trap 'ssh-agent -k' EXIT
 fi
 
 autoload -Uz vcs_info
