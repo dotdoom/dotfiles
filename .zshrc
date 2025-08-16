@@ -79,6 +79,18 @@ starttransfer: %{time_starttransfer} | \
 total: %{time_total} | \
 size: %{size_download}\n"'
 
+nix-deploy() {
+	TARGET=$1
+	shift
+	nix run --extra-experimental-features 'nix-command flakes' \
+		nixpkgs#nixos-rebuild -- switch \
+		--flake ".#${TARGET?}" \
+		--target-host "${TARGET?}" \
+		--build-host "${TARGET?}" \
+		--use-remote-sudo \
+		--fast "$@"
+}
+
 myip() {
 	if [ $# -eq 0 ]; then
 		curl -4 --silent http://ipecho.net/plain; echo
