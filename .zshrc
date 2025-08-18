@@ -69,6 +69,7 @@ alias l='ls -lA'
 alias ll='ls -la'
 # To kill the ControlMaster session (e.g. to modify it or when it's stuck).
 alias unssh='ssh -O exit'
+alias ffmpeg_q='ffmpeg -hide_banner -nostats -loglevel warning'
 
 alias curl_t='curl -w \
 "# dnslookup: %{time_namelookup} | \
