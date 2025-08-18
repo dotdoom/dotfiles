@@ -83,8 +83,7 @@ size: %{size_download}\n"'
 nix-deploy() {
 	TARGET=$1
 	shift
-	nix run --extra-experimental-features 'nix-command flakes' \
-		nixpkgs#nixos-rebuild -- switch \
+	nix run nixpkgs#nixos-rebuild -- switch \
 		--flake ".#${TARGET?}" \
 		--target-host "${TARGET?}" \
 		--build-host "${TARGET?}" \
