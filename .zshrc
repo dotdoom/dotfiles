@@ -80,15 +80,27 @@ starttransfer: %{time_starttransfer} | \
 total: %{time_total} | \
 size: %{size_download}\n"'
 
+# nix-deploy # current host
+# nix-deploy nas # deploy nas
+# nix-deploy test secondary # deploy secondary but do not add to boot
 nix-deploy() {
-	TARGET=$1
-	shift
-	nix run nixpkgs#nixos-rebuild -- switch \
-		--flake ".#${TARGET?}" \
-		--target-host "${TARGET?}" \
-		--build-host "${TARGET?}" \
-		--use-remote-sudo \
-		--fast "$@"
+	COMMAND=switch
+	if [ $# -gt 1 ]; then
+		COMMAND=$1
+		shift
+	fi
+	if [ $# -gt 0 ]; then
+		TARGET=$1
+		shift
+		nix run nixpkgs#nixos-rebuild -- "${COMMAND?}" \
+			--flake ".#${TARGET?}" \
+			--target-host "${TARGET?}" \
+			--build-host "${TARGET?}" \
+			--use-remote-sudo \
+			--fast "$@"
+	else
+		sudo nix run nixpkgs#nixos-rebuild -- switch --flake . --fast
+	fi
 }
 
 myip() {
