@@ -95,7 +95,6 @@ nix-deploy() {
 		nix run nixpkgs#nixos-rebuild -- "${COMMAND?}" \
 			--flake ".#${TARGET?}" \
 			--target-host "${TARGET?}" \
-			--build-host "${TARGET?}" \
 			--use-remote-sudo \
 			--fast "$@"
 	else
