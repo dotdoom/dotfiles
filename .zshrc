@@ -90,11 +90,13 @@ nix-deploy() {
 		shift
 	fi
 	if [ $# -gt 0 ]; then
-		TARGET=$1
+		TARGET_HOST=$1 # user@host.domain
+		TARGET_WITH_DOMAIN=${TARGET_HOST#*@} # host.domain
+		TARGET=${TARGET_WITH_DOMAIN%%.*} # host
 		shift
 		nix run nixpkgs#nixos-rebuild -- "${COMMAND?}" \
 			--flake ".#${TARGET?}" \
-			--target-host "${TARGET?}" \
+			--target-host "${TARGET_HOST?}" \
 			--use-remote-sudo \
 			--fast "$@"
 	else
