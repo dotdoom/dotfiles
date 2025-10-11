@@ -84,23 +84,28 @@ size: %{size_download}\n"'
 # nix-deploy nas # deploy nas
 # nix-deploy test secondary # deploy secondary but do not add to boot
 nix-deploy() {
-	COMMAND=switch
+	ACTION=switch
 	if [ $# -gt 1 ]; then
-		COMMAND=$1
+		ACTION=$1
 		shift
+	fi
+	if which nixos-rebuild &>/dev/null; then
+		COMMAND=(nixos-rebuild)
+	else
+		COMMAND=(nix run nixpkgs#nixos-rebuild --)
 	fi
 	if [ $# -gt 0 ]; then
 		TARGET_HOST=$1 # user@host.domain
 		TARGET_WITH_DOMAIN=${TARGET_HOST#*@} # host.domain
 		TARGET=${TARGET_WITH_DOMAIN%%.*} # host
 		shift
-		nix run nixpkgs#nixos-rebuild -- "${COMMAND?}" \
+		"${COMMAND[@]}" "${ACTION?}" \
 			--flake ".#${TARGET?}" \
 			--target-host "${TARGET_HOST?}" \
 			--use-remote-sudo \
 			--fast "$@"
 	else
-		sudo nix run nixpkgs#nixos-rebuild -- switch --flake . --fast
+		sudo "${COMMAND[@]}" switch --flake . --fast
 	fi
 }
 
