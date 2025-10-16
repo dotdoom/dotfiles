@@ -153,7 +153,7 @@ zstyle ':vcs_info:*' stagedstr '%F{green}*%f'
 zstyle ':vcs_info:*' unstagedstr '%F{red}*%f'
 zstyle ':vcs_info:git:*' formats ' (%F{cyan}%b%f%c%u)'
 setopt prompt_subst
-PROMPT='%(?..%F{red}%?%f )[%n@%m] %3~${vcs_info_msg_0_} %# '
+PROMPT='${IN_NIX_SHELL}%(?..%F{red}%?%f )[%n@%m] %3~${vcs_info_msg_0_} %# '
 
 # Expand aliases by the press of TAB.
 zstyle ':completion:*' completer _expand_alias _complete _ignored
