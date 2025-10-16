@@ -1,16 +1,4 @@
-#!/usr/bin/env bash
-
-exec >"$HOME/tmp/backup.log" 2>&1
-
-source .bashrc
-
-set -ex
-
-BUCKET="${1?GCS bucket name is required}"
-
-mkdir -p "$HOME/tmp"
-
-ROUND="$(($(date +%_j) % 10))"
+#!/bin/sh
 
 /bin/tar -cp \
 	--exclude="$HOME/pkg" \
@@ -35,10 +23,10 @@ ROUND="$(($(date +%_j) % 10))"
 	--exclude="$HOME/.config/gzdoom" \
 	--exclude="$HOME/VirtualBox VMs" \
 	--exclude="$HOME/.vagrant.d" \
+	--exclude="$HOME/.platformio" \
+	--exclude="$HOME/.vscode-server" \
 	--exclude=build \
 	--exclude=.gradle \
 	--exclude=node_modules \
 	--exclude=bower_components \
-	"$HOME" |
-gsutil cp - \
-	"gs://$BUCKET/$(hostname)/$(whoami)/backup-$ROUND.tar"
+	"$HOME"
