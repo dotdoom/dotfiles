@@ -131,6 +131,9 @@ colordiff() {
 
 alias backup-home-explore='eval "ncdu $(grep -A1 -- --exclude $HOME/bin/backup-home | tr -d \|)"'
 
+# stderr redirect for if direnv is missing
+eval "$(direnv hook zsh 2>/dev/null)"
+
 if [ -z "$SSH_AUTH_SOCK" -a -z "$SSH_CLIENT" ]; then
 	# This path is only needed in a local shell.
 	#
