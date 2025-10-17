@@ -1,73 +1,73 @@
 {
-    "files.exclude": {
-        "**/.bundle": true,
-        "**/.DS_Store": true,
-        "**/.git": true,
-        "**/.hg": true,
-        "**/.idea": true,
-        "**/.packages": true,
-        "**/.svn": true,
-        "**/.vscode": true,
-        "**/*.g.dart": true,
-        "**/CVS": true
-    },
-    "files.autoSave": "onFocusChange",
-    "terminal.integrated.fontSize": 13,
-    "terminal.integrated.fontWeightBold": "normal",
-    "editor.fontSize": 13,
-    "editor.lineHeight": 18,
-    "editor.formatOnSave": true,
-    "editor.rulers": [80],
-    // Allow completion while filling in a code snippet.
-    "editor.suggest.snippetsPreventQuickSuggestions": false,
-    // Disable [confusing] file icons in Explorer
-    "workbench.iconTheme": null,
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": "explicit"
-    },
-    "debug.toolBarLocation": "docked",
-    "debug.openDebug": "openOnDebugBreak",
-    "editor.renderWhitespace": "all",
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "html.format.wrapLineLength": 80,
-    "files.associations": {
-        // Fastlane files.
-        "Fastfile": "ruby",
-        "Pluginfile": "ruby",
-        "Matchfile": "ruby",
-        "Gymfile": "ruby",
-        "Appfile": "ruby"
-    },
-    "git.decorations.enabled": false,
-    "git.detectSubmodules": false,
-    "git.enableStatusBarSync": false,
-    "git.ignoreMissingGitWarning": true,
-    "window.autoDetectColorScheme": true,
-    "dart.debugExternalLibraries": true,
-    "dart.debugSdkLibraries": true,
-    "workbench.colorTheme": "Default Dark+",
+  "files.exclude": {
+    "**/.bundle": true,
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.idea": true,
+    "**/.packages": true,
+    "**/.svn": true,
+    "**/.vscode": true,
+    "**/*.g.dart": true,
+    "**/CVS": true
+  },
+  "files.autoSave": "onFocusChange",
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.fontWeightBold": "normal",
+  "editor.fontSize": 13,
+  "editor.lineHeight": 18,
+  "editor.formatOnSave": true,
+  "editor.rulers": [80],
+  // Allow completion while filling in a code snippet.
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  // Disable [confusing] file icons in Explorer
+  "workbench.iconTheme": null,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "debug.toolBarLocation": "docked",
+  "debug.openDebug": "openOnDebugBreak",
+  "editor.renderWhitespace": "all",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "html.format.wrapLineLength": 80,
+  "files.associations": {
+    // Fastlane files.
+    "Fastfile": "ruby",
+    "Pluginfile": "ruby",
+    "Matchfile": "ruby",
+    "Gymfile": "ruby",
+    "Appfile": "ruby"
+  },
+  "git.decorations.enabled": false,
+  "git.detectSubmodules": false,
+  "git.enableStatusBarSync": false,
+  "git.ignoreMissingGitWarning": true,
+  "window.autoDetectColorScheme": true,
+  "dart.debugExternalLibraries": true,
+  "dart.debugSdkLibraries": true,
+  "workbench.colorTheme": "Default Dark+",
 
-    "[javascript]": {
-        "editor.formatOnSave": false
-    },
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
 
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
 
-    "[dart]": {
-        // Dart plugin has a built-in semantic highlighter.
-        "editor.selectionHighlight": false,
+  "[dart]": {
+    // Dart plugin has a built-in semantic highlighter.
+    "editor.selectionHighlight": false,
 
-        // Enter "for<TAB>" to insert a corresponding snippet.
-        "editor.tabCompletion": "onlySnippets",
+    // Enter "for<TAB>" to insert a corresponding snippet.
+    "editor.tabCompletion": "onlySnippets",
 
-        // No suggestions when plugin does not provide them (comments, strings).
-        "editor.wordBasedSuggestions": "off",
-    },
-    "search.exclude": {
-        "**/.flutter": true
-    },
+    // No suggestions when plugin does not provide them (comments, strings).
+    "editor.wordBasedSuggestions": "off"
+  },
+  "search.exclude": {
+    "**/.flutter": true
+  },
 }
