@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "nix": {
+      "command": "nix",
+      "args": ["run", "github:utensils/mcp-nixos", "--"]
+    },
+    "ha": {
+      "url": "${HASS_SERVER}/mcp_server/sse",
+      "headers": {
+        "Authorization": "Bearer ${HASS_TOKEN}"
+      },
+      "timeout": 5000
+    }
+  }
+}
