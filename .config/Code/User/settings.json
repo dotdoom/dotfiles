@@ -70,4 +70,11 @@
   "search.exclude": {
     "**/.flutter": true
   },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nixd",
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide"
+  },
 }
