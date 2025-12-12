@@ -35,3 +35,7 @@
 	autoSetupRebase = always
 [include]
 	path = ~/.config/gitconfig_local
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
