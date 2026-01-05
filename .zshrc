@@ -102,10 +102,10 @@ nix-deploy() {
 		"${COMMAND[@]}" "${ACTION?}" \
 			--flake ".#${TARGET?}" \
 			--target-host "${TARGET_HOST?}" \
-			--use-remote-sudo \
-			--fast "$@"
+			--sudo \
+			"$@" |& nom
 	else
-		sudo "${COMMAND[@]}" switch --flake . --fast
+		sudo "${COMMAND[@]}" switch --flake . |& nom
 	fi
 }
 
