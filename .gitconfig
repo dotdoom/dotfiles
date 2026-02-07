@@ -33,9 +33,12 @@
 	autoSetupMerge = false
 	# Set up new branches in a way that "git pull" does a rebase by default.
 	autoSetupRebase = always
-[include]
-	path = ~/.config/gitconfig_local
 [gpg]
 	format = ssh
 [commit]
 	gpgsign = true
+
+
+# Must always go last, to be able to override the settings above.
+[include]
+	path = ~/.config/gitconfig_local
