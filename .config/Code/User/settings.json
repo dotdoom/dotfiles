@@ -17,6 +17,7 @@
   "editor.fontSize": 13,
   "editor.lineHeight": 18,
   "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "modificationsIfAvailable",
   "editor.rulers": [80],
   // Allow completion while filling in a code snippet.
   "editor.suggest.snippetsPreventQuickSuggestions": false,
