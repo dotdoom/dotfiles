@@ -4,7 +4,6 @@
     git
     vim
     stow
-    screen
   ];
 
   programs.zsh = {
