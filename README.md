@@ -22,6 +22,6 @@ nix run \
   home-manager/master -- \
     switch \
       --extra-experimental-features 'nix-command flakes' \
-      --flake .#artem
+      --flake .#linux-headless
 stow legacy
 ```
