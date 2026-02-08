@@ -1,4 +1,5 @@
 # Interactive shell.
+export PATH="${HOME}/bin:${PATH}"
 
 # Login shell, connected via SSH, interactive (implied by running in this file),
 # not in a GNU screen session already and screen is installed: jump to an active
