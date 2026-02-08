@@ -6,12 +6,12 @@ export PATH="${HOME}/bin:${PATH}"
 # screen session or start a new, UTF-8 capable.
 #
 # Since we exec right afterwards, there's no point in setting this shell up.
-case "$0" in -*)
+if [[ -o login ]]; then
 	[ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && \
 		[ -z "$STY" ] && \
 		which screen 2>/dev/null && \
 		exec screen -URR
-esac
+fi
 
 HISTFILE=~/.zsh_history
 # History in the file
