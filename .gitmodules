@@ -1,39 +1,39 @@
-[submodule ".vim/bundle/ctrlp.vim"]
-	path = .vim/bundle/ctrlp.vim
+[submodule "legacy/.vim/bundle/ctrlp.vim"]
+	path = legacy/.vim/bundle/ctrlp.vim
 	url = https://github.com/kien/ctrlp.vim
-[submodule ".vim/bundle/vim-startify"]
-	path = .vim/bundle/vim-startify
+[submodule "legacy/.vim/bundle/vim-startify"]
+	path = legacy/.vim/bundle/vim-startify
 	url = https://github.com/mhinz/vim-startify
-[submodule ".vim/bundle/nerdcommenter"]
-	path = .vim/bundle/nerdcommenter
+[submodule "legacy/.vim/bundle/nerdcommenter"]
+	path = legacy/.vim/bundle/nerdcommenter
 	url = https://github.com/scrooloose/nerdcommenter
-[submodule ".vim/bundle/vim-showmarks"]
-	path = .vim/bundle/vim-showmarks
+[submodule "legacy/.vim/bundle/vim-showmarks"]
+	path = legacy/.vim/bundle/vim-showmarks
 	url = https://github.com/jacquesbh/vim-showmarks
-[submodule ".vim/bundle/vim-coffee-script"]
-	path = .vim/bundle/vim-coffee-script
+[submodule "legacy/.vim/bundle/vim-coffee-script"]
+	path = legacy/.vim/bundle/vim-coffee-script
 	url = https://github.com/kchmck/vim-coffee-script
-[submodule ".vim/bundle/nginx.vim"]
-	path = .vim/bundle/nginx.vim
+[submodule "legacy/.vim/bundle/nginx.vim"]
+	path = legacy/.vim/bundle/nginx.vim
 	url = https://github.com/vim-scripts/nginx.vim
-[submodule ".vim/bundle/supertab"]
-	path = .vim/bundle/supertab
+[submodule "legacy/.vim/bundle/supertab"]
+	path = legacy/.vim/bundle/supertab
 	url = https://github.com/ervandew/supertab
-[submodule ".vim/bundle/vim-pathogen"]
-	path = .vim/bundle/vim-pathogen
+[submodule "legacy/.vim/bundle/vim-pathogen"]
+	path = legacy/.vim/bundle/vim-pathogen
 	url = https://github.com/tpope/vim-pathogen.git
-[submodule ".vim/bundle/vim-sensible"]
-	path = .vim/bundle/vim-sensible
+[submodule "legacy/.vim/bundle/vim-sensible"]
+	path = legacy/.vim/bundle/vim-sensible
 	url = https://github.com/tpope/vim-sensible.git
-[submodule ".vim/bundle/auto-pairs"]
-	path = .vim/bundle/auto-pairs
+[submodule "legacy/.vim/bundle/auto-pairs"]
+	path = legacy/.vim/bundle/auto-pairs
 	url = https://github.com/jiangmiao/auto-pairs
-[submodule ".vim/bundle/vim-javascript"]
-	path = .vim/bundle/vim-javascript
+[submodule "legacy/.vim/bundle/vim-javascript"]
+	path = legacy/.vim/bundle/vim-javascript
 	url = https://github.com/pangloss/vim-javascript.git
-[submodule ".vim/bundle/vim-lastplace"]
-	path = .vim/bundle/vim-lastplace
+[submodule "legacy/.vim/bundle/vim-lastplace"]
+	path = legacy/.vim/bundle/vim-lastplace
 	url = https://github.com/farmergreg/vim-lastplace.git
-[submodule ".vim/bundle/dart-vim-plugin"]
-	path = .vim/bundle/dart-vim-plugin
+[submodule "legacy/.vim/bundle/dart-vim-plugin"]
+	path = legacy/.vim/bundle/dart-vim-plugin
 	url = https://github.com/dart-lang/dart-vim-plugin.git
