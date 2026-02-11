@@ -44,6 +44,13 @@
 
               home.packages = with pkgs; [
                 secretive
+                vlc-bin
+                dosbox-staging # dosbox appears broken on darwin
+
+                # 1. Move config file to /usr/local/etc/wireguard/wg0.conf
+                # 2. sudo wg-quick up wg0
+                wireguard-tools
+                wireguard-go
               ];
 
               nixpkgs.config.allowUnfree = true;
