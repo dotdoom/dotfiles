@@ -15,7 +15,12 @@
         . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
       fi
 
-      . ~/dotfiles/migrated/.zshrc
+      if [ -r ~/dotfiles/migrated/.zshrc ]; then
+        . ~/dotfiles/migrated/.zshrc
+      else
+        # If no custom override is available, use the one bundled with flake.
+        . ${../migrated/.zshrc}
+      fi
     '';
   };
 
