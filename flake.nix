@@ -15,13 +15,15 @@
       nixpkgs,
       home-manager,
     }:
-    let
-      commonModules = [ ./modules/home.nix ];
-    in
     {
+      homeModules.main = {
+        imports = [ ./modules/home.nix ];
+      };
+
       homeConfigurations."linux-headless" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = commonModules ++ [
+        modules = [
+          self.homeModules.main
           (
             { ... }:
             {
@@ -35,7 +37,8 @@
       homeConfigurations."mac-portable" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-darwin;
 
-        modules = commonModules ++ [
+        modules = [
+          self.homeModules.main
           (
             { pkgs, ... }:
             {
