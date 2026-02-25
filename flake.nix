@@ -54,6 +54,8 @@
                 # 2. sudo wg-quick up wg0
                 wireguard-tools
                 wireguard-go
+
+                antigravity
               ];
 
               nixpkgs.config.allowUnfree = true;
