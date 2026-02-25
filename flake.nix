@@ -7,6 +7,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -14,6 +18,7 @@
       self,
       nixpkgs,
       home-manager,
+      vscode-server,
     }:
     {
       homeModules.main = {
@@ -24,11 +29,18 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
           self.homeModules.main
+          vscode-server.homeModules.default
           (
-            { ... }:
+            { lib, ... }:
             {
               home.username = "artem";
               home.homeDirectory = "/home/artem";
+
+              services.vscode-server.enable = true;
+              services.vscode-server.installPath = [
+                "$HOME/.vscode-server"
+                "$HOME/.antigravity-server"
+              ];
             }
           )
         ];
