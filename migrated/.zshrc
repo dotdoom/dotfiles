@@ -159,9 +159,4 @@ PROMPT='${IN_NIX_SHELL}%(?..%F{red}%?%f )[%n@%m] %3~${vcs_info_msg_0_} %# '
 # Expand aliases by the press of TAB.
 zstyle ':completion:*' completer _expand_alias _complete _ignored
 
-# At least have the following in .zshrc_local:
-#   export GIT_AUTHOR_NAME='Alfred Muster'
-#   export GIT_AUTHOR_EMAIL='test@example.com'
-#   export GIT_COMMITTER_NAME="${GIT_AUTHOR_NAME?}"
-#   export GIT_COMMITTER_EMAIL="${GIT_AUTHOR_EMAIL?}"
 [ -r ~/.zshrc_local ] && source ~/.zshrc_local || true
