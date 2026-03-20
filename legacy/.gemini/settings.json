@@ -2,7 +2,11 @@
   "mcpServers": {
     "nix": {
       "command": "nix",
-      "args": ["run", "github:utensils/mcp-nixos", "--"]
+      "args": [
+        "run",
+        "github:utensils/mcp-nixos",
+        "--"
+      ]
     },
     "ha": {
       "url": "${HASS_SERVER}/mcp_server/sse",
@@ -10,6 +14,18 @@
         "Authorization": "Bearer ${HASS_TOKEN}"
       },
       "timeout": 5000
+    }
+  },
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "general": {
+    "sessionRetention": {
+      "warningAcknowledged": true,
+      "enabled": true,
+      "maxAge": "30d"
     }
   }
 }

@@ -3,3 +3,9 @@ toolName = "run_shell_command"
 commandPrefix = "nix build"
 decision = "allow"
 priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "pre-commit run --all-files"
+decision = "allow"
+priority = 100
