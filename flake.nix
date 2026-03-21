@@ -54,6 +54,9 @@
           (
             { pkgs, ... }:
             {
+              # TODO: consider
+              # https://nest.pijul.com/yonkeltron/macOS-nix-config:main/ZLDSMIXK5XFW6.EIAAA
+
               home.username = "artem";
               home.homeDirectory = "/Users/artem";
 
