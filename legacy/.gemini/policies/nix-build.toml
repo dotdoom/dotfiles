@@ -11,6 +11,12 @@ decision = "allow"
 priority = 100
 
 [[rule]]
+toolName = "run_shell_command"
+commandPrefix = "nix derivation show"
+decision = "allow"
+priority = 100
+
+[[rule]]
 mcpName = "nix"
 decision = "allow"
 priority = 500
