@@ -47,243 +47,38 @@
         modules = [
           self.homeModules.main
           vscode-server.homeModules.default
-          (
-            { pkgs, ... }:
-            {
-              home.username = "artem";
-              home.homeDirectory = "/home/artem";
-
-              services.vscode-server.enable = true;
-              services.vscode-server.installPath = [
-                "$HOME/.vscode-server"
-                "$HOME/.antigravity-server"
-              ];
-
-              systemd.user.mounts.home-artem-src-freeradius = {
-                Unit = {
-                  Description = "Mount ~/src/freeradius";
-                  After = [ "network-online.target" ];
-                  Wants = [ "network-online.target" ];
-                };
-                Mount = {
-                  What = "root@nas.home.arpa:/mnt/main/critical-services/freeradius/config";
-                  Where = "/home/artem/src/freeradius";
-                  Type = "fuse.sshfs";
-                  Options = "reconnect,ServerAliveInterval=15,uid=1000,gid=1000,IdentityAgent=/home/artem/.ssh/ssh_auth_sock";
-                };
-                Install = {
-                  WantedBy = [ "default.target" ];
-                };
-              };
-
-              systemd.user.mounts.home-artem-src-haremote = {
-                Unit = {
-                  Description = "Mount ~/src/haremote";
-                  After = [ "network-online.target" ];
-                  Wants = [ "network-online.target" ];
-                };
-                Mount = {
-                  What = "root@homeassistant.home.arpa:/homeassistant";
-                  Where = "/home/artem/src/haremote";
-                  Type = "fuse.sshfs";
-                  Options = "reconnect,ServerAliveInterval=15,uid=1000,gid=1000,IdentityAgent=/home/artem/.ssh/ssh_auth_sock";
-                };
-                Install = {
-                  WantedBy = [ "default.target" ];
-                };
-              };
-
-              programs.zsh.loginExtra = ''
-                if [ -n "$SSH_AUTH_SOCK" ]; then
-                  mkdir -p ~/src/haremote ~/src/freeradius
-                  [ -z "$(ls -A ~/src/haremote 2>/dev/null)" ] && systemctl --user restart home-artem-src-haremote.mount
-                  [ -z "$(ls -A ~/src/freeradius 2>/dev/null)" ] && systemctl --user restart home-artem-src-freeradius.mount
-                fi
-              '';
-            }
-          )
+          ./hosts/deimos/home.nix
         ];
       };
 
       homeConfigurations."mac-portable" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-darwin;
-
         modules = [
           self.homeModules.main
-          (
-            { pkgs, ... }:
-            {
-              # TODO: consider
-              # https://nest.pijul.com/yonkeltron/macOS-nix-config:main/ZLDSMIXK5XFW6.EIAAA
-              # and
-              # https://github.com/bgub/nix-macos-starter/tree/main
-
-              home.username = "artem";
-              home.homeDirectory = "/Users/artem";
-
-              home.packages = with pkgs; [
-                secretive
-                vlc-bin
-                dosbox-staging # dosbox appears broken on darwin
-
-                # 1. Move config file to /usr/local/etc/wireguard/wg0.conf
-                # 2. sudo wg-quick up wg0
-                wireguard-tools
-                wireguard-go
-
-                antigravity
-              ];
-
-              nixpkgs.config.allowUnfree = true;
-              programs.vscode.enable = true;
-
-              launchd.agents.keyboard-remap = {
-                # Remap top-left key (paragraph) to backquote and backslash like
-                # proper ISO keyboard does, and the key right to the LShift to
-                # Shift.
-                enable = true;
-                config = {
-                  Label = "com.user.keyboard-remap";
-                  ProgramArguments = [
-                    "/usr/bin/hidutil"
-                    "property"
-                    "--set"
-                    ''
-                      {"UserKeyMapping":
-                        [
-                          {"HIDKeyboardModifierMappingSrc":0x700000035, "HIDKeyboardModifierMappingDst":0x7000000e1},
-                          {"HIDKeyboardModifierMappingSrc":0x700000064, "HIDKeyboardModifierMappingDst":0x700000035},
-                        ]
-                      }''
-                  ];
-                  RunAtLoad = true;
-                };
-              };
-            }
-          )
+          ./hosts/mac-portable/home.nix
         ];
       };
 
-      nixosConfigurations.deimos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {
-          inherit trustedSSHKeys;
-          pkgs-screen = import inputs.nixpkgs-screen {
-            system = "x86_64-linux";
+      nixosConfigurations.deimos =
+        let
+          system = "x86_64-linux";
+        in
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit trustedSSHKeys;
+            pkgs-screen = import inputs.nixpkgs-screen {
+              inherit system;
+            };
           };
+          modules = [
+            inputs.fw_nix.nixosModules.nix-gc
+            inputs.fw_nix.nixosModules.nix-settings
+            inputs.fw_nix.nixosModules.tools
+            inputs.fw_nix.nixosModules.sshd
+            inputs.fw_nix.nixosModules.futureware
+            ./hosts/deimos/nixos.nix
+          ];
         };
-        modules = [
-          inputs.fw_nix.nixosModules.nix-gc
-          inputs.fw_nix.nixosModules.nix-settings
-          inputs.fw_nix.nixosModules.tools
-          inputs.fw_nix.nixosModules.sshd
-          inputs.fw_nix.nixosModules.futureware
-          (
-            { modulesPath, pkgs, pkgs-screen, ... }:
-            {
-              imports = [
-                "${modulesPath}/virtualisation/lxc-container.nix"
-              ];
-
-              # Incus config:
-              # - keep root as-is (requirement from incus; just ignore it)
-              # - add a disk for /home/artem
-              # - add a disk for /nix
-              # "incus config edit deimos" and add under "config:"
-              #   raw.lxc: lxc.init.cmd = /nix/var/nix/profiles/system/init
-
-              # TODO: persistence with SSH host keys, then automatically run
-              #       "incus rebuild --empty deimos" periodically
-              # Needs /sbin to be preset because bootloader installer uses that
-              # path; consider either creating using systemd.tmpfiles or
-              # overwriting bootloader installer / activation script.
-              # https://github.com/NixOS/nixpkgs/blob/c080e09eaca35383aa8dd2be863b37c933ed8812/nixos/modules/virtualisation/lxc-container.nix#L105
-
-              users.users.artem = {
-                uid = 1000;
-                isNormalUser = true;
-                extraGroups = [
-                  "wheel"
-                  "docker"
-                ];
-                openssh.authorizedKeys.keys = trustedSSHKeys;
-                shell = pkgs.zsh;
-              };
-              security.sudo.wheelNeedsPassword = false;
-
-              virtualisation.docker.enable = true;
-
-              programs.zsh.enable = true;
-              documentation.man.enable = true;
-              programs.direnv = {
-                enable = true;
-                settings.global = {
-                  warn_timeout = "30s";
-                  hide_env_diff = true;
-                };
-              };
-
-              environment.systemPackages = with pkgs; [
-                # TODO: clean this up against artem@deimos
-                git
-                pkgs-screen.screen
-                sshfs
-
-                # https://unix.stackexchange.com/questions/651165/using-systemd-to-mount-remote-filesystems-in-user-bus
-                # Have to run the wrapper due to SUID.
-                (pkgs.writeShellScriptBin "umount.fuse.sshfs" ''
-                  exec /run/wrappers/bin/fusermount -u "$1"
-                '')
-
-                silver-searcher
-                file
-                nixfmt
-                nixd
-                home-assistant-cli
-                gemini-cli
-                yt-dlp
-
-                # From hosts/common/tools.nix:
-                # Software debug
-                iotop
-                dool # dool --time --disk -D /dev/sde,/dev/sdf --top-bio --top-cpu --zfs-arc
-                strace
-                ltrace
-                smem # smem -tkP nginx
-
-                # Hardware info and tunables
-                parted
-                hdparm
-                efivar
-                efibootmgr
-                sg3_utils # sg_unmap
-                lm_sensors # sensors
-                nvme-cli
-                dmidecode
-                ethtool
-              ];
-
-              # unprivileged LXCs can't set net.ipv4.ping_group_range
-              security.wrappers.ping = {
-                owner = "root";
-                group = "root";
-                capabilities = "cap_net_raw+p";
-                source = "${pkgs.iputils.out}/bin/ping";
-              };
-
-              # For building RPi configs. Extra steps are handled by the host (nas).
-              # https://discuss.linuxcontainers.org/t/systemd-binfmt-service-is-masked/21566/4
-              boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
-
-              networking = {
-                hostName = "deimos";
-                domain = "home.arpa";
-              };
-
-              system.stateVersion = "25.11"; # Never change this.
-            }
-          )
-        ];
-      };
     };
 }
