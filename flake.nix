@@ -8,6 +8,7 @@
     # - background colors in programs (eg less) not showing
     # - caption and hardstatus color lacks intensity
     nixpkgs-screen.url = "github:NixOS/nixpkgs/e518d4ad2bcad74f98fec028cf21ce5b1e5020dd";
+    systems.url = "github:nix-systems/default";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,12 +26,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      systems,
       home-manager,
       vscode-server,
       darwin,
@@ -42,8 +48,18 @@
         "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJhQjxeLZUWdEPMqPNS8wTTrg4lbzBAOLKvdsJd0fSBcW5ILuEbKQjgEIwmYuR/iGhnqIp7rQK48xL/4CauQUyg= office-dock-usb-a"
         "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJg7zQ4H0LQeQcILZBwCzQ+MYKtCgKm7HPe9oFeoyprKZXAvpm+HDHtaYdU39JF9f+nvRztzXuMhgETAQMAQCkc= fingerprint@macbook"
       ];
+      eachSystem = nixpkgs.lib.genAttrs (import systems);
     in
     {
+      checks = eachSystem (system: {
+        pre-commit-check = inputs.git-hooks.lib.${system}.run (
+          {
+            src = ./.;
+          }
+          // inputs.fw_nix.lib.pre-commit
+        );
+      });
+
       homeModules.main = {
         imports = [ ./modules/home.nix ];
       };
@@ -73,13 +89,16 @@
           inputs.fw_nix.nixosModules.nix-settings
           inputs.fw_nix.nixosModules.futureware
           inputs.nix-homebrew.darwinModules.nix-homebrew
-          ({ lib, ... }: {
-            # TODO: find solution to these ugly workarounds
-            options.programs.htop = lib.mkOption {
-              type = lib.types.deferredModule;
-              default = { };
-            };
-          })
+          (
+            { lib, ... }:
+            {
+              # TODO: find solution to these ugly workarounds
+              options.programs.htop = lib.mkOption {
+                type = lib.types.deferredModule;
+                default = { };
+              };
+            }
+          )
           ./hosts/mars/darwin.nix
         ];
       };
@@ -105,5 +124,19 @@
             ./hosts/deimos/nixos.nix
           ];
         };
+
+      devShells = eachSystem (
+        system:
+        let
+          pkgs = import nixpkgs { inherit system; };
+          inherit (self.checks.${system}.pre-commit-check) shellHook enabledPackages;
+        in
+        {
+          default = pkgs.mkShell {
+            packages = enabledPackages;
+            inherit shellHook;
+          };
+        }
+      );
     };
 }
