@@ -20,6 +20,10 @@
       url = "git+https://github.com/futureware-tech/nix.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    darwin = {
+      url = "github:nix-darwin/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -28,6 +32,7 @@
       nixpkgs,
       home-manager,
       vscode-server,
+      darwin,
       ...
     }@inputs:
     let
@@ -56,6 +61,28 @@
         modules = [
           self.homeModules.main
           ./hosts/mars/home.nix
+        ];
+      };
+
+      darwinConfigurations.mars = darwin.lib.darwinSystem {
+        system = "x86_64-darwin";
+        specialArgs.primaryUser = "artem";
+        modules = [
+          inputs.fw_nix.nixosModules.tools
+          inputs.fw_nix.nixosModules.nix-settings
+          inputs.fw_nix.nixosModules.futureware
+          ({ lib, ... }: {
+            # TODO: find solution to these ugly workarounds
+            options.programs.htop = lib.mkOption {
+              type = lib.types.deferredModule;
+              default = { };
+            };
+            options.programs.git = lib.mkOption {
+              type = lib.types.deferredModule;
+              default = { };
+            };
+          })
+          ./hosts/mars/darwin.nix
         ];
       };
 
