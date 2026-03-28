@@ -9,6 +9,8 @@
   imports = [
     "${modulesPath}/virtualisation/lxc-container.nix"
   ];
+  # Disable legacy channel behavior that lxc-container brings in via installer/cd-dvd/channel.nix.
+  system.installer.channel.enable = false;
 
   # Incus config:
   # - keep root as-is (requirement from incus; just ignore it)
