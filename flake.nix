@@ -42,13 +42,13 @@
         imports = [ ./modules/home.nix ];
       };
 
-      homeConfigurations."linux-headless" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."artem@deimos" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
           self.homeModules.main
           vscode-server.homeModules.default
           (
-            { lib, ... }:
+            { pkgs, ... }:
             {
               home.username = "artem";
               home.homeDirectory = "/home/artem";
@@ -58,6 +58,48 @@
                 "$HOME/.vscode-server"
                 "$HOME/.antigravity-server"
               ];
+
+              systemd.user.mounts.home-artem-src-freeradius = {
+                Unit = {
+                  Description = "Mount ~/src/freeradius";
+                  After = [ "network-online.target" ];
+                  Wants = [ "network-online.target" ];
+                };
+                Mount = {
+                  What = "root@nas.home.arpa:/mnt/main/critical-services/freeradius/config";
+                  Where = "/home/artem/src/freeradius";
+                  Type = "fuse.sshfs";
+                  Options = "reconnect,ServerAliveInterval=15,uid=1000,gid=1000,IdentityAgent=/home/artem/.ssh/ssh_auth_sock";
+                };
+                Install = {
+                  WantedBy = [ "default.target" ];
+                };
+              };
+
+              systemd.user.mounts.home-artem-src-haremote = {
+                Unit = {
+                  Description = "Mount ~/src/haremote";
+                  After = [ "network-online.target" ];
+                  Wants = [ "network-online.target" ];
+                };
+                Mount = {
+                  What = "root@homeassistant.home.arpa:/homeassistant";
+                  Where = "/home/artem/src/haremote";
+                  Type = "fuse.sshfs";
+                  Options = "reconnect,ServerAliveInterval=15,uid=1000,gid=1000,IdentityAgent=/home/artem/.ssh/ssh_auth_sock";
+                };
+                Install = {
+                  WantedBy = [ "default.target" ];
+                };
+              };
+
+              programs.zsh.loginExtra = ''
+                if [ -n "$SSH_AUTH_SOCK" ]; then
+                  mkdir -p ~/src/haremote ~/src/freeradius
+                  [ -z "$(ls -A ~/src/haremote 2>/dev/null)" ] && systemctl --user restart home-artem-src-haremote.mount
+                  [ -z "$(ls -A ~/src/freeradius 2>/dev/null)" ] && systemctl --user restart home-artem-src-freeradius.mount
+                fi
+              '';
             }
           )
         ];
@@ -171,7 +213,6 @@
 
               virtualisation.docker.enable = true;
 
-              # TODO: manage /home/artem with home-manager
               programs.zsh.enable = true;
               documentation.man.enable = true;
               programs.direnv = {
@@ -183,7 +224,7 @@
               };
 
               environment.systemPackages = with pkgs; [
-                # TODO: clean this up against linux-headless
+                # TODO: clean this up against artem@deimos
                 git
                 pkgs-screen.screen
                 sshfs
