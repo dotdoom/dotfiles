@@ -1,10 +1,9 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    git
-    vim
     stow
     wget
+    gemini-cli
   ];
 
   programs.zsh = {

@@ -51,11 +51,11 @@
         ];
       };
 
-      homeConfigurations."mac-portable" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."artem@mars" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-darwin;
         modules = [
           self.homeModules.main
-          ./hosts/mac-portable/home.nix
+          ./hosts/mars/home.nix
         ];
       };
 
