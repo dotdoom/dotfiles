@@ -77,10 +77,6 @@
               type = lib.types.deferredModule;
               default = { };
             };
-            options.programs.git = lib.mkOption {
-              type = lib.types.deferredModule;
-              default = { };
-            };
           })
           ./hosts/mars/darwin.nix
         ];
