@@ -24,6 +24,7 @@
       url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
   outputs =
@@ -71,6 +72,7 @@
           inputs.fw_nix.nixosModules.tools
           inputs.fw_nix.nixosModules.nix-settings
           inputs.fw_nix.nixosModules.futureware
+          inputs.nix-homebrew.darwinModules.nix-homebrew
           ({ lib, ... }: {
             # TODO: find solution to these ugly workarounds
             options.programs.htop = lib.mkOption {
