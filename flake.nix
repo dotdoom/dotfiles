@@ -228,6 +228,13 @@
                 git
                 pkgs-screen.screen
                 sshfs
+
+                # https://unix.stackexchange.com/questions/651165/using-systemd-to-mount-remote-filesystems-in-user-bus
+                # Have to run the wrapper due to SUID.
+                (pkgs.writeShellScriptBin "umount.fuse.sshfs" ''
+                  exec /run/wrappers/bin/fusermount -u "$1"
+                '')
+
                 silver-searcher
                 file
                 nixfmt
