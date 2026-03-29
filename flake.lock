@@ -96,11 +96,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1774798883,
-        "narHash": "sha256-XwhnCp67nX/xWX0oaYyd1F1STpRb+YFs2Ewo11V4FlY=",
+        "lastModified": 1774806429,
+        "narHash": "sha256-/JmCLKvEiywENQNGmB1VHIQDmBBWIHhBG+b32opRVZM=",
         "ref": "refs/heads/main",
-        "rev": "9b645177bb7fa513d864c440664d7f97c4146175",
-        "revCount": 15,
+        "rev": "ab9d93a3462b4efbb3fc81fea4ad709ae1bf5fda",
+        "revCount": 16,
         "type": "git",
         "url": "https://github.com/futureware-tech/nix.git"
       },
