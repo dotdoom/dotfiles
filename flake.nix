@@ -60,8 +60,11 @@
         );
       });
 
-      homeModules.main = {
-        imports = [ ./modules/home.nix ];
+      homeModules = {
+        main = import ./modules/home.nix;
+      };
+      darwinModules = {
+        mac-portable = import ./modules/mac-portable.nix;
       };
 
       homeConfigurations."artem@deimos" = home-manager.lib.homeManagerConfiguration {
@@ -85,6 +88,7 @@
         system = "x86_64-darwin";
         specialArgs.primaryUser = "artem";
         modules = [
+          self.darwinModules.mac-portable
           inputs.fw_nix.nixosModules.tools
           inputs.fw_nix.nixosModules.nix-settings
           inputs.fw_nix.nixosModules.futureware

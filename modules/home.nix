@@ -4,6 +4,7 @@
     stow
     wget
     gemini-cli
+    silver-searcher
   ];
 
   programs.zsh = {
