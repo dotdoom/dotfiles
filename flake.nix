@@ -96,16 +96,6 @@
           inputs.fw_nix.nixosModules.nix-settings
           inputs.fw_nix.nixosModules.futureware
           inputs.nix-homebrew.darwinModules.nix-homebrew
-          (
-            { lib, ... }:
-            {
-              # TODO: find solution to these ugly workarounds
-              options.programs.htop = lib.mkOption {
-                type = lib.types.deferredModule;
-                default = { };
-              };
-            }
-          )
           ./hosts/mars/darwin.nix
         ];
       };
