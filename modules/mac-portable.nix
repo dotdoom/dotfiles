@@ -1,6 +1,5 @@
 { pkgs, primaryUser, ... }:
 {
-  nixpkgs.hostPlatform = "x86_64-darwin";
   nixpkgs.config.allowUnfree = true;
 
   system.primaryUser = primaryUser;

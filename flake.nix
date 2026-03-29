@@ -78,6 +78,7 @@
 
       homeConfigurations."artem@mars" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-darwin;
+        specialArgs.primaryUser = "artem";
         modules = [
           self.homeModules.main
           ./hosts/mars/home.nix

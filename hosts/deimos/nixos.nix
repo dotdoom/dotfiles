@@ -62,7 +62,6 @@
       exec /run/wrappers/bin/fusermount -u "$1"
     '')
 
-    silver-searcher
     file
     nixfmt
     nixd
