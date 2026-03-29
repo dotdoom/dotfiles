@@ -1,18 +1,6 @@
-{ pkgs, primaryUser, ... }:
+{ pkgs, ... }:
 {
-  nixpkgs.hostPlatform = "x86_64-darwin";
-
-  # TODO: consider
-  # https://nest.pijul.com/yonkeltron/macOS-nix-config:main/ZLDSMIXK5XFW6.EIAAA
-  # and
-  # https://github.com/bgub/nix-macos-starter/tree/main
-
-  home.username = primaryUser;
-  home.homeDirectory = "/Users/${primaryUser}";
-
   home.packages = with pkgs; [
-    secretive
-    vlc-bin
     dosbox-staging # dosbox appears broken on darwin
 
     # 1. Move config file to /usr/local/etc/wireguard/wg0.conf
@@ -23,8 +11,10 @@
     antigravity
   ];
 
-  nixpkgs.config.allowUnfree = true;
-  programs.vscode.enable = true;
+  # TODO: consider
+  # https://nest.pijul.com/yonkeltron/macOS-nix-config:main/ZLDSMIXK5XFW6.EIAAA
+  # and
+  # https://github.com/bgub/nix-macos-starter/tree/main
 
   launchd.agents.keyboard-remap = {
     # Remap top-left key (paragraph) to backquote and backslash like

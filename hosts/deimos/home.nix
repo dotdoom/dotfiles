@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-{
-  home.username = "artem";
+_: {
   home.homeDirectory = "/home/artem";
 
   services.vscode-server.enable = true;

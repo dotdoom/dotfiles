@@ -1,5 +1,6 @@
-{ pkgs, ... }:
+{ pkgs, primaryUser, ... }:
 {
+  home.username = primaryUser;
   home.packages = with pkgs; [
     stow
     wget
@@ -20,7 +21,7 @@
         . ~/dotfiles/migrated/.zshrc
       else
         # If no custom override is available, use the one bundled with flake.
-        . ${../migrated/.zshrc}
+        . ${../../migrated/.zshrc}
       fi
     '';
 

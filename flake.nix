@@ -61,26 +61,28 @@
       });
 
       homeModules = {
-        main = import ./modules/home.nix;
+        mac-portable = import ./modules/home/mac-portable.nix;
+        linux-headless = import ./modules/home/linux-headless.nix;
       };
       darwinModules = {
-        mac-portable = import ./modules/mac-portable.nix;
+        mac-portable = import ./modules/darwin/mac-portable.nix;
       };
 
       homeConfigurations."artem@deimos" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        extraSpecialArgs.primaryUser = "artem";
         modules = [
-          self.homeModules.main
           vscode-server.homeModules.default
+          self.homeModules.linux-headless
           ./hosts/deimos/home.nix
         ];
       };
 
       homeConfigurations."artem@mars" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-darwin;
-        specialArgs.primaryUser = "artem";
+        extraSpecialArgs.primaryUser = "artem";
         modules = [
-          self.homeModules.main
+          self.homeModules.mac-portable
           ./hosts/mars/home.nix
         ];
       };
