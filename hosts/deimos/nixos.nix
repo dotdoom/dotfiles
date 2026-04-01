@@ -40,15 +40,7 @@
 
   virtualisation.docker.enable = true;
 
-  programs.zsh.enable = true;
   documentation.man.enable = true;
-  programs.direnv = {
-    enable = true;
-    settings.global = {
-      warn_timeout = "30s";
-      hide_env_diff = true;
-    };
-  };
 
   environment.systemPackages = with pkgs; [
     # TODO: clean this up against artem@deimos
