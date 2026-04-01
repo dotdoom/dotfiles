@@ -30,6 +30,7 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    jail-nix.url = "sourcehut:~alexdavid/jail.nix";
   };
 
   outputs =
