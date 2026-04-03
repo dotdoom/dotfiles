@@ -109,6 +109,7 @@
           inherit system;
           specialArgs = {
             inherit trustedSSHKeys;
+            inherit (inputs) jail-nix;
             pkgs-screen = import inputs.nixpkgs-screen {
               inherit system;
             };

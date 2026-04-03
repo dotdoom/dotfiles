@@ -3,8 +3,12 @@
   pkgs,
   pkgs-screen,
   trustedSSHKeys,
+  jail-nix,
   ...
 }:
+let
+  jail = jail-nix.lib.init pkgs;
+in
 {
   imports = [
     "${modulesPath}/virtualisation/lxc-container.nix"
@@ -120,6 +124,44 @@
     nvme-cli
     dmidecode
     ethtool
+
+    # jailed-gemini --yolo
+    (jail "jailed-gemini" pkgs.gemini-cli (
+      with jail.combinators;
+      [
+        network
+        time-zone
+        no-new-session
+        mount-cwd
+
+        (readwrite (noescape "~/.gemini"))
+
+        (add-pkg-deps (
+          with pkgs;
+          [
+            bashInteractive
+            curl
+            wget
+            jq
+            git
+            which
+            ripgrep
+            gnugrep
+            gnused
+            gawkInteractive
+            ps
+            findutils
+            gzip
+            unzip
+            gnutar
+            diffutils
+            coreutils
+
+            python3
+          ]
+        ))
+      ]
+    ))
   ];
 
   # unprivileged LXCs can't set net.ipv4.ping_group_range
