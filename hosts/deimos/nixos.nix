@@ -75,6 +75,8 @@
     openssh.authorizedKeys.keys = trustedSSHKeys;
     shell = pkgs.zsh;
   };
+  # Create /etc/zshrc that loads the nix-darwin environment.
+  programs.zsh.enable = true;
   security.sudo.wheelNeedsPassword = false;
 
   virtualisation.docker.enable = true;
