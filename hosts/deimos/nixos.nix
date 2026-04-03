@@ -68,6 +68,8 @@ in
     '';
   };
   system.activationScripts.users.deps = [ "persistence" ];
+  # This is supposed to persist machine-id, but fails.
+  systemd.services.systemd-machine-id-commit.enable = false;
 
   users.users.artem = {
     uid = 1000;
