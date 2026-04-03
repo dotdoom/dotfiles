@@ -12,19 +12,58 @@
   # Disable legacy channel behavior that lxc-container brings in via installer/cd-dvd/channel.nix.
   system.installer.channel.enable = false;
 
-  # Incus config:
-  # - keep root as-is (requirement from incus; just ignore it)
-  # - add a disk for /home/artem
-  # - add a disk for /nix
-  # "incus config edit deimos" and add under "config:"
-  #   raw.lxc: lxc.init.cmd = /nix/var/nix/profiles/system/init
+  # Impermanence setup:
+  # 1. There's no initrd/stage 1 in LXC container; /sbin/init is invoked after
+  #    LXC finishes setting up special and user-configured filesystems. Any
+  #    options in boot.initrd, as well as neededForBoot fileSystems won't be
+  #    respected.
+  # 2. Non-boot fileSystems (aka systemd) mount too late for systemd or nixos
+  #    persistence to be instantiated, so we have to create this script below.
+  # 3. The expectation from host is to mount /home and /nix. Root filesystem
+  #    will also be a disk, as that's Incus requirement; the host should clean
+  #    it up periodically using: "incus rebuild --empty <vm>".
+  # 4. Since rootfs will be empty after rebuild, you have to point LXC at the
+  #    current init (instead of /sbin/init), by adding to the "config:" section
+  #    in "incus config edit <vm>":
+  #      raw.lxc: lxc.init.cmd = /nix/var/nix/profiles/system/init
+  system.activationScripts.persistence = {
+    deps = [ "specialfs" ];
+    text = ''
+      persist() {
+        local item="$1"
+        local constructor="''${item%%:*}"
+        local target="''${item#*:}"
 
-  # TODO: persistence with SSH host keys, then automatically run
-  #       "incus rebuild --empty deimos" periodically
-  # Needs /sbin to be preset because bootloader installer uses that
-  # path; consider either creating using systemd.tmpfiles or
-  # overwriting bootloader installer / activation script.
-  # https://github.com/NixOS/nixpkgs/blob/c080e09eaca35383aa8dd2be863b37c933ed8812/nixos/modules/virtualisation/lxc-container.nix#L105
+        mkdir -p "$(dirname "$target")"
+        $constructor "$target"
+
+        if ! mountpoint -q "$target"; then
+          local source="/home/persistent/$target"
+
+          mkdir -p "$(dirname "$source")"
+          $constructor "$source"
+
+          mount --bind "$source" "$target"
+        fi
+      }
+
+      for item in \
+          "mkdir -p:/var/lib/nixos" \
+          "mkdir -p:/var/lib/systemd" \
+          "touch:/etc/machine-id" \
+          "touch:/etc/ssh/ssh_host_ed25519_key" \
+      ; do
+        persist "$item"
+      done
+
+      chmod 0600 /etc/ssh/ssh_host_ed25519_key
+
+      # lxc-container.nix installBootloader/installInitScript will attempt to
+      # symlink /sbin/init, so we have to create the parent directory.
+      mkdir -p /sbin
+    '';
+  };
+  system.activationScripts.users.deps = [ "persistence" ];
 
   users.users.artem = {
     uid = 1000;
