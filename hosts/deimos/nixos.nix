@@ -156,6 +156,7 @@ in
             gnutar
             diffutils
             coreutils
+            procps
 
             python3
           ]
