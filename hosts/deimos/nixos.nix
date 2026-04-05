@@ -105,7 +105,6 @@ in
     nixfmt
     nixd
     home-assistant-cli
-    gemini-cli
     yt-dlp
 
     # From hosts/common/tools.nix:
