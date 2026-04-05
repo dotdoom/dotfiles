@@ -28,5 +28,8 @@
       "maxAge": "30d"
     },
     "preferredEditor": "vim"
+  },
+  "model": {
+    "name": "auto-gemini-3"
   }
 }
