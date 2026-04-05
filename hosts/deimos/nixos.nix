@@ -137,6 +137,8 @@ in
         mount-cwd
 
         (readwrite (noescape "~/.gemini"))
+        # The above is a stow-controlled symlink to the following.
+        (readwrite (noescape "~/dotfiles/legacy/.gemini"))
 
         (add-pkg-deps (
           with pkgs;

@@ -23,5 +23,4 @@ nix run \
     switch \
       --extra-experimental-features 'nix-command flakes' \
       --flake .#artem@deimos
-stow legacy
 ```

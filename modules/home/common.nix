@@ -1,4 +1,9 @@
-{ pkgs, primaryUser, ... }:
+{
+  pkgs,
+  lib,
+  primaryUser,
+  ...
+}:
 {
   home.username = primaryUser;
   home.packages = with pkgs; [
@@ -7,6 +12,11 @@
     gemini-cli
     silver-searcher
   ];
+  home.activation.stowLegacy = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ -d "$HOME/dotfiles" ]; then
+      run ${pkgs.stow}/bin/stow -d $HOME/dotfiles -t $HOME legacy
+    fi
+  '';
 
   programs.zsh = {
     enable = true;
