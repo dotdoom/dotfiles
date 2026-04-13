@@ -162,6 +162,8 @@ in
             procps
 
             python3
+
+            nix
           ]
         ))
       ]
