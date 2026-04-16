@@ -19,4 +19,10 @@ priority = 100
 [[rule]]
 mcpName = "nix"
 decision = "allow"
-priority = 500
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "nix-hash"
+decision = "allow"
+priority = 100
