@@ -26,3 +26,9 @@ toolName = "run_shell_command"
 commandPrefix = "nix-hash"
 decision = "allow"
 priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "nix flake check"
+decision = "allow"
+priority = 100
