@@ -112,3 +112,9 @@ toolName = "run_shell_command"
 commandPrefix = "echo"
 decision = "allow"
 priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "sha256sum"
+decision = "allow"
+priority = 100
