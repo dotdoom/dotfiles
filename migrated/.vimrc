@@ -66,11 +66,11 @@ let dart_format_on_save = 1
 set viminfo='10,\"100,:100,n~/.viminfo
 
 " Line width limit hint.
-set colorcolumn=80
+set colorcolumn=81
 augroup EditorWidth
 	au!
-	au BufEnter *.go setlocal colorcolumn=100
-	au BufEnter *.java setlocal colorcolumn=100
+	au BufEnter *.go setlocal colorcolumn=101
+	au BufEnter *.java setlocal colorcolumn=101
 	au BufEnter *.data setlocal colorcolumn=0
 	au BufEnter .vimrc setlocal colorcolumn=0
 augroup END
