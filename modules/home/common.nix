@@ -45,6 +45,33 @@
     '';
   };
 
+  # TODO: find a better way to configure colorscheme and filetype options.
+  home.file.".vim/colors".source = ./../../migrated/.vim/colors;
+  home.file.".vim/after/ftplugin".source = ./../../migrated/.vim/after/ftplugin;
+
+  programs.vim = {
+    enable = true;
+    plugins = with pkgs.vimPlugins; [
+      auto-pairs
+      ctrlp
+      dart-vim-plugin
+      nerdcommenter
+      nginx-vim
+      supertab
+      vim-javascript
+      vim-lastplace
+      vim-sensible
+      vim-startify
+    ];
+    extraConfig = ''
+      if filereadable(expand("~/dotfiles/migrated/.vimrc"))
+        source ~/dotfiles/migrated/.vimrc
+      else
+        source ${../../migrated/.vimrc}
+      endif
+    '';
+  };
+
   programs.home-manager.enable = true;
 
   programs.direnv = {

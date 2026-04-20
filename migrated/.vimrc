@@ -41,11 +41,6 @@ set switchbuf+=usetab " Switch to existing tab; open a new tab for the new buf
 
 let mapleader=","
 
-filetype off
-
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-execute pathogen#infect()
-
 set background=dark
 colorscheme mydark
 
