@@ -42,7 +42,7 @@ set switchbuf+=usetab " Switch to existing tab; open a new tab for the new buf
 let mapleader=","
 
 set background=dark
-colorscheme mydark
+colorscheme torte
 
 " Configure plugins.
 
@@ -66,21 +66,23 @@ let dart_format_on_save = 1
 set viminfo='10,\"100,:100,n~/.viminfo
 
 " Line width limit hint.
+set colorcolumn=80
 augroup EditorWidth
-	" colorcolumn breaks copy from terminal, so we use this instead.
 	au!
-	au BufEnter * highlight OverLength ctermbg=darkred
-	au BufEnter * match OverLength /\%81v./
-
-	au BufEnter *.go match OverLength /\%101v./
-	au BufEnter *.java match OverLength /\%101v./
-
-	au BufEnter *.data match OverLength /$$/
-	au BufEnter .vimrc match OverLength /$$/
+	au BufEnter *.go setlocal colorcolumn=100
+	au BufEnter *.java setlocal colorcolumn=100
+	au BufEnter *.data setlocal colorcolumn=0
+	au BufEnter .vimrc setlocal colorcolumn=0
 augroup END
 
 " Custom filetypes.
 au BufNewFile,BufRead *.pi setf python
+
+augroup FileTypeSettings
+	au!
+	au FileType groovy,java setlocal shiftwidth=4 expandtab
+	au FileType javascript,json,python,ruby setlocal shiftwidth=2 expandtab
+augroup END
 
 filetype indent off
 

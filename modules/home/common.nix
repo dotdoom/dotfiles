@@ -45,10 +45,6 @@
     '';
   };
 
-  # TODO: find a better way to configure colorscheme and filetype options.
-  home.file.".vim/colors".source = ./../../migrated/.vim/colors;
-  home.file.".vim/after/ftplugin".source = ./../../migrated/.vim/after/ftplugin;
-
   programs.vim = {
     enable = true;
     plugins = with pkgs.vimPlugins; [
