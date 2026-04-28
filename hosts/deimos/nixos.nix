@@ -80,6 +80,7 @@ in
     ];
     openssh.authorizedKeys.keys = trustedSSHKeys;
     shell = pkgs.zsh;
+    linger = true; # Keep sshfs mounted even on logout.
   };
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh.enable = true;
