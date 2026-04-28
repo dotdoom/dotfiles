@@ -85,29 +85,52 @@ size: %{size_download}\n"'
 # nix-deploy nas # deploy nas
 # nix-deploy test secondary # deploy secondary but do not add to boot
 nix-deploy() {
-	ACTION=switch
-	if [ $# -gt 1 ]; then
-		ACTION=$1
+	local action=switch target config cmd r_flake
+
+	if (( $# == 0 )); then
+		# Local deployment.
+		if [[ "$OSTYPE" == darwin* ]]; then
+			cmd=darwin-rebuild
+			r_flake="darwin#darwin-rebuild"
+		else
+			cmd=nixos-rebuild
+			r_flake="nixpkgs#nixos-rebuild"
+		fi
+
+		local run_cmd=($cmd)
+		command -v "$cmd" >/dev/null 2>&1 || run_cmd=(nix run "$r_flake" --)
+
+		if [[ "$OSTYPE" == darwin* ]]; then
+			"${run_cmd[@]}" switch --flake . |& nom
+		else
+			sudo "${run_cmd[@]}" switch --flake . |& nom
+		fi
+
+		# home-manager switch if exists.
+		local hm_conf="$(whoami)@$(hostname -s)"
+		if [[ "$(nix eval --json ".#homeConfigurations" --apply "x: x ? \"$hm_conf\"" 2>/dev/null)" == "true" ]]; then
+			local hm_run=(home-manager)
+			command -v home-manager >/dev/null 2>&1 || hm_run=(nix run "home-manager#home-manager" --)
+			"${hm_run[@]}" switch --flake .
+		fi
+		return
+	fi
+
+	# Remote deployment (always NixOS).
+	if (( $# == 1 )); then
+		target=$1
 		shift
-	fi
-	if which nixos-rebuild &>/dev/null; then
-		COMMAND=(nixos-rebuild)
 	else
-		COMMAND=(nix run nixpkgs#nixos-rebuild --)
+		action=$1
+		target=$2
+		shift 2
 	fi
-	if [ $# -gt 0 ]; then
-		TARGET_HOST=$1 # user@host.domain
-		TARGET_WITH_DOMAIN=${TARGET_HOST#*@} # host.domain
-		TARGET=${TARGET_WITH_DOMAIN%%.*} # host
-		shift
-		"${COMMAND[@]}" "${ACTION?}" \
-			--flake ".#${TARGET?}" \
-			--target-host "${TARGET_HOST?}" \
-			--sudo \
-			"$@" |& nom
-	else
-		sudo "${COMMAND[@]}" switch --flake . |& nom
-	fi
+
+	config=${${target#*@}%%.*}
+	cmd=(nixos-rebuild)
+	command -v nixos-rebuild >/dev/null 2>&1 || cmd=(nix run "nixpkgs#nixos-rebuild" --)
+
+	"${cmd[@]}" "$action" --flake ".#$config" --target-host "$target" --sudo "$@" |& nom
 }
 
 myip() {
