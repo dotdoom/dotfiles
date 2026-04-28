@@ -99,12 +99,7 @@ nix-deploy() {
 
 		local run_cmd=($cmd)
 		command -v "$cmd" >/dev/null 2>&1 || run_cmd=(nix run "$r_flake" --)
-
-		if [[ "$OSTYPE" == darwin* ]]; then
-			"${run_cmd[@]}" switch --flake . |& nom
-		else
-			sudo "${run_cmd[@]}" switch --flake . |& nom
-		fi
+		sudo "${run_cmd[@]}" switch --flake . |& nom
 
 		# home-manager switch if exists.
 		local hm_conf="$(whoami)@$(hostname -s)"
