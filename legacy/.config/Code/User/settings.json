@@ -9,7 +9,7 @@
     "**/.svn": true,
     "**/.vscode": true,
     "**/*.g.dart": true,
-    "**/CVS": true
+    "**/CVS": true,
   },
   "files.autoSave": "onFocusChange",
   "terminal.integrated.fontSize": 13,
@@ -24,7 +24,7 @@
   // Disable [confusing] file icons in Explorer
   "workbench.iconTheme": null,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit"
+    "source.organizeImports": "explicit",
   },
   "debug.toolBarLocation": "docked",
   "debug.openDebug": "openOnDebugBreak",
@@ -39,7 +39,7 @@
     "Pluginfile": "ruby",
     "Matchfile": "ruby",
     "Gymfile": "ruby",
-    "Appfile": "ruby"
+    "Appfile": "ruby",
   },
   "git.decorations.enabled": false,
   "git.detectSubmodules": false,
@@ -51,11 +51,11 @@
   "workbench.colorTheme": "Default Dark+",
 
   "[javascript]": {
-    "editor.formatOnSave": false
+    "editor.formatOnSave": false,
   },
 
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
 
   "[dart]": {
@@ -66,16 +66,16 @@
     "editor.tabCompletion": "onlySnippets",
 
     // No suggestions when plugin does not provide them (comments, strings).
-    "editor.wordBasedSuggestions": "off"
+    "editor.wordBasedSuggestions": "off",
   },
   "search.exclude": {
-    "**/.flutter": true
+    "**/.flutter": true,
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
 
   "nix.enableLanguageServer": true,
   "nix.serverPath": "nixd",
   "[nix]": {
-    "editor.defaultFormatter": "jnoortheen.nix-ide"
+    "editor.defaultFormatter": "jnoortheen.nix-ide",
   },
 }
