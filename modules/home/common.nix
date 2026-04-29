@@ -11,6 +11,7 @@
     wget
     gemini-cli
     silver-searcher
+    yubikey-manager
   ];
   home.activation.stowLegacy = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ -d "$HOME/dotfiles" ]; then
