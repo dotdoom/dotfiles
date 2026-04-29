@@ -65,6 +65,9 @@
       darwinModules = {
         mac-portable = import ./modules/darwin/mac-portable.nix;
       };
+      nixosModules = {
+        linux-headless = import ./modules/nixos/linux-headless.nix;
+      };
 
       homeConfigurations."artem@deimos" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
@@ -112,6 +115,7 @@
             inherit (inputs) jail-nix;
           };
           modules = [
+            self.nixosModules.linux-headless
             inputs.fw_nix.nixosModules.nix-gc
             inputs.fw_nix.nixosModules.nix-settings
             inputs.fw_nix.nixosModules.tools
