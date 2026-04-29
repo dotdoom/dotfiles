@@ -81,7 +81,10 @@
 
       homeConfigurations."artem@mars" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-darwin;
-        extraSpecialArgs.primaryUser = "artem";
+        extraSpecialArgs = {
+          primaryUser = "artem";
+          inherit trustedSSHKeys;
+        };
         modules = [
           self.homeModules.mac-portable
           ./hosts/mars/home.nix

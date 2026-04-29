@@ -1,4 +1,10 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  trustedSSHKeys,
+  ...
+}:
 {
   home.packages = with pkgs; [
     dosbox-staging # dosbox appears broken on darwin
@@ -10,6 +16,12 @@
 
     antigravity
   ];
+
+  home.activation.setupAuthorizedKeys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run install -m 0600 -D \
+      ${pkgs.writeText "keys" (builtins.concatStringsSep "\n" trustedSSHKeys)} \
+      ${config.home.homeDirectory}/.ssh/ephemeral_sshd/authorized_keys
+  '';
 
   # TODO: consider
   # https://nest.pijul.com/yonkeltron/macOS-nix-config:main/ZLDSMIXK5XFW6.EIAAA
