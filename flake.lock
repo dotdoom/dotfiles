@@ -266,22 +266,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-screen": {
-      "locked": {
-        "lastModified": 1737753705,
-        "narHash": "sha256-fQeXAeNQrsEUH3fd6RTjN/W+8flJiAFHo7Eya2RT87M=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "e518d4ad2bcad74f98fec028cf21ce5b1e5020dd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "e518d4ad2bcad74f98fec028cf21ce5b1e5020dd",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "darwin": "darwin",
@@ -291,7 +275,6 @@
         "jail-nix": "jail-nix",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-screen": "nixpkgs-screen",
         "systems": "systems_2",
         "vscode-server": "vscode-server"
       }

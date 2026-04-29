@@ -3,11 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # too many issues with screen 5.0
-    # - load average in status broken
-    # - background colors in programs (eg less) not showing
-    # - caption and hardstatus color lacks intensity
-    nixpkgs-screen.url = "github:NixOS/nixpkgs/e518d4ad2bcad74f98fec028cf21ce5b1e5020dd";
     systems.url = "github:nix-systems/default";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -115,9 +110,6 @@
           specialArgs = {
             inherit trustedSSHKeys;
             inherit (inputs) jail-nix;
-            pkgs-screen = import inputs.nixpkgs-screen {
-              inherit system;
-            };
           };
           modules = [
             inputs.fw_nix.nixosModules.nix-gc

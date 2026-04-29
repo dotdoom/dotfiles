@@ -8,9 +8,9 @@ export PATH="${HOME}/bin:${PATH}"
 # Since we exec right afterwards, there's no point in setting this shell up.
 if [[ -o login ]]; then
 	[ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && \
-		[ -z "$STY" ] && \
-		which screen 2>/dev/null && \
-		exec screen -URR
+		[ -z "$TMUX" ] && \
+		command -v tmux >/dev/null && \
+		exec tmux new -A -D -s main
 fi
 
 HISTFILE=~/.zsh_history

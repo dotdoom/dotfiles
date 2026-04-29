@@ -1,7 +1,6 @@
 {
   modulesPath,
   pkgs,
-  pkgs-screen,
   trustedSSHKeys,
   jail-nix,
   ...
@@ -93,7 +92,6 @@ in
   environment.systemPackages = with pkgs; [
     # TODO: clean this up against artem@deimos
     git
-    pkgs-screen.screen
     sshfs
 
     # https://unix.stackexchange.com/questions/651165/using-systemd-to-mount-remote-filesystems-in-user-bus
