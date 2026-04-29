@@ -49,7 +49,7 @@
     enable = true;
     plugins = with pkgs.vimPlugins; [
       auto-pairs
-      ctrlp
+      ctrlp-vim
       dart-vim-plugin
       nerdcommenter
       nginx-vim
