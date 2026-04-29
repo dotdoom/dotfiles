@@ -103,7 +103,9 @@ Host deimos
 ### Commit signing
 
 Use SSH keys (from Apple SE and Yubikey) to sign commits. Make sure to generate
-a different set of keys for signing than the one you use for authentication.
+a different set of keys for signing than the one you use for authentication. Add
+`-O application=ssh:git-signature` to mark the key for signing (personal
+convention).
 
 ### AGE encryption
 
