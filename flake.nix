@@ -67,6 +67,7 @@
       };
       nixosModules = {
         linux-headless = import ./modules/nixos/linux-headless.nix;
+        linux-lxc = import ./modules/nixos/linux-lxc.nix;
       };
 
       homeConfigurations."artem@deimos" = home-manager.lib.homeManagerConfiguration {
@@ -116,6 +117,7 @@
           };
           modules = [
             self.nixosModules.linux-headless
+            self.nixosModules.linux-lxc
             inputs.fw_nix.nixosModules.nix-gc
             inputs.fw_nix.nixosModules.nix-settings
             inputs.fw_nix.nixosModules.tools
