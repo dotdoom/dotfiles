@@ -95,6 +95,7 @@
 
     extraConfig = ''
       set-environment -g SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock
+      set-option -g update-environment "DISPLAY SSH_ASKPASS SSH_AGENT_PID SSH_CONNECTION"
 
       # Instead of flashing or beeping, blink the window in status.
       set -g visual-bell off
