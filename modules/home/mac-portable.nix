@@ -11,6 +11,7 @@
     vlc-bin
 
     # Faster and more feature-rich than Terminal.
+    # TODO: https://iterm2.com/shell_integration/zsh
     iterm2
 
     # Newer OpenSSH client to support FIDO2 keys.
