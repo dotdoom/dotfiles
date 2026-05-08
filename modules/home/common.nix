@@ -129,7 +129,7 @@
       set -g status-left "#[fg=green,bold]#H #[fg=white]| "
 
       set -g status-right-length 60
-      set -g status-right "#[fg=cyan]%H:%M %d.%m.%Y #[fg=white]| #[fg=yellow]Load: #(cut -d ' ' -f 1-3 /proc/loadavg)"
+      set -g status-right "#[fg=cyan]%H:%M%Z %d.%m.%Y #[fg=white]| #[fg=yellow]Load: #(cut -d ' ' -f 1-3 /proc/loadavg)"
 
       set -g status-justify left
       set -g window-status-format "#[fg=white,dim]#I:#W#F"
