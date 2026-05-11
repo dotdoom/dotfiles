@@ -65,6 +65,7 @@ in
             procps
 
             python3
+            esphome
 
             nix
           ]
