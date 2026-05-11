@@ -7,6 +7,8 @@
   programs.zsh.enable = true;
   security.sudo.wheelNeedsPassword = false;
 
+  programs.mosh.enable = true;
+
   documentation.man.enable = true;
 
   environment.systemPackages = with pkgs; [
