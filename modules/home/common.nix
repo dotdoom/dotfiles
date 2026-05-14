@@ -29,9 +29,9 @@
       fi
 
       if [ -r ~/dotfiles/migrated/.zshrc ]; then
+        # Hack for faster iterations
         . ~/dotfiles/migrated/.zshrc
       else
-        # If no custom override is available, use the one bundled with flake.
         . ${../../migrated/.zshrc}
       fi
     '';
