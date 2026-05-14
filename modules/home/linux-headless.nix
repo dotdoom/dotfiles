@@ -1,8 +1,8 @@
-{ primaryUser, ... }:
+{ lib, primaryUser, ... }:
 {
   imports = [
     ./common.nix
   ];
 
-  home.homeDirectory = "/home/${primaryUser}";
+  home.homeDirectory = lib.mkDefault "/home/${primaryUser}";
 }

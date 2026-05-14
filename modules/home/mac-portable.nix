@@ -1,10 +1,15 @@
-{ pkgs, primaryUser, ... }:
+{
+  pkgs,
+  lib,
+  primaryUser,
+  ...
+}:
 {
   imports = [
     ./common.nix
   ];
 
-  home.homeDirectory = "/Users/${primaryUser}";
+  home.homeDirectory = lib.mkDefault "/Users/${primaryUser}";
 
   home.packages = with pkgs; [
     secretive
