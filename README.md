@@ -28,6 +28,18 @@ nix run \
       --flake .#artem@deimos
 ```
 
+## Layout
+
+- `migrated`: files which are assets for home-manager, but can still be used to
+  stow
+- `legacy`: files to be placed under `$HOME` which are still under stow
+- `hosts/*/{darwin,nixos,home}.nix`: personal machine nix configs
+- `modules/{darwin,nixos,home}/*.nix`: exported nix configs
+
+TODO: rename `migrated` to `assets` and create `exported` which would be the
+exact mirror of nix-built configuration, but without nix (for machines where nix
+can not be installed). That `exported` will then be used by stow.
+
 ## Security
 
 Risks taken (disclaimer):
