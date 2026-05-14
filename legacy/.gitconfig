@@ -33,12 +33,13 @@
 	autoSetupMerge = false
 	# Set up new branches in a way that "git pull" does a rebase by default.
 	autoSetupRebase = always
+
+# Commit signing, currently using ssh@mars -- to be switched to sign@mars after 2026-05-15
 [gpg]
 	format = ssh
 [commit]
 	gpgsign = true
-
-
-# Must always go last, to be able to override the settings above.
-[include]
-	path = ~/.config/gitconfig_local
+[user]
+	signingkey = key::ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJg7zQ4H0LQeQcILZBwCzQ+MYKtCgKm7HPe9oFeoyprKZXAvpm+HDHtaYdU39JF9f+nvRztzXuMhgETAQMAQCkc=
+	name = Artem Sheremet
+	email = dot.doom@gmail.com
