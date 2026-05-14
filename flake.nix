@@ -53,6 +53,7 @@
         pre-commit-check = inputs.git-hooks.lib.${system}.run (
           {
             src = ./.;
+            excludes = [ "^exported/" ];
             hooks.export-mac-portable = {
               enable = nixpkgs.lib.hasInfix "darwin" system;
               name = "Build static mac-portable home directory files";
