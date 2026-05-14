@@ -53,6 +53,12 @@
         pre-commit-check = inputs.git-hooks.lib.${system}.run (
           {
             src = ./.;
+            hooks.export-mac-portable = {
+              enable = nixpkgs.lib.hasInfix "darwin" system;
+              name = "Build static mac-portable home directory files";
+              entry = "bin/export-home-config mac-portable && git add exported/mac-portable";
+              pass_filenames = false;
+            };
           }
           // inputs.fw_nix.lib.pre-commit
         );
@@ -90,6 +96,12 @@
           self.homeModules.mac-portable
           ./hosts/mars/home.nix
         ];
+      };
+
+      homeConfigurations.mac-portable = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-darwin;
+        extraSpecialArgs.primaryUser = "empty";
+        modules = [ self.homeModules.mac-portable ];
       };
 
       darwinConfigurations.mars = darwin.lib.darwinSystem {

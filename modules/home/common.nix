@@ -28,11 +28,11 @@
         . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
       fi
 
-      if [ -r ~/dotfiles/migrated/.zshrc ]; then
+      if [ -r ~/dotfiles/assets/.zshrc ]; then
         # Hack for faster iterations
-        . ~/dotfiles/migrated/.zshrc
+        . ~/dotfiles/assets/.zshrc
       else
-        . ${../../migrated/.zshrc}
+        . ${../../assets/.zshrc}
       fi
     '';
 
@@ -61,10 +61,11 @@
       vim-startify
     ];
     extraConfig = ''
-      if filereadable(expand("~/dotfiles/migrated/.vimrc"))
-        source ~/dotfiles/migrated/.vimrc
+      if filereadable(expand("~/dotfiles/assets/.vimrc"))
+        # Hack for faster iterations
+        source ~/dotfiles/assets/.vimrc
       else
-        source ${../../migrated/.vimrc}
+        source ${../../assets/.vimrc}
       endif
     '';
   };

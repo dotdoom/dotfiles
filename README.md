@@ -10,11 +10,11 @@ git clone git@github.com:dotdoom/dotfiles.git
 cd dotfiles
 ```
 
-Step 2 - stow.
+Step 2 - if Nix is not an option.
 
 ```
-stow migrated
 stow legacy
+stow exported/{machine}
 ```
 
 Step 2 - Nix.
@@ -30,15 +30,12 @@ nix run \
 
 ## Layout
 
-- `migrated`: files which are assets for home-manager, but can still be used to
-  stow
+- `assets`: files which are assets for home-manager
 - `legacy`: files to be placed under `$HOME` which are still under stow
 - `hosts/*/{darwin,nixos,home}.nix`: personal machine nix configs
 - `modules/{darwin,nixos,home}/*.nix`: exported nix configs
-
-TODO: rename `migrated` to `assets` and create `exported` which would be the
-exact mirror of nix-built configuration, but without nix (for machines where nix
-can not be installed). That `exported` will then be used by stow.
+- `exported`: for those poor souls who can not run nix, a pre-built collection
+  of files for `$HOME`, best effort
 
 ## Security
 
