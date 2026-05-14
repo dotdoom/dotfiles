@@ -73,6 +73,11 @@
     export SSH_AUTH_SOCK=~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
   '';
 
+  # TODO: defaults read NSGlobalDomain
+  #       https://nix-darwin.github.io/nix-darwin/manual/index.html
+  #       -> set system.defaults.NSGlobalDomain
+  #          or  system.defaults.CustomSystemPreferences
+
   nixpkgs.config.allowUnfree = true;
   programs.vscode.enable = true;
 }
