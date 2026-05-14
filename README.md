@@ -68,7 +68,9 @@ Risks taken (disclaimer):
 
   Instead of PIV, we use FIDO2 slots on Yubikey to generate resident (i.e.
   stored solely on Yubikey itself) SSH keys using modern OpenSSH client built-in
-  FIDO2 support. This doesn't need an agent or a background daemon.
+  FIDO2 support. This doesn't need an agent or a background daemon. The lack of
+  agent however means that these keys can not be forwarded to remote host for
+  further SSH, Git signing or push.
 
   To generate a new key:
 
@@ -103,8 +105,9 @@ Host deimos
 ### Commit signing
 
 Use SSH keys (from Apple SE and Yubikey) to sign commits. Make sure to generate
-a different set of keys for signing than the one you use for authentication. Add
-`-O application=ssh:git-signature` to mark the key for signing (personal
+a different set of keys for signing than the one you use for authentication, to
+decouple authentication from authorization and reduce key leakage blast radius.
+Add `-O application=ssh:git-signature` to mark the key for signing (personal
 convention).
 
 ### AGE encryption
