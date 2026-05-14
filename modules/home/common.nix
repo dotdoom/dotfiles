@@ -14,7 +14,7 @@
     yubikey-manager
   ];
   home.activation.stowLegacy = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ -d "$HOME/dotfiles" ]; then
+    if [ -d "$HOME/dotfiles/legacy" ]; then
       run ${pkgs.stow}/bin/stow -d $HOME/dotfiles -t $HOME legacy
     fi
   '';
