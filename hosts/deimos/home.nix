@@ -10,6 +10,10 @@ let
   haremote-unit = utils.escapeSystemdPath haremote-path;
 in
 {
+  imports = [
+    ../common/home.nix
+  ];
+
   services.vscode-server.enable = true;
   services.vscode-server.installPath = [
     "$HOME/.vscode-server"

@@ -7,6 +7,10 @@
   ...
 }:
 {
+  imports = [
+    ../common/home.nix
+  ];
+
   home.packages = with pkgs; [
     dosbox-staging # dosbox appears broken on darwin
 
