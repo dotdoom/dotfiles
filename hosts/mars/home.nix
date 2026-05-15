@@ -2,7 +2,8 @@
   pkgs,
   lib,
   config,
-  trustedSSHKeys,
+  identities,
+  primaryUser,
   ...
 }:
 {
@@ -19,7 +20,7 @@
 
   home.activation.setupAuthorizedKeys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     run install -m 0600 -D \
-      ${pkgs.writeText "keys" (builtins.concatStringsSep "\n" trustedSSHKeys)} \
+      ${pkgs.writeText "keys" (builtins.concatStringsSep "\n" (identities.getAccessKeys primaryUser))} \
       ${config.home.homeDirectory}/.ssh/ephemeral_sshd/authorized_keys
   '';
 

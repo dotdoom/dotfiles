@@ -1,6 +1,7 @@
 {
   pkgs,
-  trustedSSHKeys,
+  identities,
+  primaryUser,
   jail-nix,
   ...
 }:
@@ -8,14 +9,14 @@ let
   jail = jail-nix.lib.init pkgs;
 in
 {
-  users.users.artem = {
+  users.users.${primaryUser} = {
     uid = 1000;
     isNormalUser = true;
     extraGroups = [
       "wheel"
       "docker"
     ];
-    openssh.authorizedKeys.keys = trustedSSHKeys;
+    openssh.authorizedKeys.keys = identities.getAccessKeys primaryUser;
     shell = pkgs.zsh;
     linger = true; # Keep sshfs mounted even on logout.
   };
