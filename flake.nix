@@ -100,28 +100,24 @@
         ];
       };
 
-      nixosConfigurations.deimos =
-        let
-          system = "x86_64-linux";
-        in
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            primaryUser = "artem";
-            inherit (inputs) jail-nix;
-          };
-          modules = [
-            inputs.fw_nix.nixosModules.identities
-            self.nixosModules.linux-headless
-            self.nixosModules.linux-lxc
-            inputs.fw_nix.nixosModules.nix-gc
-            inputs.fw_nix.nixosModules.nix-settings
-            inputs.fw_nix.nixosModules.tools
-            inputs.fw_nix.nixosModules.sshd
-            inputs.fw_nix.nixosModules.futureware
-            ./hosts/deimos/nixos.nix
-          ];
+      nixosConfigurations.deimos = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {
+          primaryUser = "artem";
+          inherit (inputs) jail-nix;
         };
+        modules = [
+          inputs.fw_nix.nixosModules.identities
+          self.nixosModules.linux-headless
+          self.nixosModules.linux-lxc
+          inputs.fw_nix.nixosModules.nix-gc
+          inputs.fw_nix.nixosModules.nix-settings
+          inputs.fw_nix.nixosModules.tools
+          inputs.fw_nix.nixosModules.sshd
+          inputs.fw_nix.nixosModules.futureware
+          ./hosts/deimos/nixos.nix
+        ];
+      };
 
       devShells = eachSystem (
         system:
