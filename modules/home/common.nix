@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  identities,
   primaryUser,
   ...
 }:
@@ -53,6 +54,9 @@
         autoSetupRebase = "always";
       };
       gpg.format = "ssh";
+      gpg.ssh.allowedSignersFile = "${pkgs.writeText "allowed_signers" (
+        lib.concatStringsSep "\n" (identities.getSigningEntries "artem")
+      )}";
       credential."https://source.developers.google.com".helper = "gcloud.sh";
     };
   };
