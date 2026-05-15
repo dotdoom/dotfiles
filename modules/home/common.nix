@@ -21,7 +21,10 @@
   '';
 
   home.activation.report-changes = lib.hm.dag.entryAnywhere ''
-    ${pkgs.nvd}/bin/nvd diff $oldGenPath $newGenPath
+    # oldGenPath can be undefined with home-manager used as part of NixOS config
+    if [ -n "''${oldGenPath+x}" ]; then
+      ${pkgs.nvd}/bin/nvd diff $oldGenPath $newGenPath
+    fi
   '';
 
   programs.git = {
