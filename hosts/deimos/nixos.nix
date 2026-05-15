@@ -16,7 +16,7 @@ in
       "wheel"
       "docker"
     ];
-    openssh.authorizedKeys.keys = identities.getAccessKeys primaryUser;
+    openssh.authorizedKeys.keys = identities.getAccessKeys { user = primaryUser; };
     shell = pkgs.zsh;
     linger = true; # Keep sshfs mounted even on logout.
   };

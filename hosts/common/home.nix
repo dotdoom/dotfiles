@@ -10,7 +10,7 @@ in
   programs.git = {
     signing = {
       # Will be available on remote machines via SSH agent (Secretive).
-      key = "key::" + user.sign."sign@mars".key;
+      key = "key::" + user.sign."sign@mars".publicKey;
       signByDefault = true;
     };
 

@@ -20,7 +20,11 @@
 
   home.activation.setupAuthorizedKeys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     run install -m 0600 -D \
-      ${pkgs.writeText "keys" (builtins.concatStringsSep "\n" (identities.getAccessKeys primaryUser))} \
+      ${
+        pkgs.writeText "keys" (
+          builtins.concatStringsSep "\n" (identities.getAccessKeys { user = primaryUser; })
+        )
+      } \
       ${config.home.homeDirectory}/.ssh/ephemeral_sshd/authorized_keys
   '';
 

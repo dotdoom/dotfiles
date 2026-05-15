@@ -55,7 +55,7 @@
       };
       gpg.format = "ssh";
       gpg.ssh.allowedSignersFile = "${pkgs.writeText "allowed_signers" (
-        lib.concatStringsSep "\n" (identities.getSigningEntries "artem")
+        lib.concatStringsSep "\n" (identities.getSigningEntries { })
       )}";
       credential."https://source.developers.google.com".helper = "gcloud.sh";
     };
