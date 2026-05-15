@@ -20,6 +20,10 @@
     fi
   '';
 
+  home.activation.report-changes = lib.hm.dag.entryAnywhere ''
+    ${pkgs.nvd}/bin/nvd diff $oldGenPath $newGenPath
+  '';
+
   programs.git = {
     enable = true;
 
