@@ -70,6 +70,7 @@
           inputs.fw_nix.nixosModules.identities
           vscode-server.homeModules.default
           self.homeModules.linux-headless
+          ./hosts/common/home.nix
           ./hosts/deimos/home.nix
         ];
       };
@@ -82,6 +83,7 @@
         modules = [
           inputs.fw_nix.nixosModules.identities
           self.homeModules.mac-portable
+          ./hosts/common/home.nix
           ./hosts/mars/home.nix
         ];
       };

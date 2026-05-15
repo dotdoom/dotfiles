@@ -19,6 +19,44 @@
     fi
   '';
 
+  programs.git = {
+    enable = true;
+
+    settings = {
+      alias = {
+        co = "checkout";
+        st = "status";
+        di = "diff -w --no-prefix";
+        df = "diff";
+        dc = "diff --cached";
+        ci = "commit";
+        br = "branch";
+        lg = "log -p --decorate=full --show-signature";
+        lol = "log --graph --decorate=full --pretty=oneline --abbrev-commit";
+        lola = "log --graph --decorate=full --pretty=oneline --abbrev-commit --all";
+        ls = "ls-files";
+        # Show files ignored by git:
+        ign = "ls-files -o -i --exclude-standard";
+      };
+
+      color.ui = "auto";
+      apply.whitespace = "nowarn";
+      push.default = "tracking";
+      rebase.stat = "yes";
+      format.pretty = "fuller";
+      fetch.prune = "yes";
+      core.autocrlf = "input";
+      branch = {
+        # 0 times I wanted this when doing "git checkout".
+        autoSetupMerge = false;
+        # Set up new branches in a way that "git pull" does a rebase by default.
+        autoSetupRebase = "always";
+      };
+      gpg.format = "ssh";
+      credential."https://source.developers.google.com".helper = "gcloud.sh";
+    };
+  };
+
   programs.zsh = {
     enable = true;
     initContent = ''
