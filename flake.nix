@@ -92,8 +92,9 @@
         modules = [
           inputs.fw_nix.nixosModules.identities
           self.darwinModules.mac-portable
-          inputs.fw_nix.nixosModules.tools
+          inputs.fw_nix.nixosModules.nix-gc
           inputs.fw_nix.nixosModules.nix-settings
+          inputs.fw_nix.nixosModules.tools
           inputs.fw_nix.nixosModules.futureware
           inputs.nix-homebrew.darwinModules.nix-homebrew
           ./hosts/mars/darwin.nix
