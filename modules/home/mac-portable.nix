@@ -47,6 +47,7 @@
 
             Columns = 160;
             Rows = 45;
+            "Scrollback Lines" = 1000000;
 
             # For tmux selection and moving borders.
             "Mouse Reporting" = true;
