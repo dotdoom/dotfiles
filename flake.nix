@@ -64,7 +64,9 @@
       };
 
       homeConfigurations."artem@deimos" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+        };
         extraSpecialArgs.primaryUser = "artem";
         modules = [
           inputs.fw_nix.nixosModules.identities
@@ -75,7 +77,9 @@
       };
 
       homeConfigurations."artem@mars" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-darwin;
+        pkgs = import nixpkgs {
+          system = "x86_64-darwin";
+        };
         extraSpecialArgs = {
           primaryUser = "artem";
         };
