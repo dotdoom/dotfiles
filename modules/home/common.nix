@@ -12,7 +12,7 @@
   home.packages = with pkgs; [
     stow
     wget
-    gemini-cli
+    antigravity-cli
     silver-searcher
     yubikey-manager
   ];

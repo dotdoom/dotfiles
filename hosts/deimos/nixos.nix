@@ -31,8 +31,8 @@ in
     home-assistant-cli
     yt-dlp
 
-    # jailed-gemini --yolo
-    (jail "jailed-gemini" pkgs.gemini-cli (
+    # jailed-agy --yolo
+    (jail "jailed-agy" pkgs.antigravity-cli (
       with jail.combinators;
       [
         network

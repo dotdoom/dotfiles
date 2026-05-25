@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-master.url = "github:nixos/nixpkgs/master";
     systems.url = "github:nix-systems/default";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -32,6 +33,7 @@
     {
       self,
       nixpkgs,
+      nixpkgs-master,
       systems,
       home-manager,
       vscode-server,
@@ -40,6 +42,17 @@
     }@inputs:
     let
       eachSystem = nixpkgs.lib.genAttrs (import systems);
+      overlay-master = _: prev: {
+        inherit
+          (import nixpkgs-master {
+            system = prev.stdenv.hostPlatform.system;
+            config = {
+              allowUnfree = true;
+            };
+          })
+          antigravity-cli
+          ;
+      };
     in
     {
       checks = eachSystem (system: {
@@ -66,6 +79,7 @@
       homeConfigurations."artem@deimos" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "x86_64-linux";
+          overlays = [ overlay-master ];
         };
         extraSpecialArgs.primaryUser = "artem";
         modules = [
@@ -79,6 +93,7 @@
       homeConfigurations."artem@mars" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "x86_64-darwin";
+          overlays = [ overlay-master ];
         };
         extraSpecialArgs = {
           primaryUser = "artem";
@@ -102,6 +117,9 @@
           inputs.fw_nix.nixosModules.futureware
           inputs.nix-homebrew.darwinModules.nix-homebrew
           ./hosts/mars/darwin.nix
+          (_: {
+            nixpkgs.overlays = [ overlay-master ];
+          })
         ];
       };
 
@@ -121,6 +139,9 @@
           inputs.fw_nix.nixosModules.sshd
           inputs.fw_nix.nixosModules.futureware
           ./hosts/deimos/nixos.nix
+          (_: {
+            nixpkgs.overlays = [ overlay-master ];
+          })
         ];
       };
 
