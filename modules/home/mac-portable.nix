@@ -79,6 +79,5 @@
   #       -> set system.defaults.NSGlobalDomain
   #          or  system.defaults.CustomSystemPreferences
 
-  nixpkgs.config.allowUnfree = true;
   programs.vscode.enable = true;
 }
