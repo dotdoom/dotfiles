@@ -15,6 +15,7 @@ in
     extraGroups = [
       "wheel"
       "docker"
+      "kvm"
     ];
     openssh.authorizedKeys.keys = identities.getAccessKeys { user = primaryUser; };
     shell = pkgs.zsh;
