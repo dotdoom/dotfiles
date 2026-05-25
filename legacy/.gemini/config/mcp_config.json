@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "nix": {
+      "command": "nix",
+      "args": [
+        "run",
+        "github:utensils/mcp-nixos",
+        "--"
+      ]
+    },
+    "ha": {
+      "command": "nix",
+      "args": [
+        "shell",
+        "nixpkgs#uv",
+        "nixpkgs#python3",
+        "--command",
+        "uv",
+        "tool",
+        "run",
+        "ha-mcp"
+      ],
+      "env": {
+        "UV_PYTHON_DOWNLOADS": "never",
+        "UV_PYTHON_PREFERENCE": "system"
+      }
+    }
+  }
+}
