@@ -125,7 +125,22 @@ nix-deploy() {
 	cmd=(nixos-rebuild)
 	command -v nixos-rebuild >/dev/null 2>&1 || cmd=(nix run "nixpkgs#nixos-rebuild" --)
 
-	"${cmd[@]}" "$action" --flake ".#$config" --target-host "$target" --sudo "$@" |& nom
+	nix build ".#nixosConfigurations.$config.config.system.build.toplevel" \
+		--out-link "result.$config" |& nom
+	local build_status=$pipestatus[1]
+	if (( build_status != 0 )); then
+		return $build_status
+	fi
+
+	if [[ "$action" != "build" ]]; then
+		# Bypass nixos-rebuild self-update check which errors in
+		# flake-only setups when --store-path is used.
+		_NIXOS_REBUILD_REEXEC=1 "${cmd[@]}" "$action" \
+			--store-path "$(readlink -f "result.$config")" \
+			--target-host "$target" \
+			--sudo \
+			"$@"
+	fi
 }
 
 myip() {
