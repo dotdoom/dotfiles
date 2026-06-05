@@ -41,6 +41,7 @@
       ...
     }@inputs:
     let
+      homeManagerUser = "artem";
       eachSystem = nixpkgs.lib.genAttrs (import systems);
       overlay-master = _: prev: {
         inherit
@@ -76,12 +77,12 @@
         linux-lxc = import ./modules/nixos/linux-lxc.nix;
       };
 
-      homeConfigurations."artem@deimos" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."${homeManagerUser}@deimos" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "x86_64-linux";
           overlays = [ overlay-master ];
         };
-        extraSpecialArgs.primaryUser = "artem";
+        extraSpecialArgs.primaryUser = homeManagerUser;
         modules = [
           inputs.fw_nix.nixosModules.identities
           vscode-server.homeModules.default
@@ -90,13 +91,13 @@
         ];
       };
 
-      homeConfigurations."artem@mars" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."${homeManagerUser}@mars" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "x86_64-darwin";
           overlays = [ overlay-master ];
         };
         extraSpecialArgs = {
-          primaryUser = "artem";
+          primaryUser = homeManagerUser;
         };
         modules = [
           inputs.fw_nix.nixosModules.identities
@@ -107,7 +108,7 @@
 
       darwinConfigurations.mars = darwin.lib.darwinSystem {
         system = "x86_64-darwin";
-        specialArgs.primaryUser = "artem";
+        specialArgs.primaryUser = homeManagerUser;
         modules = [
           inputs.fw_nix.nixosModules.identities
           self.darwinModules.mac-portable
@@ -126,7 +127,7 @@
       nixosConfigurations.deimos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
-          primaryUser = "artem";
+          primaryUser = homeManagerUser;
           inherit (inputs) jail-nix;
         };
         modules = [
