@@ -49,6 +49,9 @@
             system = prev.stdenv.hostPlatform.system;
             config = {
               allowUnfree = true;
+            }
+            // nixpkgs.lib.optionalAttrs (prev.stdenv.hostPlatform.system == "x86_64-darwin") {
+              allowDeprecatedx86_64Darwin = true;
             };
           })
           antigravity-cli
@@ -95,6 +98,7 @@
         pkgs = import nixpkgs {
           system = "x86_64-darwin";
           overlays = [ overlay-master ];
+          config.allowDeprecatedx86_64Darwin = true;
         };
         extraSpecialArgs = {
           primaryUser = homeManagerUser;
@@ -120,6 +124,7 @@
           ./hosts/mars/darwin.nix
           (_: {
             nixpkgs.overlays = [ overlay-master ];
+            nixpkgs.config.allowDeprecatedx86_64Darwin = true;
           })
         ];
       };
