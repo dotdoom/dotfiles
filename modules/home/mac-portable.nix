@@ -35,6 +35,10 @@
     TripleClickSelectsFullWrappedLines = true;
     WordChars = "/-._~";
     PromptOnQuit = false;
+
+    # Use system browser to open links.
+    NoSyncBrowserUpsell = 1;
+    NoSyncBrowserUpsell_selection = 1;
   };
   home.file."Library/Application Support/iTerm2/DynamicProfiles/nix-profile.json".text =
     builtins.toJSON
