@@ -13,7 +13,6 @@
     stow
     wget
     antigravity-cli
-    silver-searcher
     yubikey-manager
   ];
 
