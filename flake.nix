@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-master.url = "github:nixos/nixpkgs/master";
     systems.url = "github:nix-systems/default";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -33,7 +32,6 @@
     {
       self,
       nixpkgs,
-      nixpkgs-master,
       systems,
       home-manager,
       vscode-server,
@@ -43,20 +41,6 @@
     let
       homeManagerUser = "artem";
       eachSystem = nixpkgs.lib.genAttrs (import systems);
-      overlay-master = _: prev: {
-        inherit
-          (import nixpkgs-master {
-            system = prev.stdenv.hostPlatform.system;
-            config = {
-              allowUnfree = true;
-            }
-            // nixpkgs.lib.optionalAttrs (prev.stdenv.hostPlatform.system == "x86_64-darwin") {
-              allowDeprecatedx86_64Darwin = true;
-            };
-          })
-          antigravity-cli
-          ;
-      };
     in
     {
       checks = eachSystem (system: {
@@ -83,7 +67,6 @@
       homeConfigurations."${homeManagerUser}@deimos" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "x86_64-linux";
-          overlays = [ overlay-master ];
         };
         extraSpecialArgs.primaryUser = homeManagerUser;
         modules = [
@@ -97,7 +80,6 @@
       homeConfigurations."${homeManagerUser}@mars" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "x86_64-darwin";
-          overlays = [ overlay-master ];
           config.allowDeprecatedx86_64Darwin = true;
         };
         extraSpecialArgs = {
@@ -122,10 +104,9 @@
           inputs.fw_nix.nixosModules.futureware
           inputs.nix-homebrew.darwinModules.nix-homebrew
           ./hosts/mars/darwin.nix
-          (_: {
-            nixpkgs.overlays = [ overlay-master ];
+          {
             nixpkgs.config.allowDeprecatedx86_64Darwin = true;
-          })
+          }
         ];
       };
 
@@ -145,9 +126,6 @@
           inputs.fw_nix.nixosModules.sshd
           inputs.fw_nix.nixosModules.futureware
           ./hosts/deimos/nixos.nix
-          (_: {
-            nixpkgs.overlays = [ overlay-master ];
-          })
         ];
       };
 
