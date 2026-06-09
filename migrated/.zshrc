@@ -62,7 +62,6 @@ alias grep='grep --line-buffered --color=auto'
 alias ipt='iptables -nvL --line-numbers'
 alias ip6t='ip6tables -nvL --line-numbers'
 alias tcpdump='tcpdump -l'
-alias ag='ag -C 2 --noaffinity --pager="$PAGER" --smart-case'
 alias mysql='mysql --select_limit=1000'
 alias logcat='adb logcat -v "color printable usec year zone" -T 10'
 alias readelf='readelf -W'
@@ -80,6 +79,10 @@ pretransfer: %{time_pretransfer} | \
 starttransfer: %{time_starttransfer} | \
 total: %{time_total} | \
 size: %{size_download}\n"'
+
+rg() {
+	command rg -C 2 --smart-case --pretty "$@" | pager
+}
 
 # nix-deploy # current host
 # nix-deploy nas # deploy nas
