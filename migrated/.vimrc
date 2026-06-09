@@ -35,6 +35,9 @@ if exists("+undofile")
 	" Enable the persistent undo file(s)
 	set undodir=~/.vim/undo
 	set undofile
+	if !isdirectory(expand(&undodir))
+		call mkdir(expand(&undodir), "p")
+	endif
 endif
 
 set switchbuf+=usetab " Switch to existing tab; open a new tab for the new buf
