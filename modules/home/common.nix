@@ -188,5 +188,49 @@
     '';
   };
 
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    includes = [ "config.d/*" ];
+
+    settings = {
+      "*" = {
+        # Share SSH connection.
+        # If disabling, consider impact on ssh agent forwarding in screen
+        # sessions (see .ssh/rc file).
+        ControlMaster = "auto";
+        ControlPath = "~/.ssh/ctl/%r@%h:%p";
+        ControlPersist = "10m";
+
+        # When a shared connection is broken (remote reboot), detect it faster.
+        ServerAliveInterval = 11;
+        ServerAliveCountMax = 2;
+
+        ConnectTimeout = 10;
+        AddKeysToAgent = "yes";
+      };
+    };
+  };
+
+  home.file = {
+    ".ssh/rc" = {
+      executable = true;
+      text = ''
+        #!/bin/sh
+
+        # When SSH-ing with agent forwarding enabled, this variable is set by sshd
+        # itself. However, an existing screen session that we attach to will not have
+        # its SSH_AUTH_SOCK environment variable updated, so we hardcode this path in
+        # .screenrc and create a symlink to keep it alive.
+        #
+        # It WILL break if two sessions are opened to a machine, and a newer one is
+        # terminated. ControlMaster in .ssh/config solves this problem by sharing the
+        # connection (and as a result, sharing SSH agent socket).
+        [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+      '';
+    };
+    ".ssh/ctl/.keep".text = "";
+  };
+
   home.stateVersion = "25.11"; # never modify
 }
