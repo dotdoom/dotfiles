@@ -2,12 +2,8 @@
   pkgs,
   identities,
   primaryUser,
-  jail-nix,
   ...
 }:
-let
-  jail = jail-nix.lib.init pkgs;
-in
 {
   users.users.${primaryUser} = {
     uid = 1000;
@@ -30,50 +26,6 @@ in
     nixd
     home-assistant-cli
     yt-dlp
-
-    # jailed-agy --yolo
-    (jail "jailed-agy" pkgs.antigravity-cli (
-      with jail.combinators;
-      [
-        network
-        time-zone
-        no-new-session
-        mount-cwd
-
-        (readwrite (noescape "~/.gemini"))
-        # The above is a stow-controlled symlink to the following.
-        (readwrite (noescape "~/dotfiles/legacy/.gemini"))
-
-        (add-pkg-deps (
-          with pkgs;
-          [
-            bashInteractive
-            curl
-            wget
-            jq
-            git
-            which
-            ripgrep
-            gnugrep
-            gnused
-            gawkInteractive
-            ps
-            findutils
-            gzip
-            unzip
-            gnutar
-            diffutils
-            coreutils
-            procps
-
-            python3
-            esphome
-
-            nix
-          ]
-        ))
-      ]
-    ))
   ];
 
   # For building RPi configs. Extra steps are handled by the host (nas).
