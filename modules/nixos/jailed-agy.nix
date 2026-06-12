@@ -26,7 +26,6 @@ in
         (set-env "PIP_TARGET" (noescape "\"$PWD/.pip-packages\""))
         (set-env "PIP_CACHE_DIR" (noescape "\"$PWD/.pip-cache\""))
         (set-env "PIP_BREAK_SYSTEM_PACKAGES" "1")
-        (add-path (noescape "\"$PWD/.pip-packages/bin\""))
 
         (add-pkg-deps (
           with pkgs;

@@ -20,6 +20,8 @@
 
   virtualisation.docker.enable = true;
 
+  nixpkgs.config.allowUnfree = true;
+
   environment.systemPackages = with pkgs; [
     # TODO: move below into hosts/deimos/home.nix
     sshfs
