@@ -48,6 +48,7 @@
       for item in \
           "mkdir -p:/var/lib/nixos" \
           "mkdir -p:/var/lib/systemd" \
+          "mkdir -p:/var/lib/docker" \
           "touch:/etc/machine-id" \
           "touch:/etc/ssh/ssh_host_ed25519_key" \
       ; do
