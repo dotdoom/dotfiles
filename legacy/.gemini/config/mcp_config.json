@@ -8,6 +8,14 @@
         "--"
       ]
     },
+    "gitea": {
+      "command": "nix",
+      "args": [
+        "run",
+        "nixpkgs#gitea-mcp-server",
+        "--"
+      ]
+    },
     "ha": {
       "command": "nix",
       "args": [
