@@ -1,6 +1,7 @@
 {
   modulesPath,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -73,4 +74,7 @@
     capabilities = "cap_net_raw+p";
     source = "${pkgs.iputils.out}/bin/ping";
   };
+
+  # Our VMs usually have sufficient RAM, prefer to extend SSD lifetime.
+  boot.tmp.useTmpfs = lib.mkDefault true;
 }
