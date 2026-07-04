@@ -166,6 +166,14 @@ colordiff() {
 	cat "$file2" | git diff --no-prefix $gitarg --no-index "$file1" -
 }
 
+osh() {
+	local DEST="$1"
+	# TODO: loop to re-establish connection in case of network drop.
+	#       Kill the loop after mosh (below) finishes.
+	ssh -O check "$DEST" 2>/dev/null || ssh -A -f -N -o ControlPersist=yes "$DEST"
+	mosh "$@"
+}
+
 alias backup-home-explore='eval "ncdu $(grep -A1 -- --exclude $HOME/bin/backup-home | tr -d \|)"'
 
 # stderr redirect for if direnv is missing
