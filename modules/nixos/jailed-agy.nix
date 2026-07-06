@@ -46,7 +46,11 @@ let
 in
 {
   options.programs.jailed-agy = {
-    enable = lib.mkEnableOption "jailed-agy wrapper";
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether to enable the jailed-agy wrapper.";
+    };
 
     extraPackages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
