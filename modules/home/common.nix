@@ -9,12 +9,14 @@
   home.username = primaryUser;
 
   nixpkgs.config.allowUnfree = true;
-  home.packages = with pkgs; [
-    stow
-    wget
-    antigravity-cli
-    yubikey-manager
-  ];
+  home.packages =
+    with pkgs;
+    [
+      stow
+      wget
+      yubikey-manager
+    ]
+    ++ lib.optional (pkgs ? antigravity-cli) antigravity-cli;
 
   home.activation.stowLegacy = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ -d "$HOME/dotfiles/legacy" ]; then

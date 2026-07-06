@@ -46,6 +46,8 @@ let
 in
 {
   options.programs.jailed-agy = {
+    enable = lib.mkEnableOption "jailed-agy wrapper";
+
     extraPackages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
       default = [ ];
@@ -53,7 +55,7 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf config.programs.jailed-agy.enable {
     environment.systemPackages = [
       (jail "jailed-agy" pkgs.antigravity-cli (
         with jail.combinators;
