@@ -47,6 +47,10 @@
         pre-commit-check = inputs.git-hooks.lib.${system}.run (
           {
             src = ./.;
+            excludes = [
+              "^migrated/"
+              "^legacy/"
+            ];
           }
           // inputs.fw_nix.lib.pre-commit
         );
