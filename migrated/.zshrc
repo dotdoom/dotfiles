@@ -170,8 +170,9 @@ osh() {
 	local DEST="$1"
 	# TODO: loop to re-establish connection in case of network drop.
 	#       Kill the loop after mosh (below) finishes.
-	ssh -O check "$DEST" 2>/dev/null || ssh -A -f -N -o ControlPersist=yes "$DEST"
-	mosh "$@"
+	ssh -O check "$DEST" 2>/dev/null || ssh -A -f -o ControlPersist=yes "$DEST" "sleep 2592000"
+	# Disable agent forwarding on the bootstrap connection to prevent it from overwriting the symlink in .ssh/rc
+	mosh --ssh="ssh -a" "$@"
 }
 
 alias backup-home-explore='eval "ncdu $(grep -A1 -- --exclude $HOME/bin/backup-home | tr -d \|)"'
