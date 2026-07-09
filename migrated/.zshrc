@@ -129,7 +129,7 @@ nix-deploy() {
 	command -v nixos-rebuild >/dev/null 2>&1 || cmd=(nix run "nixpkgs#nixos-rebuild" --)
 
 	nix build ".#nixosConfigurations.$config.config.system.build.toplevel" \
-		--out-link "result.$config" |& nom
+		--out-link "result.$config" "$@" |& nom
 	local build_status=$pipestatus[1]
 	if (( build_status != 0 )); then
 		return $build_status
