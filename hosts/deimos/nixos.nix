@@ -28,6 +28,7 @@
     nixd
     home-assistant-cli
     yt-dlp
+    attic-client
   ];
 
   # For building RPi configs. Extra steps are handled by the host (nas).
