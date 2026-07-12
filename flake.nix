@@ -3,10 +3,15 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-mars.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
     systems.url = "github:nix-systems/default";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager-mars = {
+      url = "github:nix-community/home-manager/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs-mars";
     };
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
@@ -17,8 +22,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
-      url = "github:nix-darwin/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
+      inputs.nixpkgs.follows = "nixpkgs-mars";
     };
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     git-hooks = {
@@ -41,19 +46,28 @@
     let
       homeManagerUser = "artem";
       eachSystem = nixpkgs.lib.genAttrs (import systems);
+      nixpkgsFor = system: if system == "x86_64-darwin" then inputs.nixpkgs-mars else nixpkgs;
     in
     {
       checks = eachSystem (system: {
-        pre-commit-check = inputs.git-hooks.lib.${system}.run (
-          {
-            src = ./.;
-            excludes = [
-              "^migrated/"
-              "^legacy/"
-            ];
-          }
-          // inputs.fw_nix.lib.pre-commit
-        );
+        pre-commit-check =
+          let
+            gitHooksLib = import "${inputs.git-hooks}/nix" {
+              nixpkgs = nixpkgsFor system;
+              inherit system;
+              isFlakes = true;
+            };
+          in
+          gitHooksLib.run (
+            {
+              src = ./.;
+              excludes = [
+                "^migrated/"
+                "^legacy/"
+              ];
+            }
+            // inputs.fw_nix.lib.pre-commit
+          );
       });
 
       homeModules = {
@@ -82,20 +96,22 @@
         ];
       };
 
-      homeConfigurations."${homeManagerUser}@mars" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "x86_64-darwin";
-          config.allowDeprecatedx86_64Darwin = true;
-        };
-        extraSpecialArgs = {
-          primaryUser = homeManagerUser;
-        };
-        modules = [
-          inputs.fw_nix.nixosModules.identities
-          self.homeModules.mac-portable
-          ./hosts/mars/home.nix
-        ];
-      };
+      homeConfigurations."${homeManagerUser}@mars" =
+        inputs.home-manager-mars.lib.homeManagerConfiguration
+          {
+            pkgs = import inputs.nixpkgs-mars {
+              system = "x86_64-darwin";
+              config.allowDeprecatedx86_64Darwin = true;
+            };
+            extraSpecialArgs = {
+              primaryUser = homeManagerUser;
+            };
+            modules = [
+              inputs.fw_nix.nixosModules.identities
+              self.homeModules.mac-portable
+              ./hosts/mars/home.nix
+            ];
+          };
 
       darwinConfigurations.mars = darwin.lib.darwinSystem {
         system = "x86_64-darwin";
@@ -138,7 +154,10 @@
       devShells = eachSystem (
         system:
         let
-          pkgs = import nixpkgs { inherit system; };
+          pkgs = import (nixpkgsFor system) {
+            inherit system;
+            config.allowDeprecatedx86_64Darwin = true;
+          };
           inherit (self.checks.${system}.pre-commit-check) shellHook enabledPackages;
         in
         {
