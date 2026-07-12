@@ -52,6 +52,9 @@
       checks = eachSystem (system: {
         pre-commit-check =
           let
+            # Once x86_64-darwin is removed and we are back to a single nixpkgs
+            # version, this can be simplified to:
+            #   gitHooksLib = inputs.git-hooks.lib.${system}
             gitHooksLib = import "${inputs.git-hooks}/nix" {
               nixpkgs = nixpkgsFor system;
               inherit system;
