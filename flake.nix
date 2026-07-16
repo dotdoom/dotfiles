@@ -15,7 +15,7 @@
     };
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
     };
     fw_nix = {
       url = "git+https://github.com/futureware-tech/nix.git";
