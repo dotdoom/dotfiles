@@ -22,6 +22,8 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  programs.fuse.enable = true; # for ~/src/haremote mount
+
   environment.systemPackages = with pkgs; [
     # TODO: move below into hosts/deimos/home.nix
     sshfs
