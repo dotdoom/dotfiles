@@ -20,6 +20,15 @@ in
     "$HOME/.antigravity-server"
   ];
 
+  home.packages = with pkgs; [
+    sshfs
+    nixd
+    home-assistant-cli
+    yt-dlp
+    attic-client
+    opencode
+  ];
+
   systemd.user.mounts."${haremote-unit}" = {
     Unit = {
       Description = "Mount ${haremote-path}";
