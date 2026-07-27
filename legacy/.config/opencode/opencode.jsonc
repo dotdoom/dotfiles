@@ -1,5 +1,12 @@
 {
   "$schema": "https://opencode.ai/config.json",
+
+  // "take me offline" block
+  "experimental": { "openTelemetry": false },
+  "share": "disabled",
+  "autoupdate": false,
+  "disabled_providers": ["opencode", "exa"],
+
   "provider": {
     "local-ollama": {
       "npm": "@ai-sdk/openai-compatible",
@@ -9,9 +16,16 @@
         "apiKey": "ollama"
       },
       "models": {
-        "gemma4:26b": {
+        "gemma4-1gpu": {
           "limit": {
             "context": 48000,
+            "output": 8192
+          },
+          "tools": true
+        },
+        "qwen3.6-1gpu": {
+          "limit": {
+            "context": 128000,
             "output": 8192
           },
           "tools": true
@@ -19,17 +33,23 @@
       }
     }
   },
-  "model": "local-ollama/gemma4:26b",
+  // "model": "local-ollama/qwen2.5-coder:14b",
+  "model": "local-ollama/qwen3.6-200k",
   "compaction": {
     "auto": true,
     "prune": true,
     "threshold": 0.75,
-    "preserve_recent_tokens": 16384,
-    "reserved": 8192
+    "preserve_recent_tokens": 8192,
+    "reserved": 16384
   },
   "tool_output": {
     "max_bytes": 16384,
     "max_lines": 200
+  },
+  "agent": {
+    "build": {
+      "steps": 1000
+    }
   },
   "mcp": {
     "nix": {
@@ -50,7 +70,7 @@
         "nixpkgs#gitea-mcp-server",
         "--"
       ],
-      "enabled": true
+      "enabled": false
     },
     "ha": {
       "type": "local",
@@ -69,7 +89,7 @@
         "UV_PYTHON_DOWNLOADS": "never",
         "UV_PYTHON_PREFERENCE": "system"
       },
-      "enabled": true
+      "enabled": false
     }
   }
 }
