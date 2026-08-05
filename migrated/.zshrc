@@ -168,11 +168,19 @@ colordiff() {
 
 osh() {
 	local DEST="$1"
-	# TODO: loop to re-establish connection in case of network drop.
-	#       Kill the loop after mosh (below) finishes.
-	ssh -O check "$DEST" 2>/dev/null || ssh -A -f -o ControlPersist=yes "$DEST" "sleep 2592000"
+	local PARENT_PID=$$
+	(
+		while kill -0 $PARENT_PID 2>/dev/null; do
+			ssh -O check "$DEST" 2>/dev/null || ssh -A -f -o ControlPersist=yes "$DEST" "sleep 2592000"
+			sleep 5
+		done
+	) &
+	local loop_pid=$!
+
 	# Disable agent forwarding on the bootstrap connection to prevent it from overwriting the symlink in .ssh/rc
 	mosh --ssh="ssh -a" "$@"
+
+	kill $loop_pid 2>/dev/null
 }
 
 alias backup-home-explore='eval "ncdu $(grep -A1 -- --exclude $HOME/bin/backup-home | tr -d \|)"'
