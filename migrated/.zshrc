@@ -171,8 +171,8 @@ osh() {
 	local PARENT_PID=$$
 	(
 		while kill -0 $PARENT_PID 2>/dev/null; do
-			ssh -O check "$DEST" 2>/dev/null || ssh -A -f -o ControlPersist=yes "$DEST" "sleep 2592000"
-			sleep 5
+			ssh -O check "$DEST" 2>/dev/null || ssh -A -o ServerAliveInterval=2 -o ServerAliveCountMax=3 -o ControlPersist=yes "$DEST" "sleep 2592000"
+			sleep 1
 		done
 	) &
 	local loop_pid=$!
