@@ -13,10 +13,7 @@
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs-mars";
     };
-    vscode-server = {
-      url = "github:nix-community/nixos-vscode-server";
-      inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
-    };
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
     fw_nix = {
       url = "git+https://github.com/futureware-tech/nix.git";
       inputs.nixpkgs.follows = "nixpkgs";
