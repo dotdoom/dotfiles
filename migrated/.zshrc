@@ -169,9 +169,18 @@ colordiff() {
 osh() {
 	local DEST="$1"
 	local PARENT_PID=$$
+
+	_osh_ensure_ssh() {
+		ssh -A -o ServerAliveInterval=2 -o ServerAliveCountMax=3 -o ControlPersist=yes "$@"
+	}
+
+	# Authenticate in foreground first to ensure Touch ID doesn't conflict with mosh
+	_osh_ensure_ssh "$DEST" true
+
 	(
 		while kill -0 $PARENT_PID 2>/dev/null; do
-			ssh -O check "$DEST" 2>/dev/null || ssh -A -o ServerAliveInterval=2 -o ServerAliveCountMax=3 -o ControlPersist=yes "$DEST" "sleep 2592000"
+			# Avoid using TTY as that will instantly suspend the loop
+			_osh_ensure_ssh -n -q -o BatchMode=yes "$DEST" "sleep 2592000"
 			sleep 1
 		done
 	) &
