@@ -186,8 +186,8 @@ osh() {
 	) &
 	local loop_pid=$!
 
-	# Disable agent forwarding on the bootstrap connection to prevent it from overwriting the symlink in .ssh/rc
-	mosh --ssh="ssh -a" "$@"
+	# Allow mosh reuse of our master session.
+	mosh --experimental-remote-ip=remote "$@"
 
 	kill $loop_pid 2>/dev/null
 }
