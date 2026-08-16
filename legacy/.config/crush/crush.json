@@ -1,0 +1,82 @@
+{
+  "$schema": "https://charm.land/crush.json",
+  "experimental": { "openTelemetry": false },
+  "share": "disabled",
+  "autoupdate": false,
+  "disabled_providers": ["crush", "exa"],
+  "providers": {
+    "local-ollama": {
+      "type": "openai-compat",
+      "base_url": "http://ollama.home.arpa:11434/v1",
+      "api_key": "ollama",
+      "model_overrides": {
+        "gemma4-1gpu": {
+          "context_window": 48000,
+          "tools": true
+        },
+        "qwen3.6-1gpu": {
+          "context_window": 128000,
+          "tools": true
+        }
+      }
+    }
+  },
+  "model": "local-ollama/qwen3.6-200k",
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "threshold": 0.75,
+    "preserve_recent_tokens": 8192,
+    "reserved": 16384
+  },
+  "tool_output": {
+    "max_bytes": 16384,
+    "max_lines": 200
+  },
+  "agent": {
+    "build": {
+      "steps": 1000
+    }
+  },
+  "mcp": {
+    "nix": {
+      "type": "stdio",
+      "command": "nix",
+      "args": [
+        "run",
+        "github:utensils/mcp-nixos",
+        "--"
+      ],
+      "enabled": true
+    },
+    "gitea": {
+      "type": "stdio",
+      "command": "nix",
+      "args": [
+        "run",
+        "nixpkgs#gitea-mcp-server",
+        "--"
+      ],
+      "enabled": false
+    },
+    "ha": {
+      "type": "stdio",
+      "command": "nix",
+      "args": [
+        "shell",
+        "nixpkgs#uv",
+        "nixpkgs#python3",
+        "--command",
+        "uv",
+        "tool",
+        "run",
+        "ha-mcp"
+      ],
+      "env": {
+        "UV_PYTHON_DOWNLOADS": "never",
+        "UV_PYTHON_PREFERENCE": "system"
+      },
+      "enabled": false
+    }
+  }
+}

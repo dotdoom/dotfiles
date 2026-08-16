@@ -27,6 +27,7 @@ in
     yt-dlp
     attic-client
     opencode
+    crush
   ];
 
   systemd.user.mounts."${haremote-unit}" = {
