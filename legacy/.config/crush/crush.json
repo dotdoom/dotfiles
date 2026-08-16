@@ -46,8 +46,7 @@
         "run",
         "github:utensils/mcp-nixos",
         "--"
-      ],
-      "enabled": true
+      ]
     },
     "gitea": {
       "type": "stdio",
@@ -56,8 +55,7 @@
         "run",
         "nixpkgs#gitea-mcp-server",
         "--"
-      ],
-      "enabled": false
+      ]
     },
     "ha": {
       "type": "stdio",
@@ -75,8 +73,7 @@
       "env": {
         "UV_PYTHON_DOWNLOADS": "never",
         "UV_PYTHON_PREFERENCE": "system"
-      },
-      "enabled": false
+      }
     }
   }
 }
