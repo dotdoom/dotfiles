@@ -28,6 +28,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     jail-nix.url = "sourcehut:~alexdavid/jail.nix";
+    crush-src = {
+      url = "github:joestump-agent/crush";
+      flake = false;
+    };
   };
 
   outputs =
@@ -87,7 +91,10 @@
         pkgs = import nixpkgs {
           system = "x86_64-linux";
         };
-        extraSpecialArgs.primaryUser = homeManagerUser;
+        extraSpecialArgs = {
+          primaryUser = homeManagerUser;
+          inherit (inputs) crush-src;
+        };
         modules = [
           inputs.fw_nix.nixosModules.identities
           vscode-server.homeModules.default

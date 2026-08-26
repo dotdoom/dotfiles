@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  crush-src,
   ...
 }:
 let
@@ -27,7 +28,11 @@ in
     yt-dlp
     attic-client
     opencode
-    crush
+    ((crush.override { buildGo126Module = pkgs.buildGo127Module; }).overrideAttrs (_: {
+      src = crush-src;
+      version = crush-src.shortRev or "dirty";
+      vendorHash = "sha256-B29pB157+SZS60ZOtg/UHRt7OYcmfnqeKxqH+eP7BwY=";
+    }))
   ];
 
   systemd.user.mounts."${haremote-unit}" = {
@@ -41,6 +46,22 @@ in
       Where = haremote-path;
       Type = "fuse.sshfs";
       Options = "reconnect,ServerAliveInterval=15,uid=1000,gid=1000,IdentityAgent=${config.home.homeDirectory}/.ssh/ssh_auth_sock";
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
+
+  systemd.user.services.signal-cli = {
+    Unit = {
+      Description = "signal-cli daemon";
+      After = [ "network-online.target" ];
+      Wants = [ "network-online.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.signal-cli}/bin/signal-cli daemon --tcp 127.0.0.1:7583 --receive-mode on-start --no-receive-stdout";
+      Restart = "always";
+      RestartSec = "10s";
     };
     Install = {
       WantedBy = [ "default.target" ];

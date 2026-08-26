@@ -1,0 +1,83 @@
+option metrics false
+
+provider add crush --disable true
+provider add exa --disable true
+
+provider add local-ollama \
+  --type openai-compat \
+  --base-url "http://ollama.home.arpa:11434/v1" \
+  --api-key "ollama"
+
+model add local-ollama/gemma-large-1gpu \
+  --name "gemma-large-1gpu" \
+  --context-window 48000 \
+  --default-max-tokens 8192 \
+  --can-reason true \
+  --supports-images true
+
+model add local-ollama/qwen-small-1gpu \
+  --name "qwen-small-1gpu" \
+  --context-window 128000 \
+  --default-max-tokens 8192 \
+  --can-reason true \
+  --supports-images true
+
+model add local-ollama/qwen-large-1gpu \
+  --name "qwen-large-1gpu" \
+  --context-window 128000 \
+  --default-max-tokens 8192 \
+  --can-reason true \
+  --supports-images true
+
+model small local-ollama/qwen-small-1gpu
+model large local-ollama/qwen-large-1gpu --think
+
+mcp add nix \
+  --disabled false \
+  --type stdio \
+  --command "nix" \
+  --args "run" \
+  --args "github:utensils/mcp-nixos" \
+  --args "--"
+
+# Uses GITEA_HOST, GITEA_ACCESS_TOKEN
+mcp add gitea \
+  --disabled false \
+  --type stdio \
+  --command "nix" \
+  --args "run" \
+  --args "nixpkgs#gitea-mcp-server" \
+  --args "--"
+
+# Uses HOMEASSISTANT_URL, HOMEASSISTANT_TOKEN
+mcp add ha \
+  --disabled false \
+  --type stdio \
+  --command "nix" \
+  --args "shell" \
+  --args "nixpkgs#uv" \
+  --args "nixpkgs#python3" \
+  --args "--command" \
+  --args "uv" \
+  --args "tool" \
+  --args "run" \
+  --args "ha-mcp" \
+  --env UV_PYTHON_DOWNLOADS "never" \
+  --env UV_PYTHON_PREFERENCE "system"
+
+# Uses SIGNAL_MCP_ACCOUNT, SIGNAL_MCP_OPERATOR, SIGNAL_MCP_TRUSTED_SENDERS
+# Have to do a "bash -c" workaround because a bug in crush duplicates all args,
+# breaking the command line.
+mcp add signal \
+  --disabled false \
+  --type stdio \
+  --command "bash" \
+  --args "-c" \
+  --args 'nix shell nixpkgs#uv nixpkgs#python3 --command uvx -q --from git+https://github.com/joestump/signal-mcp signal-mcp --transport stdio --channel' \
+  --env UV_PYTHON_DOWNLOADS "never" \
+  --env UV_PYTHON_PREFERENCE "system"
+
+# TODO: in YOLO mode we shouldn't need these, right?
+permissions allow mcp_signal_send_message_to_user mcp_nix_nix
+
+# vim: ft=bash

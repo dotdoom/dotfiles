@@ -17,6 +17,22 @@
         "type": "github"
       }
     },
+    "crush-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1787663326,
+        "narHash": "sha256-oRdPES6UCXStpGNT2om13b0wzh6LvpmydTW2wJkPkUs=",
+        "owner": "joestump-agent",
+        "repo": "crush",
+        "rev": "0da593afacf2b8639cdd57cd0f6d106448438116",
+        "type": "github"
+      },
+      "original": {
+        "owner": "joestump-agent",
+        "repo": "crush",
+        "type": "github"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -276,6 +292,7 @@
     },
     "root": {
       "inputs": {
+        "crush-src": "crush-src",
         "darwin": "darwin",
         "fw_nix": "fw_nix",
         "git-hooks": "git-hooks_2",
