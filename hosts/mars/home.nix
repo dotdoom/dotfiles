@@ -14,10 +14,14 @@
   home.packages = with pkgs; [
     dosbox-staging # dosbox appears broken on darwin
 
-    # 1. Move config file to /usr/local/etc/wireguard/wg0.conf
-    # 2. sudo wg-quick up wg0
+    # 1. Edit config file:
+    #    - comment out DNS setting
+    #    - add instead, replacing <DNS> with the value of DNS setting:
+    #        PostUp = printf "d.init\nd.add ServerAddresses * <DNS>\nd.add SupplementalMatchDomains * \"\"\nset State:/Network/Service/wg0/DNS\n" | scutil
+    #        PostDown = printf "remove State:/Network/Service/wg0/DNS\n" | scutil
+    # 2. Move config file to /usr/local/etc/wireguard/wg0.conf
+    # 3. sudo wg-quick up wg0
     wireguard-tools
-    wireguard-go
 
     antigravity
   ];
