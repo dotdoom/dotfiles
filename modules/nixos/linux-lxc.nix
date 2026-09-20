@@ -77,4 +77,18 @@
 
   # Our VMs usually have sufficient RAM, prefer to extend SSD lifetime.
   boot.tmp.useTmpfs = lib.mkDefault true;
+
+  # Host passes through /dev/nvidia* and mounts /run/opengl-driver
+  environment.systemPackages = with pkgs; [
+    (symlinkJoin {
+      name = "nvidia-smi-wrapped";
+      paths = [ linuxPackages.nvidiaPackages.dc.bin ];
+      nativeBuildInputs = [ makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/nvidia-smi \
+          --prefix LD_LIBRARY_PATH : "/run/opengl-driver/lib"
+      '';
+    })
+    nvtopPackages.nvidia
+  ];
 }
