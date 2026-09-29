@@ -54,12 +54,11 @@
   # This is supposed to persist machine-id, but fails.
   systemd.services.systemd-machine-id-commit.enable = false;
 
-  # unprivileged LXCs can't set net.ipv4.ping_group_range
-  security.wrappers.ping = {
-    owner = "root";
-    group = "root";
-    capabilities = "cap_net_raw+p";
-    source = "${pkgs.iputils.out}/bin/ping";
+  boot.kernel.sysctl = {
+    # The default of 0..2^31-1 in systemd's 50-default.conf is not allowed
+    # inside containers as it would include user IDs outside the namespace,
+    # which defaults to 0..10^9 on Incus containers.
+    "net.ipv4.ping_group_range" = "0 65535";
   };
 
   # Our VMs usually have sufficient RAM, prefer to extend SSD lifetime.
