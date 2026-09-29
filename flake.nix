@@ -23,6 +23,7 @@
       inputs.nixpkgs.follows = "nixpkgs-mars";
     };
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    impermanence.url = "github:nix-community/impermanence";
     git-hooks = {
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -142,6 +143,10 @@
         system = "x86_64-linux";
         specialArgs = {
           primaryUser = homeManagerUser;
+
+          # /home is the only data-storing mountpoint besides /nix.
+          persistenceCommon = "/home/persistent";
+
           inherit (inputs) jail-nix;
         };
         modules = [
@@ -149,6 +154,7 @@
           self.nixosModules.linux-headless
           self.nixosModules.linux-lxc
           self.nixosModules.jailed-agy
+          inputs.impermanence.nixosModules.impermanence
           inputs.fw_nix.nixosModules.nix-gc
           inputs.fw_nix.nixosModules.nix-settings
           inputs.fw_nix.nixosModules.tools
