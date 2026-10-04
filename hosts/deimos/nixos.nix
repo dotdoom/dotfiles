@@ -21,6 +21,15 @@
   virtualisation.docker.enable = true;
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.overlays = [
+    (_: prev: {
+      # Temporary workaround until upstream nixpkgs fix lands:
+      # https://github.com/NixOS/nixpkgs/issues/569695
+      ltrace = prev.ltrace.overrideAttrs (_: {
+        doCheck = false;
+      });
+    })
+  ];
 
   programs.fuse.enable = true; # for ~/src/haremote mount
 

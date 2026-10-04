@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  crush-src,
   ...
 }:
 let
@@ -28,11 +27,7 @@ in
     yt-dlp
     attic-client
     opencode
-    ((crush.override { buildGo126Module = pkgs.buildGo127Module; }).overrideAttrs (_: {
-      src = crush-src;
-      version = crush-src.shortRev or "dirty";
-      vendorHash = "sha256-B29pB157+SZS60ZOtg/UHRt7OYcmfnqeKxqH+eP7BwY=";
-    }))
+    crush
   ];
 
   systemd.user.mounts."${haremote-unit}" = {

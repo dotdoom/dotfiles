@@ -29,10 +29,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     jail-nix.url = "sourcehut:~alexdavid/jail.nix";
-    crush-src = {
-      url = "github:joestump-agent/crush";
-      flake = false;
-    };
   };
 
   outputs =
@@ -94,7 +90,6 @@
         };
         extraSpecialArgs = {
           primaryUser = homeManagerUser;
-          inherit (inputs) crush-src;
         };
         modules = [
           inputs.fw_nix.nixosModules.identities
