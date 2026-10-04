@@ -50,7 +50,6 @@
       mkdir -p /sbin
     '';
   };
-  system.activationScripts.users.deps = [ "bootloder-patch" ];
   # This is supposed to persist machine-id, but fails.
   systemd.services.systemd-machine-id-commit.enable = false;
 
