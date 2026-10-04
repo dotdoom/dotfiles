@@ -150,11 +150,15 @@
       set-environment -g SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock
       set-option -g update-environment "DISPLAY SSH_ASKPASS SSH_AGENT_PID SSH_CONNECTION"
 
-      # Instead of flashing or beeping, blink the window in status.
-      set -g visual-bell off
+      # Activity: silent indicator in status bar (no beeping, no message banner).
       set -g monitor-activity on
-      set -g bell-action none
-      set -g window-status-activity-style "fg=yellow,blink"
+      set -g activity-action none
+      set -g visual-activity off
+      set -g window-status-activity-style "fg=yellow"
+
+      # Bell: ring terminal bell and show message banner in status bar.
+      set -g bell-action any
+      set -g visual-bell both
 
       # Requires support from terminal (e.g. iTerm2).
       set -s set-clipboard on
@@ -185,7 +189,7 @@
       set -g status-right "#[fg=cyan]%H:%M%Z %d.%m.%Y #[fg=white]| #[fg=yellow]Load: #(cut -d ' ' -f 1-3 /proc/loadavg)"
 
       set -g status-justify left
-      set -g window-status-format "#[fg=white,dim]#I:#W#F"
+      set -g window-status-format "#I:#W#F"
       set -g window-status-current-format "#[fg=white,bold,bg=blue] #I:#W#F "
     '';
   };
