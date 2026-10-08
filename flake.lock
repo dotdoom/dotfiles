@@ -17,6 +17,22 @@
         "type": "github"
       }
     },
+    "crush-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791476810,
+        "narHash": "sha256-oKnKnNkc12zjuyYNejbHmRdnU1YrJoRLwDS2NLyTD8M=",
+        "owner": "joestump-agent",
+        "repo": "crush",
+        "rev": "7bfc9f430e9876753b1f94ad399dbc279cb8cb94",
+        "type": "github"
+      },
+      "original": {
+        "owner": "joestump-agent",
+        "repo": "crush",
+        "type": "github"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -97,11 +113,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1790698990,
-        "narHash": "sha256-3O+rVesesqOhcqbRbBsCKN5Nf+mrQCsF6pIsm7MYORs=",
+        "lastModified": 1791141203,
+        "narHash": "sha256-lAnk0DVqjzsTySgVX1zWhrJLIayKua7nu8gejSHbLXo=",
         "ref": "refs/heads/main",
-        "rev": "23b03a94448be4392b747436b9dc675204dd9f13",
-        "revCount": 56,
+        "rev": "24e25a011b29857a745b003e4ef01e55dbef2315",
+        "revCount": 58,
         "type": "git",
         "url": "https://github.com/futureware-tech/nix.git"
       },
@@ -160,11 +176,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790989254,
-        "narHash": "sha256-ZN+riaeFuE+DZ5zfqJiXlM12jLwZzeIXiNkU1YeHMXI=",
+        "lastModified": 1791484883,
+        "narHash": "sha256-iKxFHJrg7Sltwhq3ssCZYQ4CFEDVvReVVuVuO9dj3sE=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "acd21c5a3420a9d5fd0ed06299b10828267ef9ba",
+        "rev": "dfadbe5162d5e86bc0808badec8f346f81b4b3f0",
         "type": "github"
       },
       "original": {
@@ -300,11 +316,11 @@
     },
     "nixpkgs-mars": {
       "locked": {
-        "lastModified": 1790772421,
-        "narHash": "sha256-754eQtr0m8xKtNnKYhX7ukI7XaA7oeiQpui1LiEuhyU=",
+        "lastModified": 1791244311,
+        "narHash": "sha256-cy5PsNucfXU5+KtLR+S9/zdkWOUplhL5Xr0LQWhSYbs=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "e49322d1ec25b45f7c587c5fd69ac826d1a57dbc",
+        "rev": "2bd3427b41d10b8318383195efe502ed1baca6cd",
         "type": "github"
       },
       "original": {
@@ -316,11 +332,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1790822859,
-        "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
+        "lastModified": 1791456040,
+        "narHash": "sha256-H83yz/do+hjOO0uujHyH8RgtIQP2v7Mw+cLwcZK/xKc=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "c59305bab2065cfecc4944690d9eedbb56f3a9fa",
+        "rev": "e7439b6b14ad3cc35d05608ebca9bce01a25f5f8",
         "type": "github"
       },
       "original": {
@@ -332,6 +348,7 @@
     },
     "root": {
       "inputs": {
+        "crush-src": "crush-src",
         "darwin": "darwin",
         "fw_nix": "fw_nix",
         "git-hooks": "git-hooks_2",
@@ -363,11 +380,11 @@
     },
     "systems_2": {
       "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "lastModified": 1791244623,
+        "narHash": "sha256-uuanbkFk8a313Zfrxdcz8Us/yQtaxNnKJtX8v0ZPpd8=",
         "owner": "nix-systems",
         "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "rev": "d36eeed142f88b5a636f2e3856a53c61654cf29b",
         "type": "github"
       },
       "original": {

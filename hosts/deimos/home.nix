@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  crush-src,
   ...
 }:
 let
@@ -27,7 +28,12 @@ in
     yt-dlp
     attic-client
     opencode
-    crush
+    (crush.overrideAttrs (_: {
+      src = crush-src;
+      version = crush-src.shortRev or "dirty";
+      vendorHash = "sha256-CGPZLtOWmMksODDV45rJ7qaA1lJKpe5qVP0tyauAoxU=";
+      doCheck = false;
+    }))
   ];
 
   systemd.user.mounts."${haremote-unit}" = {
