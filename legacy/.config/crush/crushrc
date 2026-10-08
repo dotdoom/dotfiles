@@ -71,21 +71,15 @@ mcp add gitea \
   --args "nixpkgs#gitea-mcp-server" \
   --args "--"
 
+# Home Assistant's own MCP server. Streamable HTTP replaces the old SSE
+# endpoint (/mcp_server/sse), which the integration no longer serves.
 # Uses HOMEASSISTANT_URL, HOMEASSISTANT_TOKEN
 mcp add ha \
-  --disabled true \
-  --type stdio \
-  --command "nix" \
-  --args "shell" \
-  --args "nixpkgs#uv" \
-  --args "nixpkgs#python3" \
-  --args "--command" \
-  --args "uv" \
-  --args "tool" \
-  --args "run" \
-  --args "ha-mcp" \
-  --env UV_PYTHON_DOWNLOADS "never" \
-  --env UV_PYTHON_PREFERENCE "system"
+  --disabled false \
+  --type http \
+  --url "${HASS_SERVER}/api/mcp" \
+  --header Authorization "Bearer ${HASS_TOKEN}" \
+  --timeout 30
 
 # Uses SIGNAL_MCP_ACCOUNT, SIGNAL_MCP_OPERATOR, SIGNAL_MCP_TRUSTED_SENDERS
 # Have to do a "bash -c" workaround because a bug in crush duplicates all args,
@@ -96,6 +90,19 @@ mcp add signal \
   --command "bash" \
   --args "-c" \
   --args 'nix shell nixpkgs#uv nixpkgs#python3 --command uvx -q --from git+https://github.com/joestump/signal-mcp signal-mcp --transport stdio --channel' \
+  --env UV_PYTHON_DOWNLOADS "never" \
+  --env UV_PYTHON_PREFERENCE "system"
+
+# Uses SEARXNG_URL (falls back to the LAN instance)
+# The mcp<2 pin is needed: mcp-searxng is not compatible with the 2.x SDK.
+# Same "bash -c" workaround as the signal server for the duplicated-args bug.
+mcp add searxng \
+  --disabled false \
+  --type stdio \
+  --command "bash" \
+  --args "-c" \
+  --args 'uvx -q --from mcp-searxng --with "mcp<2" mcp-searxng' \
+  --env SEARXNG_URL "${SEARXNG_URL:-http://searxng.home.arpa}" \
   --env UV_PYTHON_DOWNLOADS "never" \
   --env UV_PYTHON_PREFERENCE "system"
 

@@ -25,6 +25,8 @@ in
     sshfs
     nixd
     home-assistant-cli
+    uv
+    python3
     yt-dlp
     attic-client
     opencode
