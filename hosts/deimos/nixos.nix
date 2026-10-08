@@ -5,6 +5,7 @@
   ...
 }:
 {
+  programs.traceroute.enable = true;
   users.users.${primaryUser} = {
     uid = 1000;
     isNormalUser = true;
