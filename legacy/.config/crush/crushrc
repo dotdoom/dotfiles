@@ -8,6 +8,14 @@ provider add local-ollama \
   --base-url "http://ollama.home.arpa:11434/v1" \
   --api-key "ollama"
 
+# Bump timeout for longer prefill times (30k+ tokens).
+option request-timeout 0
+
+provider add mercury-halogen \
+  --type openai \
+  --base-url "http://mercury:8731/v1" \
+  --api-key "halogen"
+
 model add local-ollama/gemma-large-1gpu \
   --name "gemma-large-1gpu" \
   --context-window 48000 \
@@ -29,8 +37,22 @@ model add local-ollama/qwen-large-1gpu \
   --can-reason true \
   --supports-images true
 
+# Cost of 1h = 0.33 SFr * 0.15 kW = ~0.05 SFr
+# input  1500 t/s, 5.4M t/h: 9.2e-9
+# output 45 t/s,   162k t/h: 3e-7
+model add mercury-halogen/qwen3.8-flash-next \
+  --name "qwen-large-mercury-halogen" \
+  --context-window 100000 \
+  --default-max-tokens 65536 \
+  --can-reason true \
+  --reasoning-effort medium \
+  --price-input 0.00000001 \
+  --price-output 0.0000003 \
+  --supports-images true
+
 model small local-ollama/qwen-small-1gpu
-model large local-ollama/qwen-large-1gpu --think
+#model large local-ollama/qwen-large-1gpu --think
+model large mercury-halogen/qwen3.8-flash-next --think
 
 mcp add nix \
   --disabled false \
@@ -42,7 +64,7 @@ mcp add nix \
 
 # Uses GITEA_HOST, GITEA_ACCESS_TOKEN
 mcp add gitea \
-  --disabled false \
+  --disabled true \
   --type stdio \
   --command "nix" \
   --args "run" \
@@ -51,7 +73,7 @@ mcp add gitea \
 
 # Uses HOMEASSISTANT_URL, HOMEASSISTANT_TOKEN
 mcp add ha \
-  --disabled false \
+  --disabled true \
   --type stdio \
   --command "nix" \
   --args "shell" \
