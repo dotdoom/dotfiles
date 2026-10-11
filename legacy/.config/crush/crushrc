@@ -38,17 +38,20 @@ model add local-ollama/qwen-large-1gpu \
   --supports-images true
 
 # Cost of 1h = 0.33 SFr * 0.15 kW = ~0.05 SFr
-# input  1500 t/s, 5.4M t/h: 9.2e-9
-# output 45 t/s,   162k t/h: 3e-7
+#   input  1500 t/s, 5.4M t/h: 0.0092 SFr/Mtok
+#   output 45 t/s,   162k t/h: 0.3    SFr/Mtok
+# HALOGEN_VISION_TOWER unset, no image support.
+# Model supports 262,144 context, we keep limit lower to leave room for
+# compaction output.
 model add mercury-halogen/qwen3.8-flash-next \
   --name "qwen-large-mercury-halogen" \
-  --context-window 100000 \
+  --context-window 240000 \
   --default-max-tokens 65536 \
   --can-reason true \
   --reasoning-effort medium \
-  --price-input 0.00000001 \
-  --price-output 0.0000003 \
-  --supports-images true
+  --price-input 0.01 \
+  --price-output 0.3 \
+  --supports-images false
 
 model small local-ollama/qwen-small-1gpu
 #model large local-ollama/qwen-large-1gpu --think
