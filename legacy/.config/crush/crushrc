@@ -113,11 +113,11 @@ mcp add signal \
   --env UV_PYTHON_DOWNLOADS "never" \
   --env UV_PYTHON_PREFERENCE "system"
 
-# Uses SEARXNG_URL (falls back to the LAN instance)
+# Disabled in favor of Tavily.
 # The mcp<2 pin is needed: mcp-searxng is not compatible with the 2.x SDK.
 # Same "bash -c" workaround as the signal server for the duplicated-args bug.
 mcp add searxng \
-  --disabled false \
+  --disabled true \
   --type stdio \
   --command "bash" \
   --args "-c" \
@@ -125,6 +125,22 @@ mcp add searxng \
   --env SEARXNG_URL "http://searxng.home.arpa" \
   --env UV_PYTHON_DOWNLOADS "never" \
   --env UV_PYTHON_PREFERENCE "system"
+
+# Tavily web search. Uses TAVILY_API_KEY.
+# Tavily's hosted MCP endpoint (streamable HTTP), so no npx/uvx spawn and no
+# extra process to keep warm. Prompt-cost trim: the server offers five tools;
+# tavily_crawl, tavily_map and tavily_research are bulk-crawl/research agents
+# that cost credits and prompt tokens we rarely use from here, so only search
+# and extract are registered. Drop the --enabled-tools lines for the full set.
+if [[ -n "${TAVILY_API_KEY:-}" ]]; then
+  mcp add tavily \
+    --disabled false \
+    --type http \
+    --url "https://mcp.tavily.com/mcp/?tavilyApiKey=${TAVILY_API_KEY}" \
+    --timeout 60 \
+    --enabled-tools tavily_search \
+    --enabled-tools tavily_extract
+fi
 
 # TODO: in YOLO mode we shouldn't need these, right?
 permissions allow mcp_signal_send_message_to_user mcp_nix_nix
