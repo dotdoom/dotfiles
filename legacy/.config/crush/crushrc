@@ -60,6 +60,7 @@ model large mercury-halogen/qwen3.8-flash-next --think
 mcp add nix \
   --disabled false \
   --type stdio \
+  --timeout 90 \
   --command "nix" \
   --args "run" \
   --args "github:utensils/mcp-nixos" \
