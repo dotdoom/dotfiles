@@ -159,4 +159,7 @@ permissions deny question
 # permissions deny dispatch_agent apply_dispatch dismiss_dispatch cancel_dispatch message_agent
 # permissions deny lsp_call_hierarchy lsp_definition lsp_diagnostics lsp_references lsp_rename lsp_replace_symbol lsp_restart lsp_symbols
 
+lsp add nix --command nixd
+lsp add statix --disabled true
+
 # vim: ft=bash
