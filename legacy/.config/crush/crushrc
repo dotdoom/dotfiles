@@ -13,7 +13,7 @@ option request-timeout 0
 
 provider add mercury-halogen \
   --type openai \
-  --base-url "http://mercury:8731/v1" \
+  --base-url "http://127.0.0.1:8731/v1" \
   --api-key "halogen"
 
 model add local-ollama/gemma-large-1gpu \
