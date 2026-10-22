@@ -32,8 +32,6 @@
     })
   ];
 
-  programs.fuse.enable = true; # for ~/src/haremote mount
-
   # For building RPi configs. Extra steps are handled by the host (nas).
   # https://discuss.linuxcontainers.org/t/systemd-binfmt-service-is-masked/21566/4
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
