@@ -21,3 +21,11 @@ freely since it records no content.
 When work is finished, leave the changes in the working tree and report them; do
 not stage or commit them on your own initiative. If the user asks for a commit,
 do exactly what was asked and nothing more (no push unless requested).
+
+## Gitea
+
+You can access local Git server using `tea` command.
+
+## HomeAssistant
+
+Use `hass-cli` command to acccess HomeAssistant.

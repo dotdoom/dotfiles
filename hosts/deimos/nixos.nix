@@ -22,6 +22,13 @@
   virtualisation.docker.enable = true;
 
   nixpkgs.config.allowUnfree = true;
+
+  # Numtide's cache, so llm-agents packages come pre-built instead of compiling.
+  nix.settings = {
+    extra-substituters = [ "https://cache.numtide.com" ];
+    extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
+  };
+
   nixpkgs.overlays = [
     (_: prev: {
       # Temporary workaround until upstream nixpkgs fix lands:

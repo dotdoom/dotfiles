@@ -66,42 +66,6 @@ mcp add nix \
   --args "github:utensils/mcp-nixos" \
   --args "--"
 
-# Uses GITEA_HOST, GITEA_ACCESS_TOKEN
-# Server-side trim: -r drops the 23 write tools, -O keeps a repo-work subset.
-# All 57 tools cost ~9.5k prompt tokens, this subset costs ~2.1k.
-mcp add gitea \
-  --disabled false \
-  --type stdio \
-  --command "nix" \
-  --args "run" \
-  --args "nixpkgs#gitea-mcp-server" \
-  --args "--" \
-  --args "-r" \
-  --args "-O" \
-  --args "list_my_repos,list_org_repos,search_repos,get_file_contents,get_dir_contents,get_repository_tree,list_commits,get_commit,list_branches,list_issues,issue_read,list_pull_requests,pull_request_read,search_issues,get_me"
-
-# HA-MCP Custom Component running the full ha-mcp server in-process inside
-# Home Assistant. Uses HASS_MCP_URL.
-# Prompt-cost trim: the server pins 11 tools (~9.2k prompt tokens on every
-# request). The four dropped ones (ha_config_set_automation, ha_manage_backup,
-# ha_get_overview, ha_report_issue) are ~5.9k tokens of schema and are rarely
-# needed. They stay reachable through ha_search_tools plus
-# ha_call_read/write/delete_tool, which execute by name server-side, so
-# nothing is lost, only the always-loaded schema text. Names here are bare
-# tool names, not mcp_ha_*; a name that does not exist unregisters the server.
-mcp add ha \
-  --disabled false \
-  --type http \
-  --url "${HASS_MCP_URL}" \
-  --timeout 30 \
-  --enabled-tools ha_search \
-  --enabled-tools ha_search_tools \
-  --enabled-tools ha_get_skill_guide \
-  --enabled-tools ha_config_get_automation \
-  --enabled-tools ha_call_read_tool \
-  --enabled-tools ha_call_write_tool \
-  --enabled-tools ha_call_delete_tool
-
 # Uses SIGNAL_MCP_ACCOUNT, SIGNAL_MCP_OPERATOR, SIGNAL_MCP_TRUSTED_SENDERS
 # Have to do a "bash -c" workaround because a bug in crush duplicates all args,
 # breaking the command line.

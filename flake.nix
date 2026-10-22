@@ -33,6 +33,9 @@
       url = "github:joestump-agent/crush";
       flake = false;
     };
+    # Not following nixpkgs on purpose: the flake is only tested against its own
+    # pinned nixpkgs-unstable, and keeping it separate means we hit numtide's cache.
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs =
@@ -94,7 +97,7 @@
         };
         extraSpecialArgs = {
           primaryUser = homeManagerUser;
-          inherit (inputs) crush-src;
+          inherit (inputs) crush-src llm-agents;
         };
         modules = [
           inputs.fw_nix.nixosModules.identities

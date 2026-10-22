@@ -2,6 +2,7 @@
   config,
   pkgs,
   crush-src,
+  llm-agents,
   ...
 }:
 {
@@ -24,6 +25,8 @@
     yt-dlp
     attic-client
     opencode
+    tea
+    llm-agents.packages.${pkgs.system}.qmd
     (crush.overrideAttrs (_: {
       src = crush-src;
       version = crush-src.shortRev or "dirty";
