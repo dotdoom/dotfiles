@@ -29,10 +29,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     jail-nix.url = "sourcehut:~alexdavid/jail.nix";
-    crush-src = {
-      url = "github:joestump-agent/crush";
-      flake = false;
-    };
     # Not following nixpkgs on purpose: the flake is only tested against its own
     # pinned nixpkgs-unstable, and keeping it separate means we hit numtide's cache.
     llm-agents.url = "github:numtide/llm-agents.nix";
@@ -105,7 +101,7 @@
         };
         extraSpecialArgs = {
           primaryUser = homeManagerUser;
-          inherit (inputs) crush-src llm-agents claude-plugin-sdd;
+          inherit (inputs) llm-agents claude-plugin-sdd;
         };
         modules = [
           inputs.fw_nix.nixosModules.identities

@@ -67,22 +67,6 @@
         "type": "github"
       }
     },
-    "crush-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1791476810,
-        "narHash": "sha256-oKnKnNkc12zjuyYNejbHmRdnU1YrJoRLwDS2NLyTD8M=",
-        "owner": "joestump-agent",
-        "repo": "crush",
-        "rev": "7bfc9f430e9876753b1f94ad399dbc279cb8cb94",
-        "type": "github"
-      },
-      "original": {
-        "owner": "joestump-agent",
-        "repo": "crush",
-        "type": "github"
-      }
-    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -345,11 +329,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1792149628,
-        "narHash": "sha256-z6OJhOCXlLXdP1GdqS+6wLe/blU6KGZFrib+b/nxYE8=",
+        "lastModified": 1792775390,
+        "narHash": "sha256-N904uR1CbicgmZRan5f7if5kwgoHFnIDPda5fvjSrLA=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "e85b99217baf13a38fc887b31338b1833f1159c0",
+        "rev": "64bbc0486eb09f7fba051eac402487cea92e784a",
         "type": "github"
       },
       "original": {
@@ -425,11 +409,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1791966044,
-        "narHash": "sha256-t1hT8UW97rFCWCJO7/pClvu0AhLN5V3uir2M0ic4w/Q=",
+        "lastModified": 1792116957,
+        "narHash": "sha256-EjZqHKObBfIOeHZnMRVV87HB3pPq/WBkmRJWyFxmZu8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "319e4cebef10cbb636c6ea392137b52ad105336a",
+        "rev": "f20cd90e28fe0403873f473b29e42662cd86e8c4",
         "type": "github"
       },
       "original": {
@@ -458,7 +442,6 @@
     "root": {
       "inputs": {
         "claude-plugin-sdd": "claude-plugin-sdd",
-        "crush-src": "crush-src",
         "darwin": "darwin",
         "fw_nix": "fw_nix",
         "git-hooks": "git-hooks_2",

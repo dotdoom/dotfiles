@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  crush-src,
   llm-agents,
   claude-plugin-sdd,
   ...
@@ -50,12 +49,7 @@ in
     opencode
     tea
     llm-agents.packages.${pkgs.system}.qmd
-    (crush.overrideAttrs (_: {
-      src = crush-src;
-      version = crush-src.shortRev or "dirty";
-      vendorHash = "sha256-CGPZLtOWmMksODDV45rJ7qaA1lJKpe5qVP0tyauAoxU=";
-      doCheck = false;
-    }))
+    llm-agents.packages.${pkgs.system}.crush
   ];
 
   systemd.user.services.signal-cli = {
