@@ -123,7 +123,24 @@ permissions deny question
 # permissions deny dispatch_agent apply_dispatch dismiss_dispatch cancel_dispatch message_agent
 # permissions deny lsp_call_hierarchy lsp_definition lsp_diagnostics lsp_references lsp_rename lsp_replace_symbol lsp_restart lsp_symbols
 
-lsp add nix --command nixd
+# Crush ships nil_ls, nixd and statix as built-in nix LSPs and starts every one
+# whose binary is on PATH, which means duplicate diagnostics. Only nixd is
+# wanted, so the other two are switched off by their built-in names. Note the
+# key must be the built-in name: an entry named "nix" does not resolve to nixd,
+# it registers a third server with no filetypes and no root markers.
+lsp add nil_ls --disabled true
 lsp add statix --disabled true
+
+# The SDD plugin has no command layer here, so its skills are reached by
+# description ("create an ADR for ..."), never by typing /sdd:adr. Pointing at
+# skills/ is what makes them loadable at all.
+#
+# The paths come from home-manager (programs.crush.skillPlugins), so the plugin
+# is a pinned flake input living in the Nix store: a rebuild moves it, and
+# nothing has to survive in a scratch checkout. Sourcing is conditional because
+# the file only exists once that option is set somewhere.
+if [[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/crush-skill-plugins.sh" ]]; then
+  source "${XDG_CONFIG_HOME:-$HOME/.config}/crush-skill-plugins.sh"
+fi
 
 # vim: ft=bash

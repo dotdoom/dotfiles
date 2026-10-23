@@ -36,6 +36,13 @@
     # Not following nixpkgs on purpose: the flake is only tested against its own
     # pinned nixpkgs-unstable, and keeping it separate means we hit numtide's cache.
     llm-agents.url = "github:numtide/llm-agents.nix";
+    # Spec-Driven Development skill plugin for Crush and Antigravity. Upstream
+    # ships no flake, so this is a bare source tree that
+    # modules/home/skill-plugins.nix prunes to what the skills load at runtime.
+    claude-plugin-sdd = {
+      url = "github:joestump/claude-plugin-sdd";
+      flake = false;
+    };
   };
 
   outputs =
@@ -81,6 +88,7 @@
       homeModules = {
         mac-portable = import ./modules/home/mac-portable.nix;
         linux-headless = import ./modules/home/linux-headless.nix;
+        skill-plugins = import ./modules/home/skill-plugins.nix;
       };
       darwinModules = {
         mac-portable = import ./modules/darwin/mac-portable.nix;
@@ -97,7 +105,7 @@
         };
         extraSpecialArgs = {
           primaryUser = homeManagerUser;
-          inherit (inputs) crush-src llm-agents;
+          inherit (inputs) crush-src llm-agents claude-plugin-sdd;
         };
         modules = [
           inputs.fw_nix.nixosModules.identities

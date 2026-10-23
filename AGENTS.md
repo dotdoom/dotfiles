@@ -35,6 +35,12 @@ Host-level files import shared modules in a chain rather than flat-merging:
 - `hosts/<name>/home.nix` → imports `hosts/common/home.nix` at minimum
 - `modules/home/linux-headless.nix` and `mac-portable.nix` both import `modules/home/common.nix`
 
+### Skill plugins
+
+`modules/home/skill-plugins.nix` (exported as `homeModules.skill-plugins`) adds a `skillPlugins` option under each agent's own namespace: `programs.crush.skillPlugins`, `programs.agy.skillPlugins`, and `programs.jailed-agy.skillPlugins`. Naming a plugin is what enables registration, so hosts simply leave an option empty where that CLI isn't used. Each source is pruned to `skills/`, `references/`, `templates/`, `scripts/` and `LICENSE` — skills resolve their assets two levels up from `SKILL.md`, so those must stay siblings. Crush gets `$XDG_CONFIG_HOME/crush-skill-plugins.sh` (sourced by `legacy/.config/crush/crushrc`); Antigravity gets `~/.gemini/config/skills.json`, a manifest of skill directories that the `agy` and `jailed-agy` namespaces merge into one file. jailed-agy needs no extra mount — the jail already bind-mounts `/nix/store` and `~/.gemini`. The SDD plugin arrives as the `claude-plugin-sdd` flake input (no flake upstream, so `flake = false`).
+
+Every skill's name and description go into the system prompt whether used or not, so a large plugin is a standing token cost (the SDD plugin's 22 skills are ~1.5k tokens). Each namespace also has a matching `disabledSkills` list — the trim lever, mapping to Crush's `option disable-skill` and agy's per-entry `exclude`. `hosts/deimos/home.nix` trims four SDD skills (~290 tokens, 19%) that are setup or upstream-feedback chores.
+
 ### Secrets via `identities` input
 
 The `fw_nix` input (`futureware-tech/nix`) provides an `identities` module used across all configurations. It exposes:

@@ -1,0 +1,183 @@
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
+let
+  inherit (lib)
+    concatStringsSep
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
+
+  # A skill resolves `${CLAUDE_PLUGIN_ROOT}` by walking two levels up from its
+  # own SKILL.md, so these have to stay siblings in the deployed tree. The rest
+  # of a plugin checkout (docs, CI, evals) is dead weight in the closure.
+  pluginPaths = [
+    "skills"
+    "references"
+    "templates"
+    "scripts"
+    "LICENSE"
+  ];
+
+  preparePlugin =
+    name: src:
+    pkgs.runCommand "skill-plugin-${name}" { } ''
+      mkdir -p "$out"
+      for path in ${concatStringsSep " " pluginPaths}; do
+        if [ -e "${src}/$path" ]; then
+          cp -R "${src}/$path" "$out/"
+        fi
+      done
+      if [ ! -d "$out/skills" ]; then
+        echo "skillPlugins: plugin '${name}' has no skills/ directory" >&2
+        exit 1
+      fi
+      # A source tree can carry a committed or build-time __pycache__, which
+      # arrives read-only (the store is) and cp -R keeps that mode, so rm -rf
+      # would fail. Re-open the copy before pruning.
+      chmod -R u+w "$out"
+      find "$out" -name __pycache__ -prune -exec rm -rf {} +
+    '';
+
+  skillDirs = lib.mapAttrsToList (name: src: "${preparePlugin name src}/skills");
+
+  skillPluginsOption =
+    agent: extra:
+    mkOption {
+      type = types.attrsOf (types.either types.path types.package);
+      default = { };
+      example = literalExpression ''
+        { claude-plugin-sdd = claude-plugin-sdd; }
+      '';
+      description = ''
+        Skill plugins to register with ${agent}. Naming a plugin is what
+        enables registration, so leave this empty where ${agent} is not
+        installed. Each source is a directory holding a {file}`skills/`
+        directory of skill folders, each containing a {file}`SKILL.md`.
+        {file}`references/`, {file}`templates/` and {file}`scripts/` are copied
+        alongside, because skills load their assets relative to the plugin
+        root; the rest of the source is dropped. ${extra}
+
+        Every skill's name and description are injected into the system prompt
+        whether or not it is used, so a large plugin is a standing token cost
+        (the SDD plugin is roughly 1.5k tokens across its 22 skills). Use the
+        matching `disabledSkills` option to trim the ones a given agent should
+        never see.
+      '';
+    };
+
+  disabledSkillsOption =
+    agent: extra:
+    mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = literalExpression ''[ "report-friction" "enrich" ]'';
+      description = ''
+        Names of skills from {option}`skillPlugins` to hide from ${agent}. A
+        disabled skill is dropped from the prompt and cannot be invoked, so
+        this is the lever for keeping an otherwise-large plugin off the
+        always-on token budget. ${extra}
+      '';
+    };
+
+  crushDirs = skillDirs config.programs.crush.skillPlugins;
+  crushDisabled = config.programs.crush.disabledSkills;
+
+  # The jail runs the same CLI against the same config, so both namespaces
+  # contribute to one manifest.
+  agyDirs = lib.unique (
+    skillDirs config.programs.agy.skillPlugins ++ skillDirs config.programs.jailed-agy.skillPlugins
+  );
+  agyDisabled = lib.unique (
+    config.programs.agy.disabledSkills ++ config.programs.jailed-agy.disabledSkills
+  );
+in
+{
+  options.programs = {
+    crush.skillPlugins = skillPluginsOption "Crush" "";
+
+    crush.disabledSkills = disabledSkillsOption "Crush" "";
+
+    agy.skillPlugins = skillPluginsOption "the Antigravity CLI" "";
+
+    agy.disabledSkills = disabledSkillsOption "the Antigravity CLI" "";
+
+    # Separate from the NixOS `programs.jailed-agy` module, which builds the
+    # sandboxed wrapper itself; this only registers skills in the user's
+    # Antigravity config, which the jail mounts.
+    jailed-agy.skillPlugins = skillPluginsOption "the jailed Antigravity wrapper" ''
+      The wrapper shares one config with {option}`programs.agy.skillPlugins`,
+      so plugins named in either option are merged.
+    '';
+
+    jailed-agy.disabledSkills = disabledSkillsOption "the jailed Antigravity wrapper" ''
+      As with the plugins, disabled names are merged with
+      {option}`programs.agy.disabledSkills`.
+    '';
+  };
+
+  config = {
+    # Crush has no plugin layer, so skills only come from `skills_paths`. One
+    # generated file keeps the list in sync: adding a plugin needs no other
+    # change to the Crush config. Emitted when either list is set, so a host
+    # can trim default or builtin skills without naming any plugin.
+    xdg.configFile."crush-skill-plugins.sh" = mkIf (crushDirs != [ ] || crushDisabled != [ ]) {
+      text =
+        let
+          lines =
+            (map (dir: ''option skill-path "${dir}"'') crushDirs)
+            ++ (map (name: ''option disable-skill "${name}"'') crushDisabled);
+        in
+        ''
+          # Generated by home-manager (programs.crush.skillPlugins and
+          # programs.crush.disabledSkills). Do not edit.
+          # One `option skill-path` per plugin, pointing into the Nix store,
+          # then one `option disable-skill` per trimmed skill.
+        ''
+        + concatStringsSep "\n" lines
+        + "\n";
+    };
+
+    # Antigravity's global customization root takes a manifest of extra skill
+    # directories instead of a search path. The jail bind-mounts both /nix/store
+    # and ~/.gemini, so these store paths resolve inside it unchanged.
+    #
+    # `exclude` is a per-entry field (agy's own schema: "each object in the
+    # entries array supports ... exclude"). Scoping it per entry keeps the trim
+    # from also filtering a personal skill that shares a name. Unlike Crush,
+    # agy can only trim skills that arrive through a manifest entry: a
+    # top-level `exclude` applies only to configured paths and never to
+    # default-discovered ones, so a trim with no plugin has nothing to act on.
+    assertions = [
+      {
+        assertion = agyDisabled == [ ] || agyDirs != [ ];
+        message = ''
+          programs.agy.disabledSkills / programs.jailed-agy.disabledSkills name
+          [${concatStringsSep " " agyDisabled}], but no skillPlugins are set.
+          Antigravity can only exclude skills reached through a
+          {option}`skillPlugins` entry; there is no way to trim
+          default-discovered skills. Remove the disabled names or add a plugin.
+        '';
+      }
+    ];
+
+    home.file.".gemini/config/skills.json" = mkIf (agyDirs != [ ]) {
+      text = builtins.toJSON {
+        entries = map (
+          path:
+          {
+            inherit path;
+          }
+          // lib.optionalAttrs (agyDisabled != [ ]) {
+            exclude = agyDisabled;
+          }
+        ) agyDirs;
+      };
+    };
+  };
+}

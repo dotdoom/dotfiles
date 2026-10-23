@@ -51,6 +51,22 @@
         "type": "github"
       }
     },
+    "claude-plugin-sdd": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792576991,
+        "narHash": "sha256-Bn2zSnlMrgzRmJMDKShqSEIHmsm40LM9oiCySxjIURI=",
+        "owner": "joestump",
+        "repo": "claude-plugin-sdd",
+        "rev": "650d1d0b2a408e417be007e95393c67b8ae3bd65",
+        "type": "github"
+      },
+      "original": {
+        "owner": "joestump",
+        "repo": "claude-plugin-sdd",
+        "type": "github"
+      }
+    },
     "crush-src": {
       "flake": false,
       "locked": {
@@ -441,6 +457,7 @@
     },
     "root": {
       "inputs": {
+        "claude-plugin-sdd": "claude-plugin-sdd",
         "crush-src": "crush-src",
         "darwin": "darwin",
         "fw_nix": "fw_nix",
