@@ -29,3 +29,8 @@ You can access local Git server using `tea` command.
 ## HomeAssistant
 
 Use `hass-cli` command to acccess HomeAssistant.
+
+## Signal
+
+If it takes a long time (more than 10 minutes) to get a response, ping A. on
+Signal when you arrive at a solution, or need user input.
