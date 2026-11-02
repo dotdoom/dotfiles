@@ -30,9 +30,14 @@ model add local-ollama/qwen-small-1gpu \
   --can-reason true \
   --supports-images true
 
+# Must stay at or below the num_ctx the model is created with on nas
+# (hosts/nas/services/ollama.nix). Qwen 3.8 27b has a dense KV cache and only
+# fits the R9700 up to ~192k; past that ollama leaves gigabytes of weights in
+# host RAM and decode falls off a cliff, so the context window is capped at
+# 128k with room left for the 8k of output below.
 model add local-ollama/qwen-large-1gpu \
   --name "qwen-large-1gpu" \
-  --context-window 128000 \
+  --context-window 122880 \
   --default-max-tokens 8192 \
   --can-reason true \
   --supports-images true
@@ -53,8 +58,8 @@ model add mercury-halogen/qwen3.8-flash-next \
   --price-output 0.3 \
   --supports-images false
 
-model small local-ollama/qwen-small-1gpu
-#model large local-ollama/qwen-large-1gpu --think
+# The GPU was never broken, the context window above was too large.
+model small local-ollama/qwen-large-1gpu --think
 model large mercury-halogen/qwen3.8-flash-next --think
 
 mcp add nix \
