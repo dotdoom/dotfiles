@@ -11,7 +11,7 @@
 
   documentation.man.enable = true;
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = [
     # https://unix.stackexchange.com/questions/651165/using-systemd-to-mount-remote-filesystems-in-user-bus
     # Have to run the wrapper due to SUID.
     (pkgs.writeShellScriptBin "umount.fuse.sshfs" ''

@@ -85,7 +85,6 @@ The git-hooks.nix pre-commit check explicitly excludes `migrated/` and `legacy/`
 
 ## Gotchas
 
-- **Unused `with pkgs`** — `modules/nixos/linux-headless.nix:14` has an unnecessary `with pkgs; [...]` that nixd warns about but is left as-is since the `[` immediately after it makes the block valid. Consider removing when editing that file.
 - **SSH_AUTH_SOCK in tmux** — The tmux config hardcodes `SSH_AUTH_SOCK=$HOME/.ssh/ssh_auth_sock`. On Linux this is a socket symlinked by home-manager; on macOS Secretive provides it. Changing this path breaks SSH inside tmux.
 - **Home-assistant sshfs mount** — The deimos home config mounts a remote Home Assistant directory via sshfs. The `umount.fuse.sshfs` wrapper script in `linux-headless.nix` is required because of SUID restrictions on fusermount.
 - **Direnv + nix-direnv** — Enabled globally; `.envrc` files use `use flake` to enter dev shells automatically.
