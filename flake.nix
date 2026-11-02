@@ -39,6 +39,12 @@
       url = "github:joestump/claude-plugin-sdd";
       flake = false;
     };
+    # Agent-oriented HA CLI (binary `ha`): JSON on stdout, structured exit codes,
+    # and `ha schema` for command discovery. Not in nixpkgs yet.
+    homeassistant-cli = {
+      url = "github:rvben/homeassistant-cli";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -101,7 +107,7 @@
         };
         extraSpecialArgs = {
           primaryUser = homeManagerUser;
-          inherit (inputs) llm-agents claude-plugin-sdd;
+          inherit (inputs) llm-agents claude-plugin-sdd homeassistant-cli;
         };
         modules = [
           inputs.fw_nix.nixosModules.identities

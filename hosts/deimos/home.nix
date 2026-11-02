@@ -3,6 +3,7 @@
   pkgs,
   llm-agents,
   claude-plugin-sdd,
+  homeassistant-cli,
   ...
 }:
 let
@@ -16,6 +17,10 @@ let
     "enrich"
     "organize"
   ];
+
+  # `ha`: JSON on stdout, structured exit codes, and `ha schema` for discovery,
+  # which suits agents better than the Python hass-cli's tables.
+  ha-cli = homeassistant-cli.packages.${pkgs.system}.default;
 in
 {
   imports = [
@@ -41,7 +46,7 @@ in
   home.packages = with pkgs; [
     sshfs
     nixd
-    home-assistant-cli
+    ha-cli
     uv
     python3
     yt-dlp

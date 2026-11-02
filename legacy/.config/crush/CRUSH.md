@@ -30,7 +30,22 @@ is always down over `git@git.home.arpa`.
 
 ## HomeAssistant
 
-Use `hass-cli` command to acccess HomeAssistant.
+Use the `ha` command to access HomeAssistant (`ha entity list`, `ha entity get
+<id>`, `ha service call <domain.service> --entity <id>`, `ha schema` for the
+full command list). It prints JSON when stdout is not a TTY; exit codes are 2
+for auth/config, 3 for missing entity, 4 for connection. It reads `HA_URL` and
+`HA_TOKEN`, which are exported from `~/.zshenv_local`, so a shell that did not
+source it needs them set explicitly.
+
+`ha` has no raw websocket access. For low-level websocket calls (e.g.
+`trace/list` for automation run traces) use websocat from nixpkgs:
+
+```console
+nix build nixpkgs#websocat
+{ printf '{"type":"auth","access_token":"%s"}\n' "$HA_TOKEN"; sleep 2; \
+  printf '{"id":1,"type":"trace/list","domain":"automation","item_id":"<id>"}\n'; \
+  sleep 6; } | result/bin/websocat -t "wss://homeassistant.sheremet.ch/api/websocket"
+```
 
 ## Repositories
 
