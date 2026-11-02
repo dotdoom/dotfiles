@@ -66,21 +66,10 @@ mcp add nix \
   --args "github:utensils/mcp-nixos" \
   --args "--"
 
-# Uses SIGNAL_MCP_ACCOUNT, SIGNAL_MCP_OPERATOR, SIGNAL_MCP_TRUSTED_SENDERS
-# Have to do a "bash -c" workaround because a bug in crush duplicates all args,
-# breaking the command line.
-mcp add signal \
-  --disabled false \
-  --type stdio \
-  --command "bash" \
-  --args "-c" \
-  --args 'nix shell nixpkgs#uv nixpkgs#python3 --command uvx -q --from git+https://github.com/joestump/signal-mcp signal-mcp --transport stdio --channel' \
-  --env UV_PYTHON_DOWNLOADS "never" \
-  --env UV_PYTHON_PREFERENCE "system"
-
 # Disabled in favor of Tavily.
 # The mcp<2 pin is needed: mcp-searxng is not compatible with the 2.x SDK.
-# Same "bash -c" workaround as the signal server for the duplicated-args bug.
+# The "bash -c" wrapper works around a bug in crush that duplicates all args,
+# breaking the command line.
 mcp add searxng \
   --disabled true \
   --type stdio \
@@ -108,7 +97,7 @@ if [[ -n "${TAVILY_API_KEY:-}" ]]; then
 fi
 
 # TODO: in YOLO mode we shouldn't need these, right?
-permissions allow mcp_signal_send_message_to_user mcp_nix_nix
+permissions allow mcp_nix_nix
 permissions allow mcp_tavily_tavily_search mcp_tavily_tavily_extract
 
 # A Signal session is a chat, not a coding workspace. `question` renders a

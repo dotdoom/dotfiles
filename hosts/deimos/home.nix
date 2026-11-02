@@ -48,6 +48,7 @@ in
     attic-client
     opencode
     tea
+    signal-cli
     llm-agents.packages.${pkgs.system}.qmd
     llm-agents.packages.${pkgs.system}.crush
   ];
@@ -59,7 +60,7 @@ in
       Wants = [ "network-online.target" ];
     };
     Service = {
-      ExecStart = "${pkgs.signal-cli}/bin/signal-cli daemon --tcp 127.0.0.1:7583 --receive-mode on-start --no-receive-stdout";
+      ExecStart = "${pkgs.signal-cli}/bin/signal-cli daemon --tcp 127.0.0.1:7583 --receive-mode manual";
       Restart = "always";
       RestartSec = "10s";
     };

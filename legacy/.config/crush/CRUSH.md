@@ -32,17 +32,14 @@ is always down over `git@git.home.arpa`.
 
 Use `hass-cli` command to acccess HomeAssistant.
 
-## Signal
-
-If it takes a long time (more than 10 minutes) to get a response, ping A. on
-Signal when you arrive at a solution, or need user input.
-
 ## Repositories
 
 Locally checked out repositories, with their DasFoo names:
 
+- `~/dotfiles` workstation configs (`artem/dotfiles`).
 - `~/src/home` NixOS configuration for home hosts (`home/home`).
 - `~/src/homeassistant` HomeAssistant configuration (`home/homeassistant`).
 - `~/src/esphome` esphome device configuration (`home/esphome`).
-- `~/src/comicslate` comicslate.org server NixOS repository (no local mirror).
-- `~/src/comicsbot` comicslate.org on-server headless renderer of web pages.
+- `~/src/comicslate` comicslate.org server NixOS repository (https://github.com/dotdoom/comicslate).
+- `~/src/comicsbot` comicslate.org on-server headless renderer of web pages (https://github.com/dotdoom/comicsbot).
+- `~/src/fw_nix` FutureWare Nix templates (`futureware-tech/nix`).
