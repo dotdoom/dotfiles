@@ -70,20 +70,19 @@
     "darwin": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs-mars"
+          "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1792800221,
-        "narHash": "sha256-53jIZEWNh96irEXhsMZFoNhLJgGSU3nYl1i4wFQHAsU=",
+        "lastModified": 1793418699,
+        "narHash": "sha256-+RpTlcdh9KqZ+ZiLkNSTvibQWm935EcIdBzRPCTFsrQ=",
         "owner": "nix-darwin",
         "repo": "nix-darwin",
-        "rev": "d31953cf55f9027a56e9be938daf5db8c5655663",
+        "rev": "ff0e21a414d4547183396da1b44a66f2577b65e9",
         "type": "github"
       },
       "original": {
         "owner": "nix-darwin",
-        "ref": "nix-darwin-26.05",
         "repo": "nix-darwin",
         "type": "github"
       }
@@ -244,27 +243,6 @@
         "type": "github"
       }
     },
-    "home-manager-mars": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs-mars"
-        ]
-      },
-      "locked": {
-        "lastModified": 1792818383,
-        "narHash": "sha256-199i7ubVSXTMl+0AAlL7cVCXSjcI+jWByMcimYjeMX0=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "24f2190587513b9c2f73db112a17844ae912d965",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "ref": "release-26.05",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
     "home-manager_2": {
       "inputs": {
         "nixpkgs": [
@@ -411,22 +389,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-mars": {
-      "locked": {
-        "lastModified": 1793671242,
-        "narHash": "sha256-FXXhGUZDRvPAdKFx/eF4E/WG3BnzvkCW2V/Qzs4KBoA=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "4ad2eda5f89410d94c57449a70d08935d9bbb4f6",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixpkgs-26.05-darwin",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1793345420,
@@ -466,14 +428,12 @@
         "fw_nix": "fw_nix",
         "git-hooks": "git-hooks_2",
         "home-manager": "home-manager",
-        "home-manager-mars": "home-manager-mars",
         "homeassistant-cli": "homeassistant-cli",
         "impermanence": "impermanence",
         "jail-nix": "jail-nix",
         "llm-agents": "llm-agents",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_3",
-        "nixpkgs-mars": "nixpkgs-mars",
         "systems": "systems_3",
         "vscode-server": "vscode-server"
       }
