@@ -168,11 +168,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1793546865,
-        "narHash": "sha256-3sjwdIA5LK+TM7cxgPWKUMj4pqbgZkbHNp14XOg9dIw=",
+        "lastModified": 1793746627,
+        "narHash": "sha256-xZSxEhKlA0tqNiizSewH4oxF3ieLvqYNNhrkx0BwFCg=",
         "ref": "refs/heads/main",
-        "rev": "74d1937cf790cd8fcf3ce87263e739dcc2b34973",
-        "revCount": 77,
+        "rev": "1040a5c4a844898a41c04a7fa69100331fee6ff4",
+        "revCount": 78,
         "type": "git",
         "url": "https://github.com/futureware-tech/nix.git"
       },
@@ -211,11 +211,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791909798,
-        "narHash": "sha256-VAhpCOmrun/KXimYfR8NM88bciKCui7CqHHhThSzgag=",
+        "lastModified": 1793686154,
+        "narHash": "sha256-Zb/0L3soxrkfcrywpfp0J++0WFLB3tzh0Xtx9up+VNc=",
         "owner": "cachix",
         "repo": "git-hooks.nix",
-        "rev": "1ba1dbfe28738c9a71c266be6efa5b89e75491a9",
+        "rev": "204b6977e00caac19e2313015a598543ca7be150",
         "type": "github"
       },
       "original": {
@@ -293,11 +293,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792834371,
-        "narHash": "sha256-5Gdma9Xrd9GA/7a+OneA35xeGyGfIM6QfZOa3sHmtf4=",
+        "lastModified": 1793711139,
+        "narHash": "sha256-oZQ3zCSkcIgkP7s3j81CoTBjZPmv+8oVdYNdhlQmhiU=",
         "owner": "rvben",
         "repo": "homeassistant-cli",
-        "rev": "457a5f9a3219051f9cf26e3d5c02500328d07bfe",
+        "rev": "f3ad8f8c13c72049a117fae50f26f166ef817a91",
         "type": "github"
       },
       "original": {
@@ -349,11 +349,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1793610633,
-        "narHash": "sha256-nHvr6I1PDcV6EBquDHE47cIPysnCyhPqQr+OAYse+QY=",
+        "lastModified": 1793708775,
+        "narHash": "sha256-TCztCGO7C7rgg3S4JscvKm4lA5b1R3zy5MPKfYirOHI=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "10f2be38f8a46fdf7689697270dd14b27f723aae",
+        "rev": "a854ddf4456f5fd67474e2d844cb4a29c32702d0",
         "type": "github"
       },
       "original": {
@@ -413,11 +413,11 @@
     },
     "nixpkgs-mars": {
       "locked": {
-        "lastModified": 1793147889,
-        "narHash": "sha256-+//qXhkXCKTFoVCHAYhoEP1ZnPSx/b4IHdLI1ZMz3UU=",
+        "lastModified": 1793671242,
+        "narHash": "sha256-FXXhGUZDRvPAdKFx/eF4E/WG3BnzvkCW2V/Qzs4KBoA=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "36173dbc6ff2b383c4d03b002fd1ea58e2e4dbcd",
+        "rev": "4ad2eda5f89410d94c57449a70d08935d9bbb4f6",
         "type": "github"
       },
       "original": {
