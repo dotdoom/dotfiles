@@ -4,6 +4,9 @@
   primaryUser,
   ...
 }:
+let
+  iTerm2NixManaged = "17DF2CCB-C7CD-4BCC-AC28-666DD6C8AF4A";
+in
 {
   imports = [
     ./common.nix
@@ -27,6 +30,9 @@
   targets.darwin.defaults."com.googlecode.iterm2" = {
     # $ defaults read ~/Library/Preferences/com.googlecode.iterm2.plist
 
+    # Pre-select our profile as default.
+    "Default Bookmark Guid" = iTerm2NixManaged;
+
     # Allow tmux (and others) to use OSC 52 to set clipboard.
     AllowClipboardAccess = true;
     # Allow programs to clear scrollback.
@@ -46,7 +52,7 @@
         Profiles = [
           {
             Name = "Nix-Managed";
-            Guid = "17DF2CCB-C7CD-4BCC-AC28-666DD6C8AF4A";
+            Guid = iTerm2NixManaged;
             "Normal Font" = "Menlo-Regular 13";
 
             Columns = 160;
