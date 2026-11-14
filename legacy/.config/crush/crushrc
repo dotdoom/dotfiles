@@ -101,6 +101,12 @@ if [[ -n "${TAVILY_API_KEY:-}" ]]; then
     --enabled-tools tavily_extract
 fi
 
+mcp add galaxus \
+  --disabled false \
+  --type http \
+  --url "https://mcp.galaxus.ch" \
+  --timeout 30
+
 # TODO: in YOLO mode we shouldn't need these, right?
 permissions allow mcp_nix_nix
 permissions allow mcp_tavily_tavily_search mcp_tavily_tavily_extract
