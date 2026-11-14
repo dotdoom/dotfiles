@@ -56,7 +56,7 @@ model add mercury-halogen/qwen3.8-flash-next \
   --reasoning-effort medium \
   --price-input 0.01 \
   --price-output 0.3 \
-  --supports-images false
+  --supports-images true
 
 # The GPU was never broken, the context window above was too large.
 model small local-ollama/qwen-large-1gpu --think
