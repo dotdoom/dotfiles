@@ -31,10 +31,55 @@
           "tools": true
         }
       }
+    },
+    // mercury binds the API to its own loopback, so this only works through the
+    // mercury-halogen-tunnel user unit (hosts/deimos/home.nix). The tunnel
+    // listens on 127.0.0.1 only, so "localhost" is not interchangeable here: it
+    // can resolve to ::1 first and then fail to connect.
+    "mercury-halogen": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Mercury Halogen",
+      "options": {
+        "baseURL": "http://127.0.0.1:8731/v1",
+        "apiKey": "halogen",
+        // Prefilling 200k+ tokens on this box outlives the built-in 5 minute
+        // limits, so all three are switched off (same intent as crush's
+        // `option request-timeout 0`).
+        "timeout": false,
+        "headerTimeout": false,
+        "chunkTimeout": false
+      },
+      "models": {
+        "qwen3.8-flash-next": {
+          "name": "qwen-large-mercury-halogen",
+          // The model itself holds 262,144 tokens; the limit stays lower to
+          // leave room for compaction output.
+          "limit": {
+            "context": 240000,
+            "output": 65536
+          },
+          "tool_call": true,
+          "reasoning": true,
+          // HALOGEN_VISION_TOWER is unset on mercury, so no image input.
+          "attachment": false,
+          "modalities": {
+            "input": ["text"],
+            "output": ["text"]
+          },
+          // Cost of 1h = 0.33 SFr * 0.15 kW = ~0.05 SFr
+          //   input  1500 t/s, 5.4M t/h: 0.0092 SFr/Mtok
+          //   output 45 t/s,   162k t/h: 0.3    SFr/Mtok
+          "cost": {
+            "input": 0.01,
+            "output": 0.3
+          }
+        }
+      }
     }
   },
   // "model": "local-ollama/qwen2.5-coder:14b",
-  "model": "local-ollama/qwen3.6-200k",
+  // "model": "local-ollama/qwen3.6-200k",
+  "model": "mercury-halogen/qwen3.8-flash-next",
   "compaction": {
     "auto": true,
     "prune": true,
@@ -60,36 +105,45 @@
         "github:utensils/mcp-nixos",
         "--"
       ],
-      "enabled": true
+      "enabled": true,
+      // Cold `nix run github:...` fetches outlive the 5s default (crush: 90s).
+      "timeout": 90000
     },
+    // Uses GITEA_HOST, GITEA_ACCESS_TOKEN.
+    // Server-side trim: -r drops the 23 write tools, -O keeps a repo-work
+    // subset. All 57 tools cost ~9.5k prompt tokens, this subset ~2.1k.
     "gitea": {
       "type": "local",
       "command": [
         "nix",
         "run",
         "nixpkgs#gitea-mcp-server",
-        "--"
+        "--",
+        "-r",
+        "-O",
+        "list_my_repos,list_org_repos,search_repos,get_file_contents,get_dir_contents,get_repository_tree,list_commits,get_commit,list_branches,list_issues,issue_read,list_pull_requests,pull_request_read,search_issues,get_me"
       ],
-      "enabled": false
+      "enabled": true
     },
+    // HA-MCP Custom Component running the full ha-mcp server in-process inside
+    // Home Assistant. Uses HASS_MCP_URL.
+    // crush trims to 7 tools with --enabled-tools (~5.9k prompt tokens saved);
+    // opencode has no per-server tool allowlist, so all 11 load.
     "ha": {
-      "type": "local",
-      "command": [
-        "nix",
-        "shell",
-        "nixpkgs#uv",
-        "nixpkgs#python3",
-        "--command",
-        "uv",
-        "tool",
-        "run",
-        "ha-mcp"
-      ],
-      "environment": {
-        "UV_PYTHON_DOWNLOADS": "never",
-        "UV_PYTHON_PREFERENCE": "system"
-      },
-      "enabled": false
+      "type": "remote",
+      "url": "{env:HASS_MCP_URL}",
+      "enabled": true,
+      "timeout": 30000
+    },
+    // Tavily web search. Uses TAVILY_API_KEY.
+    // crush adds this only when TAVILY_API_KEY is set and trims to
+    // tavily_search + tavily_extract; opencode has neither conditional nor tool
+    // allowlist, so it stays enabled and loads all 5 tools.
+    "tavily": {
+      "type": "remote",
+      "url": "https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}",
+      "enabled": true,
+      "timeout": 60000
     }
   }
 }
