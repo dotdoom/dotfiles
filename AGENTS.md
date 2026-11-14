@@ -12,7 +12,7 @@ hosts/                       — Per-machine config files
   common/home.nix            — Per-user git config shared across hosts
 modules/                     — Reusable exported modules
   home/*.nix                 — Shared home-manager modules (common, linux-headless, mac-portable)
-  nixos/*.nix                — NixOS modules (linux-headless, linux-lxc, jailed-agy)
+  nixos/*.nix                — NixOS modules (linux-headless, linux-lxc, jailed-agy, remote-agy)
   darwin/*.nix               — nix-darwin modules (mac-portable)
 migrated/                    — Raw dotfiles (.zshrc, .vimrc) managed by BOTH stow and home-manager
 legacy/                      — Non-Nix config files managed purely via `stow legacy`
