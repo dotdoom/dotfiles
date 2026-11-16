@@ -1,9 +1,7 @@
 {
   config,
   pkgs,
-  llm-agents,
   claude-plugin-sdd,
-  homeassistant-cli,
   ...
 }:
 let
@@ -17,10 +15,6 @@ let
     "enrich"
     "organize"
   ];
-
-  # `ha`: JSON on stdout, structured exit codes, and `ha schema` for discovery,
-  # which suits agents better than the Python hass-cli's tables.
-  ha-cli = homeassistant-cli.packages.${pkgs.system}.default;
 in
 {
   imports = [
@@ -30,12 +24,12 @@ in
 
   # Spec-Driven Development skills (ADRs, specs, sprint planning). Pinned by
   # the flake input, so a rebuild moves them, not a git pull. Here Antigravity
-  # is only ever run through the jail, so the plugins go to that namespace.
+  # is only ever run through the jail, which shares the same ~/.gemini config.
   programs.crush.skillPlugins.claude-plugin-sdd = claude-plugin-sdd;
-  programs.jailed-agy.skillPlugins.claude-plugin-sdd = claude-plugin-sdd;
+  programs.agy.skillPlugins.claude-plugin-sdd = claude-plugin-sdd;
 
   programs.crush.disabledSkills = sddTrimmedSkills;
-  programs.jailed-agy.disabledSkills = sddTrimmedSkills;
+  programs.agy.disabledSkills = sddTrimmedSkills;
 
   services.vscode-server.enable = true;
   services.vscode-server.installPath = [
@@ -46,7 +40,10 @@ in
   home.packages = with pkgs; [
     sshfs
     nixd
-    ha-cli
+    # `ha`: JSON on stdout, structured exit codes, and `ha schema` for
+    # discovery, which suits agents better than the Python hass-cli's
+    # tables. Injected into pkgs by the flake's agent overlays.
+    homeassistant-cli
     uv
     python3
     yt-dlp
@@ -54,8 +51,8 @@ in
     opencode
     tea
     signal-cli
-    llm-agents.packages.${pkgs.system}.qmd
-    llm-agents.packages.${pkgs.system}.crush
+    qmd
+    crush
   ];
 
   systemd.user.services.signal-cli = {

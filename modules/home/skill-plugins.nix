@@ -13,38 +13,17 @@ let
     types
     ;
 
-  # A skill resolves `${CLAUDE_PLUGIN_ROOT}` by walking two levels up from its
-  # own SKILL.md, so these have to stay siblings in the deployed tree. The rest
-  # of a plugin checkout (docs, CI, evals) is dead weight in the closure.
-  pluginPaths = [
-    "skills"
-    "references"
-    "templates"
-    "scripts"
-    "LICENSE"
-  ];
-
-  preparePlugin =
-    name: src:
-    pkgs.runCommand "skill-plugin-${name}" { } ''
-      mkdir -p "$out"
-      for path in ${concatStringsSep " " pluginPaths}; do
-        if [ -e "${src}/$path" ]; then
-          cp -R "${src}/$path" "$out/"
-        fi
-      done
-      if [ ! -d "$out/skills" ]; then
-        echo "skillPlugins: plugin '${name}' has no skills/ directory" >&2
-        exit 1
-      fi
-      # A source tree can carry a committed or build-time __pycache__, which
-      # arrives read-only (the store is) and cp -R keeps that mode, so rm -rf
-      # would fail. Re-open the copy before pruning.
-      chmod -R u+w "$out"
-      find "$out" -name __pycache__ -prune -exec rm -rf {} +
-    '';
-
-  skillDirs = lib.mapAttrsToList (name: src: "${preparePlugin name src}/skills");
+  # Pruning logic is shared with modules/nixos/remote-agy.nix, which registers
+  # plugins for the remote-control daemon's own user rather than a
+  # home-manager user.
+  inherit
+    (import ../lib/skill-plugins-lib.nix {
+      inherit lib pkgs;
+    })
+    skillDirs
+    mkAgyManifestJson
+    trimNeedsPluginsAssertion
+    ;
 
   skillPluginsOption =
     agent: extra:
@@ -88,14 +67,11 @@ let
   crushDirs = skillDirs config.programs.crush.skillPlugins;
   crushDisabled = config.programs.crush.disabledSkills;
 
-  # The jail runs the same CLI against the same config, so both namespaces
-  # contribute to one manifest.
-  agyDirs = lib.unique (
-    skillDirs config.programs.agy.skillPlugins ++ skillDirs config.programs.jailed-agy.skillPlugins
-  );
-  agyDisabled = lib.unique (
-    config.programs.agy.disabledSkills ++ config.programs.jailed-agy.disabledSkills
-  );
+  # One user, one ~/.gemini, one manifest: the jail wrapper (the NixOS
+  # `programs.jailed-agy` module) runs the same CLI against the same config,
+  # so a single namespace covers both entry points.
+  agyDirs = skillDirs config.programs.agy.skillPlugins;
+  agyDisabled = config.programs.agy.disabledSkills;
 in
 {
   options.programs = {
@@ -103,21 +79,15 @@ in
 
     crush.disabledSkills = disabledSkillsOption "Crush" "";
 
-    agy.skillPlugins = skillPluginsOption "the Antigravity CLI" "";
-
-    agy.disabledSkills = disabledSkillsOption "the Antigravity CLI" "";
-
-    # Separate from the NixOS `programs.jailed-agy` module, which builds the
-    # sandboxed wrapper itself; this only registers skills in the user's
-    # Antigravity config, which the jail mounts.
-    jailed-agy.skillPlugins = skillPluginsOption "the jailed Antigravity wrapper" ''
-      The wrapper shares one config with {option}`programs.agy.skillPlugins`,
-      so plugins named in either option are merged.
+    agy.skillPlugins = skillPluginsOption "the Antigravity CLI" ''
+      The jailed wrapper (the NixOS {option}`programs.jailed-agy` module)
+      runs the same CLI against the same config, so these skills serve both
+      entry points.
     '';
 
-    jailed-agy.disabledSkills = disabledSkillsOption "the jailed Antigravity wrapper" ''
-      As with the plugins, disabled names are merged with
-      {option}`programs.agy.disabledSkills`.
+    agy.disabledSkills = disabledSkillsOption "the Antigravity CLI" ''
+      The trim applies to the jailed wrapper as well, which shares this
+      config.
     '';
   };
 
@@ -146,37 +116,18 @@ in
     # Antigravity's global customization root takes a manifest of extra skill
     # directories instead of a search path. The jail bind-mounts both /nix/store
     # and ~/.gemini, so these store paths resolve inside it unchanged.
-    #
-    # `exclude` is a per-entry field (agy's own schema: "each object in the
-    # entries array supports ... exclude"). Scoping it per entry keeps the trim
-    # from also filtering a personal skill that shares a name. Unlike Crush,
-    # agy can only trim skills that arrive through a manifest entry: a
-    # top-level `exclude` applies only to configured paths and never to
-    # default-discovered ones, so a trim with no plugin has nothing to act on.
     assertions = [
-      {
-        assertion = agyDisabled == [ ] || agyDirs != [ ];
-        message = ''
-          programs.agy.disabledSkills / programs.jailed-agy.disabledSkills name
-          [${concatStringsSep " " agyDisabled}], but no skillPlugins are set.
-          Antigravity can only exclude skills reached through a
-          {option}`skillPlugins` entry; there is no way to trim
-          default-discovered skills. Remove the disabled names or add a plugin.
-        '';
-      }
+      (trimNeedsPluginsAssertion {
+        optionNames = "programs.agy.disabledSkills";
+        disabled = agyDisabled;
+        paths = agyDirs;
+      })
     ];
 
     home.file.".gemini/config/skills.json" = mkIf (agyDirs != [ ]) {
-      text = builtins.toJSON {
-        entries = map (
-          path:
-          {
-            inherit path;
-          }
-          // lib.optionalAttrs (agyDisabled != [ ]) {
-            exclude = agyDisabled;
-          }
-        ) agyDirs;
+      text = mkAgyManifestJson {
+        paths = agyDirs;
+        exclude = agyDisabled;
       };
     };
   };

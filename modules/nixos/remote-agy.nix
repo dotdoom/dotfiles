@@ -15,6 +15,29 @@ let
   email = "${user}@sheremet.ch";
   tokenFile = "${userHome}/.config/gitea-token";
 
+  # Pruning and manifest logic is shared with modules/home/skill-plugins.nix,
+  # which does the same registration for home-manager users.
+  skill-plugins-lib = import ../lib/skill-plugins-lib.nix { inherit lib pkgs; };
+
+  skillPaths = skill-plugins-lib.skillDirs cfg.skillPlugins;
+
+  skillsJsonFile = skill-plugins-lib.mkAgyManifest {
+    name = "remote-agy-skills";
+    paths = skillPaths;
+    exclude = cfg.disabledSkills;
+  };
+
+  customizeCommands = ''
+    ${
+      if skillPaths != [ ] then
+        ''ln -sfn "${skillsJsonFile}" "$HOME/.gemini/config/skills.json"''
+      else
+        ''rm -f "$HOME/.gemini/config/skills.json"''
+    }
+  '';
+
+  globalRulesFile = pkgs.writeText "remote-agy-agents.md" cfg.globalRules;
+
   antigravity = pkgs.symlinkJoin {
     name = "antigravity";
     paths = [ pkgs.antigravity-cli ];
@@ -26,7 +49,15 @@ let
   setupScript = pkgs.writeShellScriptBin "remote-agy-setup" ''
     set -euo pipefail
 
-    # 1. Generate SSH key for repository transport (clone/push) if missing
+    # 1. Refresh the managed Antigravity customization (global rules, skill
+    #    manifest). Symlinks into the store, so a rebuild plus service restart
+    #    moves them atomically. agy loads global rules from
+    #    ~/.gemini/config/AGENTS.md on every session.
+    mkdir -p "$HOME/.gemini/config"
+    ln -sfn "${globalRulesFile}" "$HOME/.gemini/config/AGENTS.md"
+    ${customizeCommands}
+
+    # 2. Generate SSH key for repository transport (clone/push) if missing
     mkdir -p "$HOME/.ssh"
     chmod 700 "$HOME/.ssh"
     SSH_KEY_FILE="$HOME/.ssh/id_ed25519"
@@ -37,7 +68,7 @@ let
       ${pkgs.openssh}/bin/ssh-keygen -t ed25519 -C "${user}@${instanceName}" -f "$SSH_KEY_FILE" -N ""
     fi
 
-    # 2. Generate GPG key for commit signing if missing
+    # 3. Generate GPG key for commit signing if missing
     mkdir -p "$HOME/.gnupg"
     chmod 700 "$HOME/.gnupg"
     GPG_KEY_ID="$(( ${pkgs.gnupg}/bin/gpg --list-secret-keys --with-colons "${email}" 2>/dev/null || true) | awk -F: '/^sec:/ {print $5}' | head -n1)"
@@ -58,7 +89,7 @@ let
       GPG_KEY_ID="$(( ${pkgs.gnupg}/bin/gpg --list-secret-keys --with-colons "${email}" 2>/dev/null || true) | awk -F: '/^sec:/ {print $5}' | head -n1)"
     fi
 
-    # 3. Configure Git for commit signing and identity
+    # 4. Configure Git for commit signing and identity
     ${pkgs.git}/bin/git config --global user.name "${user}"
     ${pkgs.git}/bin/git config --global user.email "${email}"
     ${pkgs.git}/bin/git config --global gpg.format openpgp
@@ -66,7 +97,7 @@ let
     ${pkgs.git}/bin/git config --global user.signingkey "$GPG_KEY_ID"
     ${pkgs.git}/bin/git config --global commit.gpgsign true
 
-    # 4. Gitea automation
+    # 5. Gitea automation
     TOKEN_FILE="${tokenFile}"
     if [ -f "$TOKEN_FILE" ]; then
       TOKEN="$(tr -d '[:space:]' < "$TOKEN_FILE")"
@@ -162,9 +193,74 @@ in
       default = [ "docker" ];
       description = "Extra groups for the agent user.";
     };
+
+    skillPlugins = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.path lib.types.package);
+      default = { };
+      example = lib.literalExpression ''
+        { claude-plugin-sdd = claude-plugin-sdd; }
+      '';
+      description = ''
+        Skill plugins to register with the remote-control daemon's
+        Antigravity config ({file}`~${user}/.gemini/config/skills.json`).
+        Each source is a directory holding a {file}`skills/` directory of
+        skill folders, each containing a {file}`SKILL.md`.
+        {file}`references/`, {file}`templates/` and {file}`scripts/` are
+        copied alongside, because skills load their assets relative to the
+        plugin root; the rest of the source is dropped.
+
+        Every skill's name and description are injected into the system
+        prompt whether or not it is used, so a large plugin is a standing
+        token cost. Use {option}`programs.remote-agy.disabledSkills` to
+        trim the ones the agent should never see.
+      '';
+    };
+
+    disabledSkills = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = lib.literalExpression ''[ "init" "report-friction" ]'';
+      description = ''
+        Names of skills from {option}`programs.remote-agy.skillPlugins` to
+        hide from the agent. A disabled skill is dropped from the prompt and
+        cannot be invoked, so this is the lever for keeping an
+        otherwise-large plugin off the always-on token budget.
+      '';
+    };
+
+    globalRules = lib.mkOption {
+      type = lib.types.lines;
+      default = "";
+      description = ''
+        Global rules the Antigravity CLI loads into every session of the
+        agent user, written to {file}`~${user}/.gemini/config/AGENTS.md`.
+        The module ships a Gitea section {func}`lib.mkBefore`, so any
+        assignment is appended after it and every {env}`types.lines`
+        assignment is kept; {func}`lib.mkForce` replaces the whole thing.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    # An option's `default` yields entirely to assignments, so the shipped
+    # text lives in config instead: lines merge by concatenation, and
+    # mkBefore pins it ahead of anything a host declares.
+    programs.remote-agy.globalRules = lib.mkBefore ''
+      ## Gitea "DasFoo" instance
+
+      You can access local Git server using `tea` command. The instance is
+      available at `git.home.arpa:3000` and also has a public URL available
+      via HTTPS. SSH clone is always down over `git@git.home.arpa`.
+    '';
+
+    assertions = [
+      (skill-plugins-lib.trimNeedsPluginsAssertion {
+        optionNames = "programs.remote-agy.disabledSkills";
+        disabled = cfg.disabledSkills;
+        paths = skillPaths;
+      })
+    ];
+
     environment.systemPackages = [
       antigravity
       pkgs.tea
