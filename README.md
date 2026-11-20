@@ -17,7 +17,7 @@ stow migrated
 stow legacy
 ```
 
-Step 2 - Nix.
+Step 2 - Nix, home-manager (Linux, deimos).
 
 ```
 nix run \
@@ -26,6 +26,17 @@ nix run \
     switch \
       --extra-experimental-features 'nix-command flakes' \
       --flake .#artem@deimos
+```
+
+Step 2 - Nix, nix-darwin (macOS, mars). Run this before home-manager.
+
+```
+nix run \
+  --extra-experimental-features 'nix-command flakes' \
+  nix-darwin/master -- \
+    switch \
+      --extra-experimental-features 'nix-command flakes' \
+      --flake .#mars
 ```
 
 ## Layout
