@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import importlib.util
 import json
 from pathlib import Path
@@ -11,6 +12,7 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from unittest.mock import patch
 
@@ -557,7 +559,7 @@ class NotificationEvaluationTest(unittest.TestCase):
         self.assertEqual([c["id"] for c in t_allowed.new_comments], [11])
         prompt = sidecar.build_prompt(t_allowed, "artem-agent")
         self.assertIn(
-            "1. Immediately, as your very first step before doing anything else, add an `eyes` reaction to comment #11.",
+            "1. First, add an `eyes` reaction to comment #11.",
             prompt,
         )
         self.assertIn("`gitea` skill", prompt)
@@ -595,7 +597,7 @@ class NotificationEvaluationTest(unittest.TestCase):
         assert t_rr is not None
         prompt_rr = sidecar.build_prompt(t_rr, "artem-agent")
         self.assertIn(
-            "1. Immediately, as your very first step before doing anything else, add an `eyes` reaction to pull #59.",
+            "1. First, add an `eyes` reaction to pull #59.",
             prompt_rr,
         )
 
@@ -623,6 +625,58 @@ class NotificationEvaluationTest(unittest.TestCase):
                 for msg in cm_rr.output
             )
         )
+
+    def test_build_prompt_omits_redundant_context_for_existing_conversation(
+        self,
+    ) -> None:
+        trigger = sidecar.NotificationTrigger(
+            thread_id="1",
+            thread_key="artem/dotfiles#2",
+            subject_type="Pull",
+            repo_full="artem/dotfiles",
+            index=2,
+            title="Cleanup PR",
+            html_url="https://git.sheremet.ch/artem/dotfiles/pulls/2",
+            state_str="open",
+            body="A" * (sidecar.MAX_DESCRIPTION_CHARS + 500),
+            author="artem-agent",
+            ssh_url="",
+            clone_url="",
+            head_repo="artem-agent/artem-dotfiles",
+            head_ref="cleanup/remote-agy-legacy",
+            base_ref="master",
+            reasons=["@artem-agent mentioned"],
+            new_comments=[
+                {
+                    "id": 99,
+                    "user": {"login": "artem"},
+                    "created_at": "2026-11-22T12:15:00Z",
+                    "body": "@artem-agent trim the prompt too",
+                }
+            ],
+        )
+
+        fresh = sidecar.build_prompt(
+            trigger, "artem-agent", workspace_dir=Path("/tmp/ws")
+        )
+        self.assertIn("Description:", fresh)
+        self.assertIn("truncated; fetch full body with `tea`", fresh)
+        self.assertIn("Workspace: /tmp/ws", fresh)
+        self.assertIn("cleanup/remote-agy-legacy", fresh)
+
+        followup = sidecar.build_prompt(
+            trigger,
+            "artem-agent",
+            workspace_dir=Path("/tmp/ws"),
+            existing_conversation=True,
+        )
+        self.assertIn("Gitea follow-up on `artem/dotfiles#2`", followup)
+        self.assertIn("@artem-agent trim the prompt too", followup)
+        self.assertIn("add an `eyes` reaction to comment #99", followup)
+        self.assertNotIn("Description:", followup)
+        self.assertNotIn("Workspace:", followup)
+        self.assertNotIn("Branches:", followup)
+        self.assertNotIn("AAAA", followup)
 
 
 class ConversationRoutingTest(unittest.TestCase):
@@ -750,6 +804,27 @@ class ConversationRoutingTest(unittest.TestCase):
             head_repo="home/home",
             head_ref="feat/corosync-qdevice-quorum",
         )
+        self.assertEqual(routed, ("conv-151", self.ws_home_main))
+
+    def test_routes_pr_by_transcript_reads_tail_past_max_bytes(self) -> None:
+        t_151 = (
+            self.app_data
+            / "brain"
+            / "conv-151"
+            / ".system_generated"
+            / "logs"
+            / "transcript.jsonl"
+        )
+        padding = '{"content":"' + ("x" * 2048) + '"}\n'
+        tail = '{"content":"created https://git.sheremet.ch/home/home/pulls/152"}\n'
+        with patch.object(sidecar, "MAX_TRANSCRIPT_BYTES", 512):
+            t_151.write_text(padding + tail, encoding="utf-8")
+            routed = self.router.find_conversation_for_pr(
+                repo_full="home/home",
+                index=152,
+                head_repo="home/home",
+                head_ref="tail-branch",
+            )
         self.assertEqual(routed, ("conv-151", self.ws_home_main))
 
     def test_resolves_workspace_from_projects_json(self) -> None:
@@ -997,6 +1072,58 @@ class DaemonIntegrationTest(unittest.TestCase):
             self.assertEqual(mock_run.call_args.kwargs["conversation_id"], "conv-pr")
             self.assertIsNotNone(daemon.state.get_thread_state("home/home#2"))
             self.assertIsNotNone(daemon.state.get_search_cursor())
+
+    def test_gitea_client_reuses_keepalive_and_reconnects_after_drop(self) -> None:
+        seen_client_ports: list[int] = []
+        drop_next = {"flag": False}
+
+        class _Handler(BaseHTTPRequestHandler):
+            protocol_version = "HTTP/1.1"
+
+            def log_message(self, format: str, *args: object) -> None:  # noqa: A002
+                pass
+
+            def do_GET(self) -> None:
+                if drop_next["flag"]:
+                    drop_next["flag"] = False
+                    self.close_connection = True
+                    return
+                seen_client_ports.append(self.client_address[1])
+                body = json.dumps({"ok": True, "path": self.path}).encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), _Handler)
+        port = server.server_address[1]
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                token_file = Path(tmp) / "token"
+                token_file.write_text("tok\n", encoding="utf-8")
+                client = sidecar.GiteaClient(f"http://127.0.0.1:{port}", token_file)
+
+                r1 = client.request("GET", "/user")
+                r2 = client.request("GET", "/notifications")
+                self.assertEqual(r1["ok"], True)
+                self.assertEqual(r2["ok"], True)
+                # Both requests reused the exact same TCP connection (same ephemeral port).
+                self.assertEqual(len(seen_client_ports), 2)
+                self.assertEqual(seen_client_ports[0], seen_client_ports[1])
+
+                # Simulate server closing an idle keep-alive socket; client transparently retries.
+                drop_next["flag"] = True
+                r3 = client.request("GET", "/user")
+                self.assertEqual(r3["ok"], True)
+                self.assertEqual(len(seen_client_ports), 3)
+                self.assertNotEqual(seen_client_ports[1], seen_client_ports[2])
+                client.close()
+        finally:
+            server.shutdown()
+            server.server_close()
 
 
 if __name__ == "__main__":

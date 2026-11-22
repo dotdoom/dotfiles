@@ -26,13 +26,12 @@ import sys
 import threading
 import time
 from typing import Any
-from urllib.error import HTTPError, URLError
-from urllib.parse import unquote, urlencode, urlparse
-from urllib.request import HTTPHandler, HTTPSHandler, Request, build_opener
+from urllib.parse import unquote, urlencode, urljoin, urlparse
 
 LOG = logging.getLogger("remote-agy-gitea-sidecar")
 
 MAX_TRANSCRIPT_BYTES = 2 * 1024 * 1024
+MAX_DESCRIPTION_CHARS = 2000
 MAX_BACKOFF_SECONDS = 300
 AGENTAPI_TIMEOUT_SECONDS = 120
 
@@ -172,7 +171,7 @@ def _fast_create_connection(
 
 
 class GiteaClient:
-    """Minimal Gitea/Forgejo REST API client using stdlib urllib."""
+    """Minimal Gitea/Forgejo REST API client with HTTP/1.1 keep-alive."""
 
     def __init__(self, base_url: str, token_file: Path, timeout: int = 30) -> None:
         self.base_url = base_url.rstrip("/")
@@ -181,7 +180,10 @@ class GiteaClient:
         self._lock = threading.Lock()
         self._cached_token: str = ""
         self._cached_mtime: float = -1.0
-        preferred_family: list[socket.AddressFamily | None] = [None]
+        self._preferred_family: list[socket.AddressFamily | None] = [None]
+        self._local = threading.local()
+
+        preferred_family = self._preferred_family
 
         class _HTTPConn(http.client.HTTPConnection):
             def connect(conn_self) -> None:
@@ -205,15 +207,35 @@ class GiteaClient:
                     raw_sock, server_hostname=server_hostname
                 )
 
-        class _FastHTTPHandler(HTTPHandler):
-            def http_open(handler_self, req: Request) -> Any:
-                return handler_self.do_open(_HTTPConn, req)
+        self._http_cls = _HTTPConn
+        self._https_cls = _HTTPSConn
 
-        class _FastHTTPSHandler(HTTPSHandler):
-            def https_open(handler_self, req: Request) -> Any:
-                return handler_self.do_open(_HTTPSConn, req)
+    def close(self) -> None:
+        self._close_conn()
 
-        self._opener = build_opener(_FastHTTPHandler(), _FastHTTPSHandler())
+    def _close_conn(self) -> None:
+        conn = getattr(self._local, "conn", None)
+        if conn is not None:
+            try:
+                conn.close()
+            except OSError:
+                pass
+        self._local.conn = None
+        self._local.conn_key = None
+
+    def _get_conn(
+        self, scheme: str, host: str, port: int | None
+    ) -> http.client.HTTPConnection:
+        key = (scheme, host, port)
+        conn = getattr(self._local, "conn", None)
+        if conn is not None and getattr(self._local, "conn_key", None) == key:
+            return conn
+        self._close_conn()
+        cls = self._https_cls if scheme == "https" else self._http_cls
+        conn = cls(host, port=port, timeout=self.timeout)
+        self._local.conn = conn
+        self._local.conn_key = key
+        return conn
 
     def read_token(self) -> str:
         """Read and cache the Gitea token, reloading automatically on file updates."""
@@ -251,22 +273,64 @@ class GiteaClient:
             body_bytes = json.dumps(data).encode("utf-8")
             headers["Content-Type"] = "application/json"
 
-        req = Request(url, data=body_bytes, headers=headers, method=method)
-        try:
-            with self._opener.open(req, timeout=self.timeout) as resp:
-                raw = resp.read()
-                if not raw:
-                    return None
-                return json.loads(raw.decode("utf-8"))
-        except HTTPError as err:
-            detail = err.read().decode("utf-8", errors="replace")[:300]
-            raise RuntimeError(
-                f"Gitea API {method} {url} failed ({err.code}): {detail}"
-            ) from err
-        except URLError as err:
-            raise RuntimeError(
-                f"Gitea API {method} {url} unreachable: {err.reason}"
-            ) from err
+        cur_method = method
+        cur_url = url
+        for _ in range(4):
+            parsed = urlparse(cur_url)
+            if not parsed.hostname:
+                raise RuntimeError(f"Gitea API invalid URL: {cur_url}")
+            target = (parsed.path or "/") + (f"?{parsed.query}" if parsed.query else "")
+
+            status = 0
+            raw = b""
+            location: str | None = None
+            for attempt in range(2):
+                conn = self._get_conn(parsed.scheme, parsed.hostname, parsed.port)
+                reused = conn.sock is not None
+                try:
+                    conn.request(cur_method, target, body=body_bytes, headers=headers)
+                    resp = conn.getresponse()
+                    raw = resp.read()
+                    status = resp.status
+                    location = resp.getheader("Location")
+                    if resp.will_close:
+                        self._close_conn()
+                    break
+                except (
+                    http.client.RemoteDisconnected,
+                    http.client.BadStatusLine,
+                    http.client.CannotSendRequest,
+                    BrokenPipeError,
+                    ConnectionResetError,
+                ) as err:
+                    self._close_conn()
+                    if reused and attempt == 0:
+                        continue
+                    raise RuntimeError(
+                        f"Gitea API {cur_method} {cur_url} unreachable: {err}"
+                    ) from err
+                except (OSError, http.client.HTTPException) as err:
+                    self._close_conn()
+                    raise RuntimeError(
+                        f"Gitea API {cur_method} {cur_url} unreachable: {err}"
+                    ) from err
+
+            if status in (301, 302, 303, 307, 308) and location:
+                cur_url = urljoin(cur_url, location)
+                if status == 303:
+                    cur_method = "GET"
+                    body_bytes = None
+                continue
+            if status >= 400:
+                detail = raw.decode("utf-8", errors="replace")[:300]
+                raise RuntimeError(
+                    f"Gitea API {cur_method} {cur_url} failed ({status}): {detail}"
+                )
+            if not raw:
+                return None
+            return json.loads(raw.decode("utf-8"))
+
+        raise RuntimeError(f"Gitea API {method} {url} exceeded redirect limit")
 
     def paginate(
         self,
@@ -521,6 +585,7 @@ def is_conversation_archived(app_data_dir: Path, conversation_id: str) -> bool:
 
 
 def read_transcript_excerpt(app_data_dir: Path, conversation_id: str) -> str:
+    """Read the tail of a conversation transcript so recent PR links stay visible."""
     transcript = (
         app_data_dir
         / "brain"
@@ -532,8 +597,10 @@ def read_transcript_excerpt(app_data_dir: Path, conversation_id: str) -> str:
     if not transcript.is_file():
         return ""
     try:
-        with transcript.open("r", encoding="utf-8", errors="ignore") as fh:
-            return fh.read(MAX_TRANSCRIPT_BYTES)
+        with transcript.open("rb") as fh:
+            fh.seek(0, os.SEEK_END)
+            fh.seek(max(0, fh.tell() - MAX_TRANSCRIPT_BYTES))
+            return fh.read(MAX_TRANSCRIPT_BYTES).decode("utf-8", errors="ignore")
     except OSError:
         return ""
 
@@ -1162,36 +1229,51 @@ def evaluate_thread(
     return trigger, None
 
 
+def _truncate_description(body: str) -> str:
+    text = body.strip()
+    if len(text) <= MAX_DESCRIPTION_CHARS:
+        return text
+    return (
+        text[:MAX_DESCRIPTION_CHARS].rstrip()
+        + "\n... (truncated; fetch full body with `tea` if needed)"
+    )
+
+
 def build_prompt(
     trigger: NotificationTrigger,
     bot_login: str,
     workspace_dir: Path | None = None,
+    *,
+    existing_conversation: bool = False,
 ) -> str:
-    """Render a self-contained prompt describing the Gitea notification event."""
-    lines = [
-        f"Gitea notification for @{bot_login} ({', '.join(trigger.reasons)}):",
-        f"- Type: {trigger.subject_type}",
-        f"- Repository: {trigger.repo_full}",
-    ]
-    if trigger.index:
-        lines.append(f"- Number: #{trigger.index}")
-    lines.extend(
-        [
-            f"- Title: {trigger.title}",
-            f"- State: {trigger.state_str}",
-            f"- Author: @{trigger.author}",
-            f"- URL: {trigger.html_url}",
-        ]
+    """Render a concise prompt describing the Gitea notification event."""
+    del bot_login
+    ref = f"{trigger.repo_full}#{trigger.index}" if trigger.index else trigger.repo_full
+    has_updates = bool(
+        trigger.new_reviews or trigger.new_review_comments or trigger.new_comments
     )
-    if workspace_dir is not None:
-        lines.append(f"- Workspace: {workspace_dir}")
-    if trigger.subject_type == "Pull":
-        lines.append(
-            f"- Branches: {trigger.head_repo}:{trigger.head_ref} -> {trigger.base_ref}"
-        )
 
-    if trigger.body.strip():
-        lines.extend(["", "Description:", trigger.body.strip()[:4000]])
+    if existing_conversation:
+        lines = [f"Gitea follow-up on `{ref}` ({', '.join(trigger.reasons)}):"]
+        if not has_updates and trigger.body.strip():
+            lines.extend(["", "Description:", _truncate_description(trigger.body)])
+    else:
+        lines = [
+            f"Gitea {trigger.subject_type} `{ref}` ({trigger.state_str}, by @{trigger.author}): {trigger.title}",
+            f"Trigger: {', '.join(trigger.reasons)} | URL: {trigger.html_url}",
+        ]
+        meta: list[str] = []
+        if workspace_dir is not None:
+            meta.append(f"Workspace: {workspace_dir}")
+        if trigger.subject_type == "Pull":
+            meta.append(
+                f"Branches: {trigger.head_repo}:{trigger.head_ref} -> {trigger.base_ref}"
+            )
+        if meta:
+            lines.append(" | ".join(meta))
+
+        if trigger.body.strip():
+            lines.extend(["", "Description:", _truncate_description(trigger.body)])
 
     if trigger.new_reviews:
         lines.extend(["", "New PR Reviews:"])
@@ -1234,45 +1316,35 @@ def build_prompt(
     elif trigger.index:
         reaction_target = f"{trigger.subject_type.lower()} #{trigger.index}"
 
-    lines.extend(["", "Instructions (use the `gitea` skill for Gitea/tea API calls):"])
+    lines.extend(["", "Instructions (use the `gitea` skill):"])
     step = 1
     if reaction_target:
-        lines.append(
-            f"{step}. Immediately, as your very first step before doing anything else, add an `eyes` reaction to {reaction_target}."
-        )
+        lines.append(f"{step}. First, add an `eyes` reaction to {reaction_target}.")
         step += 1
-    lines.append(
-        f"{step}. Review the request, feedback, or assignment in the workspace."
-    )
-    step += 1
-    if trigger.subject_type == "Pull" and trigger.head_ref:
-        lines.append(
-            f"{step}. If code changes are needed, ensure you are working on the PR branch `{trigger.head_ref}`, "
-            "verify/test your changes, commit (GPG-signed), and push to the PR branch."
-        )
-    elif trigger.index:
-        lines.append(
-            f"{step}. Investigate or implement the requested change in the repository if applicable."
-        )
-    else:
-        lines.append(f"{step}. Investigate the commit comment in the repository.")
-    step += 1
+
+    if not existing_conversation:
+        if trigger.subject_type == "Pull" and trigger.head_ref:
+            lines.append(
+                f"{step}. If code changes are needed, work on PR branch `{trigger.head_ref}`, verify, commit, and push."
+            )
+        elif trigger.index:
+            lines.append(f"{step}. Investigate or address this in the repository.")
+        else:
+            lines.append(f"{step}. Investigate the commit comment in the repository.")
+        step += 1
 
     if trigger.new_review_comments and trigger.new_review_comments[-1].get("id"):
         rcid = trigger.new_review_comments[-1]["id"]
         lines.append(
-            f"{step}. Reply inside the existing inline PR review thread for comment #{rcid} "
+            f"{step}. Reply in-thread for comment #{rcid} "
             f'(`tea pr reply --login local --repo {trigger.repo_full} {trigger.index} {rcid} "<reply>"`); '
             "do not open a new review thread."
         )
     elif trigger.index:
-        lines.append(
-            f"{step}. Always post a concise, helpful response on `{trigger.repo_full}#{trigger.index}` "
-            "(comment or PR review as appropriate) summarizing what you found, changed, or need clarified."
-        )
+        lines.append(f"{step}. Post a concise reply on `{ref}`.")
     else:
         lines.append(
-            f"{step}. Post a concise response on Gitea for `{trigger.repo_full}` summarizing what you found."
+            f"{step}. Post a concise reply on Gitea for `{trigger.repo_full}`."
         )
     return "\n".join(lines)
 
@@ -1342,16 +1414,6 @@ def run_agentapi(
             cmd.append(f"--title={clean_title}")
         cmd.extend(["--", prompt])
 
-    LOG.info(
-        "Running %s (%s) in %s",
-        cfg.agentapi_bin,
-        (
-            f"send-message conversation={conversation_id}"
-            if conversation_id
-            else "new-conversation"
-        ),
-        workspace_dir,
-    )
     proc = subprocess.run(
         cmd,
         cwd=str(workspace_dir),
@@ -1423,20 +1485,10 @@ class SidecarDaemon:
                 )
                 if routed is not None:
                     conv_id, ws_dir = routed
-                    LOG.info(
-                        "Routed %s to existing conversation %s",
-                        trigger.thread_key,
-                        conv_id,
-                    )
             elif trigger.index:
                 cached = self.state.get_conversation(trigger.thread_key)
                 if cached and self.router.conversation_exists(cached):
                     conv_id = cached
-                    LOG.info(
-                        "Routed %s to cached conversation %s",
-                        trigger.thread_key,
-                        conv_id,
-                    )
 
             if ws_dir is None:
                 with self._get_lock(f"repo:{trigger.repo_full.lower()}"):
@@ -1446,27 +1498,39 @@ class SidecarDaemon:
                         clone_url=trigger.clone_url,
                     )
 
-            prompt = build_prompt(trigger, self._bot_login, workspace_dir=ws_dir)
+            prompt = build_prompt(
+                trigger,
+                self._bot_login,
+                workspace_dir=ws_dir,
+                existing_conversation=bool(conv_id),
+            )
             conv_title = (
                 f"Gitea {trigger.repo_full}#{trigger.index}: {trigger.title}"
                 if trigger.index
                 else f"Gitea {trigger.repo_full}: {trigger.title}"
             )[:120]
+            action = (
+                f"send-message conversation={conv_id}"
+                if conv_id
+                else "new-conversation"
+            )
             if self.cfg.dry_run:
                 LOG.info(
-                    "[DRY RUN] Would invoke %s (%s) in %s for %s: %s",
-                    self.cfg.agentapi_bin,
-                    (
-                        f"send-message conversation={conv_id}"
-                        if conv_id
-                        else "new-conversation"
-                    ),
-                    ws_dir,
+                    "[DRY RUN] Would dispatch %s (%s) via %s in %s",
                     trigger.thread_key,
                     ", ".join(trigger.reasons),
+                    action,
+                    ws_dir,
                 )
                 return
 
+            LOG.info(
+                "Dispatching %s (%s) via %s in %s",
+                trigger.thread_key,
+                ", ".join(trigger.reasons),
+                action,
+                ws_dir,
+            )
             new_conv_id = run_agentapi(
                 self.cfg,
                 conversation_id=conv_id,
@@ -1754,6 +1818,7 @@ class SidecarDaemon:
                 pending = list(self._futures)
             for fut in pending:
                 fut.result()
+        self.client.close()
         return 0
 
 
