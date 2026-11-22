@@ -670,9 +670,16 @@ class NotificationEvaluationTest(unittest.TestCase):
             workspace_dir=Path("/tmp/ws"),
             existing_conversation=True,
         )
-        self.assertIn("Gitea follow-up on `artem/dotfiles#2`", followup)
+        self.assertIn(
+            "Gitea follow-up on `artem/dotfiles#2` (branch `cleanup/remote-agy-legacy`",
+            followup,
+        )
         self.assertIn("@artem-agent trim the prompt too", followup)
         self.assertIn("add an `eyes` reaction to comment #99", followup)
+        self.assertIn(
+            "Address the update above (making and pushing changes if needed)",
+            followup,
+        )
         self.assertNotIn("Description:", followup)
         self.assertNotIn("Workspace:", followup)
         self.assertNotIn("Branches:", followup)

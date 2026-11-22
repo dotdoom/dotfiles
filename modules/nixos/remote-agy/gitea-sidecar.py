@@ -1254,7 +1254,11 @@ def build_prompt(
     )
 
     if existing_conversation:
-        lines = [f"Gitea follow-up on `{ref}` ({', '.join(trigger.reasons)}):"]
+        details: list[str] = []
+        if trigger.subject_type == "Pull" and trigger.head_ref:
+            details.append(f"branch `{trigger.head_ref}`")
+        details.extend(trigger.reasons)
+        lines = [f"Gitea follow-up on `{ref}` ({', '.join(details)}):"]
         if not has_updates and trigger.body.strip():
             lines.extend(["", "Description:", _truncate_description(trigger.body)])
     else:
@@ -1335,17 +1339,31 @@ def build_prompt(
 
     if trigger.new_review_comments and trigger.new_review_comments[-1].get("id"):
         rcid = trigger.new_review_comments[-1]["id"]
-        lines.append(
-            f"{step}. Reply in-thread for comment #{rcid} "
-            f'(`tea pr reply --login local --repo {trigger.repo_full} {trigger.index} {rcid} "<reply>"`); '
-            "do not open a new review thread."
-        )
+        reply_cmd = f'(`tea pr reply --login local --repo {trigger.repo_full} {trigger.index} {rcid} "<reply>"`); do not open a new review thread.'
+        if existing_conversation:
+            lines.append(
+                f"{step}. Address the update above (making and pushing changes if needed) "
+                f"and reply in-thread for comment #{rcid} {reply_cmd}"
+            )
+        else:
+            lines.append(f"{step}. Reply in-thread for comment #{rcid} {reply_cmd}")
     elif trigger.index:
-        lines.append(f"{step}. Post a concise reply on `{ref}`.")
+        if existing_conversation:
+            lines.append(
+                f"{step}. Address the update above (making and pushing changes if needed) "
+                f"and post a concise reply on `{ref}`."
+            )
+        else:
+            lines.append(f"{step}. Post a concise reply on `{ref}`.")
     else:
-        lines.append(
-            f"{step}. Post a concise reply on Gitea for `{trigger.repo_full}`."
-        )
+        if existing_conversation:
+            lines.append(
+                f"{step}. Address the update above and post a concise reply on Gitea for `{trigger.repo_full}`."
+            )
+        else:
+            lines.append(
+                f"{step}. Post a concise reply on Gitea for `{trigger.repo_full}`."
+            )
     return "\n".join(lines)
 
 
