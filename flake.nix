@@ -136,7 +136,7 @@
         linux-headless = import ./modules/nixos/linux-headless.nix;
         linux-lxc = import ./modules/nixos/linux-lxc.nix;
         jailed-agy = import ./modules/nixos/jailed-agy.nix;
-        remote-agy = import ./modules/nixos/remote-agy.nix;
+        remote-agy = import ./modules/nixos/remote-agy;
       };
 
       homeConfigurations."${homeManagerUser}@deimos" = home-manager.lib.homeManagerConfiguration {

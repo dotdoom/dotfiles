@@ -1,5 +1,5 @@
 # Shared between modules/home/skill-plugins.nix (home-manager, per-user) and
-# modules/nixos/remote-agy.nix (NixOS, per-service). Both register skill
+# modules/nixos/remote-agy/default.nix (NixOS, per-service). Both register skill
 # directories with Antigravity through the same skills.json manifest shape, so
 # the pruning logic lives here once.
 { lib, pkgs }:

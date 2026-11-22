@@ -19,13 +19,15 @@ chmod 600 ~/.config/gitea-token
 
 ### 3. Authenticate Antigravity
 
-While still logged in as `${USER}-agent`:
+While still logged in as `${USER}-agent` over SSH:
 
 ```bash
-antigravity
+remote-agy-server
 ```
 
-Complete the OAuth flow in the browser, then exit (`/exit`).
+Open the printed Google OAuth URL in your browser, paste the final redirect URL back into the terminal, then press `Ctrl+C`.
+
+> Upgrading from `antigravity-cli`: `remote-agy-setup` migrates conversations and copies the OAuth token automatically on first start. If token refresh fails afterward, delete `~/.gemini/jetski-standalone-oauth-token` and re-run `remote-agy-server`.
 
 ### 4. Start Daemon
 
@@ -33,4 +35,4 @@ Complete the OAuth flow in the browser, then exit (`/exit`).
 sudo systemctl restart antigravity-remote-control
 ```
 
-SSH transport key, verified GPG signing key, and Gitea registration are configured automatically on startup.
+Logs: `journalctl -u antigravity-remote-control -f`.

@@ -43,7 +43,7 @@ Host-level files import shared modules in a chain rather than flat-merging:
 
 Every skill's name and description go into the system prompt whether used or not, so a large plugin is a standing token cost (the SDD plugin's 22 skills are ~1.5k tokens). Each namespace also has a matching `disabledSkills` list — the trim lever, mapping to Crush's `option disable-skill` and agy's per-entry `exclude`. `hosts/deimos/home.nix` trims four SDD skills (~290 tokens, 19%) that are setup or upstream-feedback chores.
 
-The NixOS `programs.remote-agy` module (the `antigravity remote-control serve` daemon's own user) carries the same framework: `skillPlugins`/`disabledSkills` write the same `skills.json` manifest into the agent user's `~/.gemini/config/` from `ExecStartPre`, plus `globalRules` — an always-loaded global prompt (`types.lines`) whose shipped Gitea section is `mkBefore` config, so host assignments are appended after it. Plugin pruning logic is shared via `modules/lib/skill-plugins-lib.nix`.
+The NixOS `programs.remote-agy` module (running `antigravity-hub`'s standalone `language_server` under the agent user) carries the same framework: `skillPlugins`/`disabledSkills` write the same `skills.json` manifest into the agent user's `~/.gemini/config/` from `ExecStartPre`, plus `globalRules` — an always-loaded global prompt (`types.lines`) whose shipped Gitea section is `mkBefore` config, so host assignments are appended after it. Plugin pruning logic is shared via `modules/lib/skill-plugins-lib.nix`.
 
 ### Secrets via `identities` input
 

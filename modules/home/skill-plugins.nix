@@ -13,7 +13,7 @@ let
     types
     ;
 
-  # Pruning logic is shared with modules/nixos/remote-agy.nix, which registers
+  # Pruning logic is shared with modules/nixos/remote-agy/default.nix, which registers
   # plugins for the remote-control daemon's own user rather than a
   # home-manager user.
   inherit
