@@ -37,6 +37,54 @@ let
 
   globalRulesFile = pkgs.writeText "remote-agy-agents.md" cfg.globalRules;
 
+  giteaSidecar = pkgs.stdenvNoCC.mkDerivation {
+    pname = "remote-agy-gitea-sidecar";
+    version = "1.0.0";
+    src = lib.fileset.toSource {
+      root = ./.;
+      fileset = lib.fileset.unions [
+        ./gitea-sidecar.py
+        ./test_gitea_sidecar.py
+      ];
+    };
+    buildInputs = [ pkgs.python3 ];
+    nativeCheckInputs = [
+      pkgs.python3
+      pkgs.git
+    ];
+    doCheck = true;
+    checkPhase = ''
+      runHook preCheck
+      python3 -m unittest -v test_gitea_sidecar.py
+      runHook postCheck
+    '';
+    installPhase = ''
+      runHook preInstall
+      install -Dm755 gitea-sidecar.py "$out/bin/remote-agy-gitea-sidecar"
+      runHook postInstall
+    '';
+  };
+
+  giteaSidecarManifest = pkgs.writeText "remote-agy-gitea-sidecar.json" (
+    builtins.toJSON {
+      display_name = "Gitea";
+      description = "Polls Gitea notifications and routes @mentions, assignments, review requests, and PR replies into Antigravity conversations.";
+      command = "${giteaSidecar}/bin/remote-agy-gitea-sidecar";
+      args = [ ];
+      restart_policy = "always";
+      env = {
+        GITEA_SERVER_URL = giteaUrl;
+        GITEA_TOKEN_FILE = "${userHome}/.config/gitea-token";
+        GITEA_POLL_INTERVAL = toString cfg.giteaSidecar.pollInterval;
+        GITEA_MAX_CONCURRENCY = toString cfg.giteaSidecar.maxConcurrency;
+        GITEA_ALLOWED_USERS = lib.concatStringsSep "," cfg.giteaSidecar.allowedUsers;
+      }
+      // lib.optionalAttrs (cfg.giteaSidecar.model != null) {
+        AGY_MODEL = cfg.giteaSidecar.model;
+      };
+    }
+  );
+
   serverScript = pkgs.writeShellApplication {
     name = "remote-agy-server";
     text = ''
@@ -105,6 +153,17 @@ let
       mkdir -p "$HOME/.gemini/config"
       ln -sfn "${globalRulesFile}" "$HOME/.gemini/config/AGENTS.md"
       ${customizeCommands}
+      ${
+        if cfg.giteaSidecar.enable then
+          ''
+            mkdir -p "$HOME/.gemini/config/sidecars/gitea"
+            ln -sfn "${giteaSidecarManifest}" "$HOME/.gemini/config/sidecars/gitea/sidecar.json"
+          ''
+        else
+          ''
+            rm -rf "$HOME/.gemini/config/sidecars/gitea"
+          ''
+      }
 
       CONFIG_JSON="$HOME/.gemini/config/config.json"
       if [ ! -f "$CONFIG_JSON" ] || ! jq -e 'type == "object"' "$CONFIG_JSON" >/dev/null 2>&1; then
@@ -112,11 +171,19 @@ let
       fi
       jq \
         --arg host "${instanceName}" \
+        --argjson enableGitea ${if cfg.giteaSidecar.enable then "true" else "false"} \
         '
           .userSettings = ((.userSettings // {}) + {
             remoteControlEnabled: true,
             remoteControlHostname: $host
           })
+          | if $enableGitea then
+              .sidecars = ((.sidecars // {}) | .gitea = ((.gitea // {}) + {enabled: true}))
+            elif (.sidecars.gitea? != null) then
+              .sidecars.gitea.enabled = false
+            else
+              .
+            end
         ' "$CONFIG_JSON" > "$CONFIG_JSON.tmp"
       chmod 600 "$CONFIG_JSON.tmp"
       mv -f "$CONFIG_JSON.tmp" "$CONFIG_JSON"
@@ -304,6 +371,59 @@ in
         assignment is kept; {func}`lib.mkForce` replaces the whole thing.
       '';
     };
+
+    giteaSidecar = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = ''
+          Whether to register and enable the Gitea notifications sidecar
+          ({file}`~/.gemini/config/sidecars/gitea/sidecar.json`) under the
+          Antigravity language server's native SidecarManager, polling Gitea
+          and routing mentions, assignments, review requests, and PR replies
+          into Antigravity conversations via `agentapi`.
+        '';
+      };
+
+      pollInterval = lib.mkOption {
+        type = lib.types.ints.positive;
+        default = 30;
+        description = "Seconds between Gitea notification/issue search polls.";
+      };
+
+      maxConcurrency = lib.mkOption {
+        type = lib.types.ints.positive;
+        default = 2;
+        description = "Maximum number of Gitea notification threads dispatched concurrently.";
+      };
+
+      model = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        example = "pro";
+        description = "Optional model tier or ID passed to `agentapi new-conversation --model`.";
+      };
+
+      allowedUsers = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ primaryUser ];
+        example = [
+          "artem"
+          "katarina"
+        ];
+        description = ''
+          Gitea usernames allowed to trigger the sidecar (mentions, comments,
+          reviews, assignments, and review requests). An empty list disables
+          the allowlist and accepts events from any user.
+        '';
+      };
+
+      extraPackages = lib.mkOption {
+        type = lib.types.listOf lib.types.package;
+        default = [ ];
+        description = "Extra packages added to the remote Antigravity daemon and sidecar PATH.";
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -318,6 +438,14 @@ in
       via HTTPS. SSH clone is always down over `git@git.home.arpa`.
     '';
 
+    # Progressive disclosure: keep Gitea/tea recipes off the always-on prompt budget.
+    programs.remote-agy.skillPlugins.gitea = lib.mkDefault (
+      lib.fileset.toSource {
+        root = ../../..;
+        fileset = ../../../skills/gitea;
+      }
+    );
+
     assertions = [
       (skill-plugins-lib.trimNeedsPluginsAssertion {
         optionNames = "programs.remote-agy.disabledSkills";
@@ -331,7 +459,8 @@ in
       pkgs.gnupg
       setupScript
       serverScript
-    ];
+    ]
+    ++ lib.optional cfg.giteaSidecar.enable giteaSidecar;
 
     users.users.${user} = {
       isNormalUser = true;
@@ -345,13 +474,16 @@ in
       wantedBy = [ "multi-user.target" ];
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
-      path = config.environment.systemPackages ++ [
-        pkgs.git
-        pkgs.openssh
-        pkgs.curl
-        pkgs.jq
-        pkgs.python3
-      ];
+      path =
+        config.environment.systemPackages
+        ++ [
+          pkgs.git
+          pkgs.openssh
+          pkgs.curl
+          pkgs.jq
+          pkgs.python3
+        ]
+        ++ lib.optionals cfg.giteaSidecar.enable cfg.giteaSidecar.extraPackages;
       environment = {
         GITEA_SERVER_URL = giteaUrl;
         # SSH_CONNECTION triggers file-based OAuth token storage instead of

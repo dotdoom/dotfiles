@@ -6,7 +6,7 @@ Step-by-step initial setup for `${primaryUser}-agent` (e.g. `artem-agent`):
 
 1. Go to [https://git.sheremet.ch/-/admin/users/](https://git.sheremet.ch/-/admin/users/)
 2. Open or create user `${primaryUser}-agent`
-3. Generate an access token with `repo` and `write:user` scopes
+3. Generate an access token with `repo`, `write:user`, and `write:notification` scopes
 
 ### 2. Save Token
 
@@ -35,4 +35,4 @@ Open the printed Google OAuth URL in your browser, paste the final redirect URL 
 sudo systemctl restart antigravity-remote-control
 ```
 
-Logs: `journalctl -u antigravity-remote-control -f`.
+Logs: `journalctl -u antigravity-remote-control -f` and `~${USER}-agent/.gemini/antigravity/sidecar_data/gitea/logs/sidecar.log`.
