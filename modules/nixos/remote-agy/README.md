@@ -27,8 +27,6 @@ remote-agy-server
 
 Open the printed Google OAuth URL in your browser, paste the final redirect URL back into the terminal, then press `Ctrl+C`.
 
-> Upgrading from `antigravity-cli`: `remote-agy-setup` migrates conversations and copies the OAuth token automatically on first start. If token refresh fails afterward, delete `~/.gemini/jetski-standalone-oauth-token` and re-run `remote-agy-server`.
-
 ### 4. Start Daemon
 
 ```bash

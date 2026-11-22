@@ -119,35 +119,6 @@ let
       pkgs.jq
     ];
     text = ''
-      # 0. One-time migration from antigravity-cli to standalone language_server.
-      #    Leave worktrees/ in place: existing conversations and project configs
-      #    store absolute paths under ~/.gemini/antigravity-cli/worktrees/.
-      CLI_DATA_DIR="$HOME/.gemini/antigravity-cli"
-      HUB_DATA_DIR="$HOME/.gemini/antigravity"
-      if [ ! -e "$HUB_DATA_DIR" ] && [ -d "$CLI_DATA_DIR" ]; then
-        echo "remote-agy-setup: Migrating conversations from $CLI_DATA_DIR to $HUB_DATA_DIR..."
-        mkdir -p "$HUB_DATA_DIR"
-        for item in \
-          conversations \
-          brain \
-          annotations \
-          agyhub_summaries_proto.pb \
-          conversation_summaries.db \
-          conversation_summaries.db-shm \
-          conversation_summaries.db-wal
-        do
-          if [ -e "$CLI_DATA_DIR/$item" ]; then
-            mv "$CLI_DATA_DIR/$item" "$HUB_DATA_DIR/$item"
-          fi
-        done
-
-        if [ ! -f "$HOME/.gemini/jetski-standalone-oauth-token" ] && [ -f "$CLI_DATA_DIR/antigravity-oauth-token" ]; then
-          echo "remote-agy-setup: Copying OAuth token to ~/.gemini/jetski-standalone-oauth-token..."
-          cp -p "$CLI_DATA_DIR/antigravity-oauth-token" "$HOME/.gemini/jetski-standalone-oauth-token"
-          chmod 600 "$HOME/.gemini/jetski-standalone-oauth-token"
-        fi
-      fi
-
       # 1. Symlinks into the store, so a rebuild plus service restart moves them
       #    atomically.
       mkdir -p "$HOME/.gemini/config"
@@ -364,7 +335,7 @@ in
       type = lib.types.lines;
       default = "";
       description = ''
-        Global rules the Antigravity CLI loads into every session of the
+        Global rules Antigravity loads into every session of the
         agent user, written to {file}`~${user}/.gemini/config/AGENTS.md`.
         The module ships a Gitea section {func}`lib.mkBefore`, so any
         assignment is appended after it and every {env}`types.lines`

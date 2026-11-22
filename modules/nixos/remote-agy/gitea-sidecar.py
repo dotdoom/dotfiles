@@ -701,8 +701,6 @@ class ConversationRouter:
 
         if projects_dir.is_dir():
             for proj_file in sorted(projects_dir.glob("*.json")):
-                if proj_file.name == "default-cli-project.json":
-                    continue
                 try:
                     proj = json.loads(proj_file.read_text(encoding="utf-8"))
                 except (OSError, json.JSONDecodeError):
