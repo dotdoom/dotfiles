@@ -109,18 +109,25 @@
       ];
     in
     {
-      checks = eachSystem (system: {
-        pre-commit-check = inputs.git-hooks.lib.${system}.run (
-          {
-            src = ./.;
-            excludes = [
-              "^migrated/"
-              "^legacy/"
-            ];
-          }
-          // inputs.fw_nix.lib.pre-commit
-        );
-      });
+      checks = eachSystem (
+        system:
+        let
+          pkgs = import nixpkgs { inherit system; };
+        in
+        {
+          pre-commit-check = inputs.git-hooks.lib.${system}.run (
+            {
+              src = ./.;
+              excludes = [
+                "^migrated/"
+                "^legacy/"
+              ];
+            }
+            // inputs.fw_nix.lib.pre-commit
+          );
+          remote-agy-gitea-sidecar = pkgs.callPackage ./modules/nixos/remote-agy/gitea-sidecar.nix { };
+        }
+      );
 
       overlays.llm-agents = llmAgentsOverlay;
 

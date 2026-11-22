@@ -37,33 +37,7 @@ let
 
   globalRulesFile = pkgs.writeText "remote-agy-agents.md" cfg.globalRules;
 
-  giteaSidecar = pkgs.stdenvNoCC.mkDerivation {
-    pname = "remote-agy-gitea-sidecar";
-    version = "1.0.0";
-    src = lib.fileset.toSource {
-      root = ./.;
-      fileset = lib.fileset.unions [
-        ./gitea-sidecar.py
-        ./test_gitea_sidecar.py
-      ];
-    };
-    buildInputs = [ pkgs.python3 ];
-    nativeCheckInputs = [
-      pkgs.python3
-      pkgs.git
-    ];
-    doCheck = true;
-    checkPhase = ''
-      runHook preCheck
-      python3 -m unittest -v test_gitea_sidecar.py
-      runHook postCheck
-    '';
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 gitea-sidecar.py "$out/bin/remote-agy-gitea-sidecar"
-      runHook postInstall
-    '';
-  };
+  giteaSidecar = pkgs.callPackage ./gitea-sidecar.nix { };
 
   giteaSidecarManifest = pkgs.writeText "remote-agy-gitea-sidecar.json" (
     builtins.toJSON {
