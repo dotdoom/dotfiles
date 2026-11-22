@@ -685,6 +685,207 @@ class NotificationEvaluationTest(unittest.TestCase):
         self.assertNotIn("Branches:", followup)
         self.assertNotIn("AAAA", followup)
 
+    def test_addressed_to_others(self) -> None:
+        self.assertTrue(
+            sidecar.addressed_to_others(
+                "@katarina-agent Please check this", "artem-agent"
+            )
+        )
+        self.assertTrue(
+            sidecar.addressed_to_others("Ask @katarina-agent.", "artem-agent")
+        )
+        self.assertFalse(
+            sidecar.addressed_to_others(
+                "@katarina-agent and @artem-agent please check", "artem-agent"
+            )
+        )
+        self.assertFalse(
+            sidecar.addressed_to_others(
+                "Please add `@dataclass` and `@types/node` here", "artem-agent"
+            )
+        )
+        self.assertFalse(
+            sidecar.addressed_to_others(
+                "```python\n@staticmethod\ndef f(): pass\n```\nLooks good",
+                "artem-agent",
+            )
+        )
+        self.assertFalse(
+            sidecar.addressed_to_others("Contact foo@bar.ch", "artem-agent")
+        )
+
+    def test_ignores_unmentioned_reviews_on_other_pr_and_other_mentions(self) -> None:
+        # PR authored by katarina-agent; artem-agent previously posted one audit comment.
+        self.client.issues[("bonagri", "bonagri", 61)] = {
+            "state": "open",
+            "title": "PDF OCR",
+            "body": "PR description",
+            "user": {"login": "katarina-agent"},
+            "assignees": [],
+            "pull_request": {"merged": False},
+        }
+        self.client.pulls[("bonagri", "bonagri", 61)] = {
+            "merged": False,
+            "head": {
+                "ref": "enable_pdf_ocr",
+                "repo": {"full_name": "bonagri/bonagri"},
+            },
+            "base": {"ref": "main"},
+            "requested_reviewers": [],
+        }
+        self.client.comments[("bonagri", "bonagri", 61)] = [
+            {
+                "id": 2319,
+                "user": {"login": "artem"},
+                "body": "@artem-agent do an SDD audit",
+            },
+            {
+                "id": 2320,
+                "user": {"login": "artem-agent"},
+                "body": "Audit summary",
+            },
+            {
+                "id": 2321,
+                "user": {"login": "katarina"},
+                "body": "@katarina-agent please address #2320",
+            },
+        ]
+        self.client.reviews[("bonagri", "bonagri", 61)] = [
+            {
+                "id": 78,
+                "state": "REQUEST_CHANGES",
+                "user": {"login": "artem"},
+                "body": "Needs fixes",
+                "comments_count": 1,
+            }
+        ]
+        self.client.review_comments[("bonagri", "bonagri", 61, 78)] = [
+            {
+                "id": 2337,
+                "pull_request_review_id": 78,
+                "user": {"login": "artem"},
+                "path": "hosts/ki1/ai.nix",
+                "body": "Where does this apply?",
+            }
+        ]
+
+        # Neither @katarina's comment for @katarina-agent nor @artem's review for
+        # @katarina-agent's PR should wake @artem-agent.
+        trigger, ignored = sidecar.evaluate_thread(
+            self.client,
+            self.state,
+            self._thread(610, "bonagri/bonagri", "Pull", 61),
+            "artem-agent",
+        )
+        self.assertIsNone(trigger)
+        assert ignored is not None
+        self.state.set_thread_state("bonagri/bonagri#61", ignored)
+
+        # A follow-up top-level comment without @mentions on the same PR DOES wake
+        # @artem-agent because it already participated in the top-level thread.
+        self.client.comments[("bonagri", "bonagri", 61)].append(
+            {
+                "id": 2338,
+                "user": {"login": "artem"},
+                "body": "Good catch, can you also check ADR-0009?",
+            }
+        )
+        t_followup, _ = sidecar.evaluate_thread(
+            self.client,
+            self.state,
+            self._thread(610, "bonagri/bonagri", "Pull", 61),
+            "artem-agent",
+        )
+        assert t_followup is not None
+        self.assertEqual([c["id"] for c in t_followup.new_comments], [2338])
+        self.state.set_thread_state("bonagri/bonagri#61", t_followup.next_thread_state)
+
+        # A reply inside an inline PR review thread that @artem-agent participated in
+        # DOES wake @artem-agent (without needing an explicit @mention).
+        self.client.reviews[("bonagri", "bonagri", 61)].append(
+            {
+                "id": 79,
+                "state": "COMMENT",
+                "user": {"login": "artem-agent"},
+                "body": "",
+                "comments_count": 2,
+            }
+        )
+        self.client.review_comments[("bonagri", "bonagri", 61, 79)] = [
+            {
+                "id": 2340,
+                "pull_request_review_id": 79,
+                "user": {"login": "artem-agent"},
+                "path": "hosts/ki1/ai.nix",
+                "position": 12,
+                "diff_hunk": "@@ -10,3 +10,3 @@\n+foo",
+                "body": "Should this be scoped?",
+            },
+            {
+                "id": 2341,
+                "pull_request_review_id": 79,
+                "user": {"login": "artem"},
+                "path": "hosts/ki1/ai.nix",
+                "position": 12,
+                "diff_hunk": "@@ -10,3 +10,3 @@\n+foo",
+                "body": "Yes, good point, fixing now.",
+            },
+        ]
+        t_inline, _ = sidecar.evaluate_thread(
+            self.client,
+            self.state,
+            self._thread(610, "bonagri/bonagri", "Pull", 61),
+            "artem-agent",
+        )
+        assert t_inline is not None
+        self.assertEqual([rc["id"] for rc in t_inline.new_review_comments], [2341])
+
+        # Even on artem-agent's own PR, a comment addressed to @katarina-agent is ignored.
+        self.client.issues[("bonagri", "bonagri", 62)] = {
+            "state": "open",
+            "title": "Own PR",
+            "body": "Body",
+            "user": {"login": "artem-agent"},
+            "assignees": [],
+            "pull_request": {"merged": False},
+        }
+        self.client.pulls[("bonagri", "bonagri", 62)] = {
+            "merged": False,
+            "head": {"ref": "own", "repo": {"full_name": "bonagri/bonagri"}},
+            "base": {"ref": "main"},
+            "requested_reviewers": [],
+        }
+        self.client.comments[("bonagri", "bonagri", 62)] = [
+            {
+                "id": 1,
+                "user": {"login": "katarina"},
+                "body": "@katarina-agent compare this with #61",
+            }
+        ]
+        t_other, _ = sidecar.evaluate_thread(
+            self.client,
+            self.state,
+            self._thread(620, "bonagri/bonagri", "Pull", 62),
+            "artem-agent",
+        )
+        self.assertIsNone(t_other)
+
+        # Unmentioned feedback (even mentioning `@dataclass` in backticks) on own PR triggers.
+        self.client.comments[("bonagri", "bonagri", 62)].append(
+            {
+                "id": 2,
+                "user": {"login": "artem"},
+                "body": "Please use `@dataclass` here",
+            }
+        )
+        t_own, _ = sidecar.evaluate_thread(
+            self.client,
+            self.state,
+            self._thread(620, "bonagri/bonagri", "Pull", 62),
+            "artem-agent",
+        )
+        self.assertIsNotNone(t_own)
+
 
 class ConversationRoutingTest(unittest.TestCase):
     def setUp(self) -> None:
@@ -996,7 +1197,7 @@ class DaemonIntegrationTest(unittest.TestCase):
             # Empty /notifications (as for Gitea Bot accounts)
             fake.notifications = []
             fake.search_results = [
-                # Recent unassigned PR where artem-agent previously left a review and author replied
+                # Recent PR authored by artem-agent with a new review from artem
                 {
                     "number": 7,
                     "title": "PR #7",
@@ -1022,8 +1223,8 @@ class DaemonIntegrationTest(unittest.TestCase):
             fake.issues[("home", "home", 7)] = {
                 "state": "open",
                 "title": "PR #7",
-                "body": "Author PR",
-                "user": {"login": "artem"},
+                "body": "Agent PR",
+                "user": {"login": "artem-agent"},
                 "assignees": [],
                 "pull_request": {},
             }

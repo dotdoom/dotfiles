@@ -103,12 +103,42 @@ def normalize_repo_slug(url: str) -> str:
     return f"{parts[-2]}/{parts[-1]}".lower()
 
 
+_CODE_FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
+_INLINE_CODE_RE = re.compile(r"`[^`\n]+`")
+_MENTION_RE = re.compile(
+    r"(?<![A-Za-z0-9._-])@([A-Za-z0-9][A-Za-z0-9_-]*)(?![A-Za-z0-9_/-]|\.[A-Za-z0-9])"
+)
+
+
+def extract_mentions(text: str | None) -> set[str]:
+    """Return lowercase @usernames mentioned outside markdown code spans."""
+    if not text:
+        return set()
+    stripped = _INLINE_CODE_RE.sub("", _CODE_FENCE_RE.sub("", text))
+    return {m.group(1).lower() for m in _MENTION_RE.finditer(stripped)}
+
+
 def mentions_user(text: str | None, username: str) -> bool:
     """Return True if text contains a standalone @username mention."""
     if not text or not username:
         return False
     pattern = rf"(?<![A-Za-z0-9._-])@{re.escape(username)}(?![A-Za-z0-9_-])"
     return bool(re.search(pattern, text, re.IGNORECASE))
+
+
+def addressed_to_others(text: str | None, bot_login: str) -> bool:
+    """Return True if text explicitly @mentions other user(s) without @bot_login."""
+    mentions = extract_mentions(text)
+    return bool(mentions) and bot_login.lower() not in mentions
+
+
+def _review_thread_key(rc: dict[str, Any]) -> tuple[str, int, str]:
+    """Identify an inline PR review thread across replies."""
+    return (
+        str(rc.get("path") or ""),
+        int(rc.get("original_position") or rc.get("position") or 0),
+        str(rc.get("diff_hunk") or ""),
+    )
 
 
 def extract_index_from_url(url: str) -> int | None:
@@ -1021,15 +1051,17 @@ def evaluate_thread(
                 )
             )
 
-    has_bot_activity = (
-        _last_bot_comment_id(comments, bot_login) > 0
-        or _last_bot_review_id(reviews, bot_login) > 0
-        or any(
-            ((rc.get("user") or {}).get("login") or "") == bot_login
-            for rc in review_comments_all
-        )
-    )
-    is_participant = (issue_author == bot_login) or is_assigned or has_bot_activity
+    # PR reviews are aimed at the PR author/assignees, not bystanders who left a
+    # top-level comment. For non-owners, follow up on top-level comments if the
+    # bot already commented in the thread, and on inline review comments only in
+    # inline threads where the bot participated.
+    is_owner = (issue_author == bot_login) or is_assigned
+    has_bot_comment = _last_bot_comment_id(comments, bot_login) > 0
+    bot_review_threads = {
+        _review_thread_key(rc)
+        for rc in review_comments_all
+        if ((rc.get("user") or {}).get("login") or "") == bot_login
+    }
 
     prev = state_store.get_thread_state(thread_key)
     if prev is None:
@@ -1081,16 +1113,19 @@ def evaluate_thread(
         c
         for c in raw_unseen_comments
         if _is_allowed_actor(((c.get("user") or {}).get("login") or ""), allowed_users)
+        and not addressed_to_others(c.get("body"), bot_login)
     ]
     unseen_reviews = [
         r
         for r in raw_unseen_reviews
         if _is_allowed_actor(((r.get("user") or {}).get("login") or ""), allowed_users)
+        and not addressed_to_others(r.get("body"), bot_login)
     ]
     unseen_review_comments = [
         rc
         for rc in raw_unseen_review_comments
         if _is_allowed_actor(((rc.get("user") or {}).get("login") or ""), allowed_users)
+        and not addressed_to_others(rc.get("body"), bot_login)
     ]
 
     disallowed_actors = sorted(
@@ -1143,16 +1178,30 @@ def evaluate_thread(
     substantive_reviews = [
         r
         for r in unseen_reviews
-        if (r.get("body") or "").strip()
-        or r.get("state") in {"REQUEST_CHANGES", "REQUEST_REVIEW"}
+        if (
+            (r.get("body") or "").strip()
+            or r.get("state") in {"REQUEST_CHANGES", "REQUEST_REVIEW"}
+        )
+        and (is_owner or mentions_user(r.get("body"), bot_login))
     ]
+    relevant_review_comments = [
+        rc
+        for rc in unseen_review_comments
+        if is_owner
+        or _review_thread_key(rc) in bot_review_threads
+        or mentions_user(rc.get("body"), bot_login)
+    ]
+    relevant_comments = (
+        unseen_comments
+        if (is_owner or has_bot_comment)
+        else [c for c in unseen_comments if mentions_user(c.get("body"), bot_login)]
+    )
     has_new_feedback = bool(
-        unseen_comments or unseen_review_comments or substantive_reviews
+        relevant_comments or relevant_review_comments or substantive_reviews
     )
 
     should_trigger = has_mention or (
-        state_str == "open"
-        and (newly_assigned or (is_participant and has_new_feedback))
+        state_str == "open" and (newly_assigned or has_new_feedback)
     )
 
     next_state = {
@@ -1180,7 +1229,7 @@ def evaluate_thread(
         reasons.append(f"@{bot_login} mentioned")
     if newly_assigned:
         reasons.append(f"assigned/review-requested @{bot_login}")
-    if is_participant and has_new_feedback and not reasons:
+    if has_new_feedback and not reasons:
         reasons.append("new PR/issue reply or review feedback")
 
     head_repo = ""
@@ -1221,9 +1270,9 @@ def evaluate_thread(
         head_ref=head_ref,
         base_ref=base_ref,
         reasons=reasons,
-        new_comments=unseen_comments,
+        new_comments=relevant_comments,
         new_reviews=substantive_reviews,
-        new_review_comments=unseen_review_comments,
+        new_review_comments=relevant_review_comments,
         next_thread_state=next_state,
     )
     return trigger, None
