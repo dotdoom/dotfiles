@@ -27,6 +27,11 @@
     antigravity
   ];
 
+  programs.ssh.settings.deimos = {
+    ForwardAgent = "yes";
+    RemoteForward = "2222 localhost:2222";
+  };
+
   home.activation.setupAuthorizedKeys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     run install -m 0600 -D \
       ${
