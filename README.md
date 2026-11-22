@@ -10,33 +10,46 @@ git clone git@github.com:dotdoom/dotfiles.git
 cd dotfiles
 ```
 
-Step 2 - stow.
+Step 2 - Nix, system config. On each machine, apply the system-level config
+first, before home-manager.
+
+NixOS (Linux, deimos):
 
 ```
-stow migrated
-stow legacy
+sudo nixos-rebuild switch \
+  --extra-experimental-features 'nix-command flakes' \
+  --flake .#deimos
 ```
 
-Step 2 - Nix, home-manager (Linux, deimos).
+nix-darwin (macOS, mars):
+
+```
+sudo nix run \
+  --extra-experimental-features 'nix-command flakes' \
+  nix-darwin/master -- \
+    switch --flake .#mars
+```
+
+Step 3 - Nix, home-manager (both machines).
 
 ```
 nix run \
   --extra-experimental-features 'nix-command flakes' \
   home-manager/master -- \
-    switch \
-      --extra-experimental-features 'nix-command flakes' \
-      --flake .#artem@deimos
+    switch --flake .#artem@deimos
 ```
 
-Step 2 - Nix, nix-darwin (macOS, mars). Run this before home-manager.
+On mars, use `.#artem@mars` instead.
+
+Step 4 - stow (only on machines without home-manager).
+
+Home-manager does this itself: it runs `stow legacy` on every switch, and
+sources `migrated` files (`.zshrc`, `.vimrc`) straight from the checkout. On a
+machine without Nix, stow is the whole installation:
 
 ```
-nix run \
-  --extra-experimental-features 'nix-command flakes' \
-  nix-darwin/master -- \
-    switch \
-      --extra-experimental-features 'nix-command flakes' \
-      --flake .#mars
+stow migrated
+stow legacy
 ```
 
 ## Layout
