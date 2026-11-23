@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   identities,
   primaryUser,
@@ -13,6 +14,10 @@
   # dropped, since setup and backlog bookkeeping can still be useful remotely.
   programs.remote-agy.skillPlugins.claude-plugin-sdd = claude-plugin-sdd;
   programs.remote-agy.disabledSkills = [ "report-friction" ];
+  programs.remote-agy.skillPlugins.code-review = lib.fileset.toSource {
+    root = ../..;
+    fileset = ../../skills/code-review;
+  };
   programs.remote-agy.giteaSidecar.allowedUsers = [
     "artem"
     "katarina"
