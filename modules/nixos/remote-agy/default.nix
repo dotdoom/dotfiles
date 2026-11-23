@@ -311,9 +311,10 @@ in
       description = ''
         Global rules Antigravity loads into every session of the
         agent user, written to {file}`~${user}/.gemini/config/AGENTS.md`.
-        The module ships a Gitea section {func}`lib.mkBefore`, so any
-        assignment is appended after it and every {env}`types.lines`
-        assignment is kept; {func}`lib.mkForce` replaces the whole thing.
+        The module ships a Gitea and repository-conventions section
+        {func}`lib.mkBefore`, so any assignment is appended after it and
+        every {env}`types.lines` assignment is kept;
+        {func}`lib.mkForce` replaces the whole thing.
       '';
     };
 
@@ -380,7 +381,19 @@ in
 
       You can access local Git server using `tea` command. The instance is
       available at `git.home.arpa:3000` and also has a public URL available
-      via HTTPS. SSH clone is always down over `git@git.home.arpa`.
+      via HTTPS. SSH clone is always done over `git@git.home.arpa`.
+
+      Repositories are checked out under `~/src`, either `~/src/<repo>` or
+      `~/src/<owner>/<repo>`. Clone new repositories there so the Gitea
+      sidecar finds them for future events.
+
+      ## Before making changes
+
+      Once per task, right before the first line of code is written (not on
+      every iteration or response), bring the branch up to date: `git fetch`
+      and check whether it is behind its remote, e.g. with `git status -sb`.
+      If it is stale and no other instruction pins the work to a branch or
+      commit, pull the latest changes first.
     '';
 
     # Progressive disclosure: keep Gitea/tea recipes off the always-on prompt budget.
