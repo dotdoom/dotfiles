@@ -167,11 +167,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1794759277,
-        "narHash": "sha256-9dMqkRAiImzWWIFIyCzOQ6mV2DqkpyX26FrjjTUyICE=",
+        "lastModified": 1795465225,
+        "narHash": "sha256-3nl0bYP8mMhGc5uUVcIx5nYefB8vq+xOglIS3ygTQGE=",
         "ref": "refs/heads/main",
-        "rev": "5d5b7f9d66cd27b972fdd8d40c0a15863b82b127",
-        "revCount": 82,
+        "rev": "86080fab175b51a876100eabd33830c6c9f9b24a",
+        "revCount": 86,
         "type": "git",
         "url": "https://github.com/futureware-tech/nix.git"
       },
@@ -189,11 +189,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791909798,
-        "narHash": "sha256-VAhpCOmrun/KXimYfR8NM88bciKCui7CqHHhThSzgag=",
+        "lastModified": 1793686154,
+        "narHash": "sha256-Zb/0L3soxrkfcrywpfp0J++0WFLB3tzh0Xtx9up+VNc=",
         "owner": "cachix",
         "repo": "git-hooks.nix",
-        "rev": "1ba1dbfe28738c9a71c266be6efa5b89e75491a9",
+        "rev": "204b6977e00caac19e2313015a598543ca7be150",
         "type": "github"
       },
       "original": {

@@ -157,6 +157,7 @@
         };
         modules = [
           inputs.fw_nix.nixosModules.identities
+          inputs.fw_nix.homeModules.git-signing
           vscode-server.homeModules.default
           self.homeModules.linux-headless
           ./hosts/deimos/home.nix
@@ -173,6 +174,7 @@
         };
         modules = [
           inputs.fw_nix.nixosModules.identities
+          inputs.fw_nix.homeModules.git-signing
           self.homeModules.mac-portable
           ./hosts/mars/home.nix
         ];
