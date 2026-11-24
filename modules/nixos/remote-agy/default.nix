@@ -440,6 +440,7 @@ in
           pkgs.curl
           pkgs.jq
           pkgs.python3
+          pkgs.qmd # SDD plugin, TODO: set together with plugin
         ]
         ++ lib.optionals cfg.giteaSidecar.enable cfg.giteaSidecar.extraPackages;
       environment = {
