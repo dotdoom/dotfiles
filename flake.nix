@@ -103,10 +103,26 @@
         homeassistant-cli = inputs.homeassistant-cli.packages.${system}.default or null;
       }) [ "homeassistant-cli" ];
 
+      # tmux 3.8 pins the Esc delay to 500ms whenever its window-size pixel
+      # query (CSI 18/14 t) goes unanswered. Under mosh the outer layer never
+      # answers it, so the delay sticks forever despite escape-time 0. The
+      # patch lets the existing 5s query timeout release that flag. Drop
+      # once fixed upstream (mechanism acknowledged in tmux#5886).
+      tmuxOverlay = _final: prev: {
+        tmux = prev.tmux.overrideAttrs (
+          _final': prevAttrs: {
+            patches = (prevAttrs.patches or [ ]) ++ [ ./modules/patches/tmux-3.8-winsize-escape.patch ];
+          }
+        );
+      };
+
       agentOverlays = [
         llmAgentsOverlay
         homeassistantCliOverlay
       ];
+
+      # Applied to every pkgs import in this flake.
+      allOverlays = [ tmuxOverlay ] ++ agentOverlays;
     in
     {
       checks = eachSystem (
@@ -121,6 +137,9 @@
               excludes = [
                 "^migrated/"
                 "^legacy/"
+                # Whitespace-exact machine-generated diffs; trimming hooks
+                # must not touch them.
+                "^modules/patches/"
               ];
             }
             // inputs.fw_nix.lib.pre-commit
@@ -130,6 +149,7 @@
       );
 
       overlays.llm-agents = llmAgentsOverlay;
+      overlays.tmux = tmuxOverlay;
 
       homeModules = {
         mac-portable = import ./modules/home/mac-portable.nix;
@@ -149,7 +169,7 @@
       homeConfigurations."${homeManagerUser}@deimos" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "x86_64-linux";
-          overlays = agentOverlays;
+          overlays = allOverlays;
         };
         extraSpecialArgs = {
           primaryUser = homeManagerUser;
@@ -167,7 +187,7 @@
       homeConfigurations."${homeManagerUser}@mars" = inputs.home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "aarch64-darwin";
-          overlays = agentOverlays;
+          overlays = allOverlays;
         };
         extraSpecialArgs = {
           primaryUser = homeManagerUser;
@@ -184,7 +204,7 @@
         system = "aarch64-darwin";
         specialArgs.primaryUser = homeManagerUser;
         modules = [
-          { nixpkgs.overlays = agentOverlays; }
+          { nixpkgs.overlays = allOverlays; }
           inputs.fw_nix.nixosModules.identities
           self.darwinModules.mac-portable
           inputs.fw_nix.nixosModules.nix-gc
@@ -207,7 +227,7 @@
           inherit (inputs) jail-nix claude-plugin-sdd;
         };
         modules = [
-          { nixpkgs.overlays = agentOverlays; }
+          { nixpkgs.overlays = allOverlays; }
           inputs.fw_nix.nixosModules.identities
           self.nixosModules.linux-headless
           self.nixosModules.linux-lxc
